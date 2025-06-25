@@ -39,6 +39,7 @@
             <div>🔥 Calories</div>
             <div style="font-size: 14px; color: #2563eb;" id="cal-today">0 cal today</div>
             <div style="font-size: 14px; color: #8b5cf6;" id="protein-today">0g protein</div>
+            <div style="font-size: 14px; color: #f59e0b;" id="balance-today">Enter burned calories</div>
         </div>
         <div class="stat-card" onclick="showTab('spending')">
             <div>💰 Spending</div>
@@ -78,6 +79,7 @@ let data = {
     lists: { read: [], listen: [], watch: [], cook: [], make: [] },
     notes: [],
     calories: [],
+    caloriesBurned: [],
     spending: []
 };
 
@@ -308,24 +310,38 @@ loadNotesTab();
 
 function loadCaloriesTab() {
 const content = document.getElementById(‘content’);
+const today = new Date().toISOString().split(‘T’)[0];
+const todayBurned = data.caloriesBurned?.find(entry => entry.date === today);
 
 ```
 let html = '<h2>CALORIES</h2>' +
+           
+           // Burned calories section
+           '<div style="background: #f0f9ff; border: 1px solid #0284c7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">' +
+           '<h3 style="margin-bottom: 10px; color: #0284c7;">Daily Calories Burned</h3>' +
+           '<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">' +
+           '<input type="number" id="burned-input" placeholder="Total burned" value="' + (todayBurned?.burned || '') + '" style="flex: 1; min-width: 150px;">' +
+           '<input type="date" id="burned-date" value="' + today + '">' +
+           '<button class="btn btn-primary" onclick="addBurnedCalories()">Save</button>' +
+           '</div>' +
+           '<small style="color: #0284c7;">Tip: Usually enter previous day\'s data from Apple Watch</small>' +
+           '</div>' +
+           
+           // Food logging
+           '<h3>Food Log</h3>' +
            '<div class="form-row">' +
-           '<input type="text" id="food-input" placeholder="Food">' +
-           '<input type="number" id="cal-input" placeholder="Calories">' +
-           '<input type="number" id="prot-input" placeholder="Protein">' +
-           '<select id="meal-input"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snack</option></select>' +
-           '<input type="date" id="cal-date" value="' + new Date().toISOString().split('T')[0] + '">' +
+           '<select id="meal-input" style="flex: 1;"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snack</option></select>' +
+           '<input type="number" id="cal-input" placeholder="Calories" style="flex: 1;">' +
+           '<input type="number" id="prot-input" placeholder="Protein (g)" style="flex: 1;">' +
+           '<input type="date" id="cal-date" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 1;">' +
            '<button class="btn btn-green" onclick="addCalorie()">Add</button>' +
            '</div><div>';
 
 data.calories.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(entry => {
     html += '<div class="item">' +
             '<div class="item-content" onclick="editCalorie(' + entry.id + ')">' +
-            '<strong>' + entry.food + '</strong> - ' + entry.calories + ' cal' +
+            '<strong>' + entry.meal.charAt(0).toUpperCase() + entry.meal.slice(1) + '</strong> - ' + entry.calories + ' cal' +
             (entry.protein ? ', ' + entry.protein + 'g protein' : '') +
-            ' (' + entry.meal + ')' +
             '<br><small>' + new Date(entry.date).toLocaleDateString() + '</small>' +
             '</div>' +
             '<button class="btn btn-delete" onclick="deleteCalorie(' + entry.id + ')">🗑️</button>' +
@@ -338,18 +354,16 @@ content.innerHTML = html + '</div>';
 }
 
 function addCalorie() {
-const food = document.getElementById(‘food-input’).value.trim();
 const cals = parseInt(document.getElementById(‘cal-input’).value);
 const protein = parseInt(document.getElementById(‘prot-input’).value) || 0;
 const meal = document.getElementById(‘meal-input’).value;
 const date = document.getElementById(‘cal-date’).value;
 
 ```
-if (!food || !cals || !date) return;
+if (!cals || !date) return;
 
 data.calories.push({
     id: Date.now(),
-    food: food,
     calories: cals,
     protein: protein,
     meal: meal,
@@ -357,7 +371,6 @@ data.calories.push({
 });
 
 save();
-document.getElementById('food-input').value = '';
 document.getElementById('cal-input').value = '';
 document.getElementById('prot-input').value = '';
 loadCaloriesTab();
@@ -371,8 +384,8 @@ const entry = data.calories.find(e => e.id === id);
 if (!entry) return;
 
 ```
-const food = prompt('Food:', entry.food);
-if (!food) return;
+const meal = prompt('Meal (breakfast/lunch/dinner/snack):', entry.meal);
+if (!meal) return;
 
 const cals = prompt('Calories:', entry.calories);
 if (!cals) return;
@@ -381,7 +394,7 @@ const protein = prompt('Protein:', entry.protein);
 const date = prompt('Date:', entry.date);
 if (!date) return;
 
-entry.food = food;
+entry.meal = meal;
 entry.calories = parseInt(cals);
 entry.protein = parseInt(protein) || 0;
 entry.date = date;
@@ -488,14 +501,66 @@ updateStats();
 }
 }
 
+function addBurnedCalories() {
+const burned = parseInt(document.getElementById(‘burned-input’).value);
+const date = document.getElementById(‘burned-date’).value;
+
+```
+if (!burned || !date) return;
+
+if (!data.caloriesBurned) data.caloriesBurned = [];
+
+const existingIndex = data.caloriesBurned.findIndex(entry => entry.date === date);
+
+if (existingIndex >= 0) {
+    data.caloriesBurned[existingIndex].burned = burned;
+} else {
+    data.caloriesBurned.push({
+        id: Date.now(),
+        burned: burned,
+        date: date
+    });
+}
+
+save();
+loadCaloriesTab();
+updateStats();
+```
+
+}
+
 function updateStats() {
 const today = new Date().toISOString().split(‘T’)[0];
 const todayCals = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + e.calories, 0);
 const todayProtein = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + (e.protein || 0), 0);
 
 ```
+// Get today's burned calories
+const todayBurned = data.caloriesBurned?.find(entry => entry.date === today);
+const burnedCals = todayBurned?.burned || 0;
+
+// Calculate balance and update display
+let balanceText = 'Enter burned calories';
+let balanceColor = '#f59e0b';
+
+if (burnedCals > 0) {
+    const balance = todayCals - burnedCals;
+    if (balance < -100) {
+        balanceText = balance + ' deficit ✅';
+        balanceColor = '#22c55e';
+    } else if (balance > 100) {
+        balanceText = '+' + balance + ' surplus ⚠️';
+        balanceColor = '#ef4444';
+    } else {
+        balanceText = (balance >= 0 ? '+' : '') + balance + ' maintenance ⚖️';
+        balanceColor = '#f59e0b';
+    }
+}
+
 document.getElementById('cal-today').textContent = todayCals + ' cal today';
 document.getElementById('protein-today').textContent = todayProtein + 'g protein';
+document.getElementById('balance-today').textContent = balanceText;
+document.getElementById('balance-today').style.color = balanceColor;
 
 const weekStart = new Date();
 weekStart.setDate(weekStart.getDate() - weekStart.getDay());
