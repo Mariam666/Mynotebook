@@ -325,11 +325,12 @@
         const contentArea = document.getElementById('content-area');
         
         if (listName === 'read') {
-            // Special layout for READ with category dropdown
+            // Special layout for READ with category dropdown and link field
             contentArea.innerHTML = 
                 '<h2>' + listName.toUpperCase() + '</h2>' +
-                '<div style="display: grid; grid-template-columns: 1fr auto auto auto; gap: 0.5rem; margin-bottom: 1rem;">' +
+                '<div style="display: grid; grid-template-columns: 1fr auto auto auto auto; gap: 0.5rem; margin-bottom: 1rem;">' +
                     '<input type="text" id="new-item-' + listName + '" placeholder="Add new ' + listName + ' item...">' +
+                    '<input type="url" id="read-link-input" placeholder="Link (optional)" style="min-width: 150px;">' +
                     '<select id="read-category-input">' +
                         '<option value="book">Book</option>' +
                         '<option value="essay">Essay</option>' +
@@ -362,7 +363,10 @@
                                     '<br><small style="color: ' + categoryTextColor + '; font-weight: 600;">' + (item.category || 'book').toUpperCase() + '</small>' +
                                     '<br><small style="color: #6b7280;">' + new Date(item.date).toLocaleDateString() + '</small>' +
                                 '</span>' +
-                                '<button class="btn btn-delete" onclick="deleteListItem(\'' + listName + '\', ' + item.id + ')">Delete</button>' +
+                                '<div style="display: flex; align-items: center; gap: 0.5rem;">' +
+                                    (item.link ? '<button class="btn" onclick="window.open(\'' + item.link + '\', \'_blank\')" style="background: #10b981; color: white; padding: 0.25rem 0.5rem; font-size: 0.75rem;">🔗 Open</button>' : '') +
+                                    '<button class="btn btn-delete" onclick="deleteListItem(\'' + listName + '\', ' + item.id + ')">Delete</button>' +
+                                '</div>' +
                             '</div>';
                         }).join('') +
                 '</div>';
@@ -409,7 +413,12 @@
         // Add category for read items
         if (listName === 'read') {
             const categoryInput = document.getElementById('read-category-input');
+            const linkInput = document.getElementById('read-link-input');
             newItem.category = categoryInput.value;
+            if (linkInput.value.trim()) {
+                newItem.link = linkInput.value.trim();
+            }
+            linkInput.value = ''; // Clear link field after adding
         }
 
         appData.lists[listName].push(newItem);
@@ -438,6 +447,15 @@
                 const newCategory = prompt('Edit category (book/essay/poem):', item.category || 'book');
                 if (newCategory && ['book', 'essay', 'poem'].includes(newCategory.toLowerCase())) {
                     item.category = newCategory.toLowerCase();
+                }
+                
+                const newLink = prompt('Edit link (optional):', item.link || '');
+                if (newLink !== null) {
+                    if (newLink.trim()) {
+                        item.link = newLink.trim();
+                    } else {
+                        delete item.link; // Remove link if empty
+                    }
                 }
             }
             
