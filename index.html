@@ -328,16 +328,16 @@
             // Special layout for READ with category dropdown and link field
             contentArea.innerHTML = 
                 '<h2>' + listName.toUpperCase() + '</h2>' +
-                '<div style="display: grid; grid-template-columns: 1fr auto auto auto auto; gap: 0.5rem; margin-bottom: 1rem;">' +
-                    '<input type="text" id="new-item-' + listName + '" placeholder="Add new ' + listName + ' item...">' +
-                    '<input type="url" id="read-link-input" placeholder="Link (optional)" style="min-width: 150px;">' +
-                    '<select id="read-category-input">' +
+                '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; align-items: center;">' +
+                    '<input type="text" id="new-item-' + listName + '" placeholder="Add new read item..." style="flex: 2; min-width: 200px;">' +
+                    '<input type="url" id="read-link-input" placeholder="Link (optional)" style="flex: 1; min-width: 140px;">' +
+                    '<select id="read-category-input" style="flex: 0 0 auto; min-width: 80px;">' +
                         '<option value="book">Book</option>' +
                         '<option value="essay">Essay</option>' +
                         '<option value="poem">Poem</option>' +
                     '</select>' +
-                    '<input type="date" id="list-date-input-' + listName + '" value="' + new Date().toISOString().split('T')[0] + '">' +
-                    '<button class="btn btn-primary" onclick="addListItem(\'' + listName + '\')">Add</button>' +
+                    '<input type="date" id="list-date-input-' + listName + '" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 0 0 auto;">' +
+                    '<button class="btn btn-primary" onclick="addListItem(\'' + listName + '\')" style="flex: 0 0 auto;">Add</button>' +
                 '</div>' +
                 '<div class="item-list">' +
                     items
@@ -486,17 +486,22 @@
         const contentArea = document.getElementById('content-area');
         
         contentArea.innerHTML = 
-            '<h2>Notes</h2>' +
+            '<h2>NOTES</h2>' +
             '<div style="margin-bottom: 1rem;">' +
                 '<textarea id="new-note" placeholder="Write your note here..."></textarea>' +
-                '<button class="btn btn-primary" onclick="addNote()" style="margin-top: 0.5rem;">Save Note</button>' +
+                '<div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">' +
+                    '<input type="date" id="note-date-input" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 0 0 auto;">' +
+                    '<button class="btn btn-primary" onclick="addNote()">Save Note</button>' +
+                '</div>' +
             '</div>' +
             '<div>' +
-                appData.notes.map(note => 
+                appData.notes
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .map(note => 
                     '<div style="padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.75rem;">' +
                         '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editNote(' + note.id + ')">' + note.content + '</div>' +
                         '<div style="display: flex; justify-content: space-between;">' +
-                            '<small>' + new Date(note.date).toLocaleDateString() + '</small>' +
+                            '<small style="color: #6b7280;">' + new Date(note.date).toLocaleDateString() + '</small>' +
                             '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">Delete</button>' +
                         '</div>' +
                     '</div>'
@@ -506,18 +511,21 @@
 
     function addNote() {
         const textarea = document.getElementById('new-note');
+        const dateInput = document.getElementById('note-date-input');
         const content = textarea.value.trim();
-        if (!content) return;
+        const date = dateInput.value;
+        if (!content || !date) return;
 
         const newNote = {
             id: Date.now(),
             content: content,
-            date: new Date().toISOString()
+            date: date
         };
 
         appData.notes.push(newNote);
         saveData();
         textarea.value = '';
+        // Keep the date for easy multiple entries
         loadNotesTab();
         updateDashboard();
     }
@@ -527,8 +535,14 @@
         if (!note) return;
 
         const newContent = prompt('Edit note:', note.content);
-        if (newContent !== null && newContent.trim() !== '') {
+        if (newContent === null) return;
+        
+        const newDate = prompt('Edit date (YYYY-MM-DD):', note.date);
+        if (newDate === null) return;
+
+        if (newContent.trim() !== '' && newDate) {
             note.content = newContent.trim();
+            note.date = newDate;
             saveData();
             loadNotesTab();
             updateDashboard();
@@ -540,69 +554,6 @@
             appData.notes = appData.notes.filter(note => note.id !== noteId);
             saveData();
             loadNotesTab();
-            updateDashboard();
-        }
-    }
-
-    // Load poetry tab
-    function loadPoetryTab() {
-        const contentArea = document.getElementById('content-area');
-        
-        contentArea.innerHTML = 
-            '<h2>Poetry</h2>' +
-            '<div style="margin-bottom: 1rem;">' +
-                '<textarea id="new-poetry" placeholder="Add a poem or quote..."></textarea>' +
-                '<button class="btn btn-purple" onclick="addPoetry()" style="margin-top: 0.5rem;">Save Poetry</button>' +
-            '</div>' +
-            '<div>' +
-                appData.poetry.map(poem => 
-                    '<div style="padding: 1rem; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 0.375rem; margin-bottom: 1rem;">' +
-                        '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editPoetry(' + poem.id + ')">' + poem.content + '</div>' +
-                        '<div style="display: flex; justify-content: space-between;">' +
-                            '<small>' + new Date(poem.date).toLocaleDateString() + '</small>' +
-                            '<button class="btn btn-delete" onclick="deletePoetry(' + poem.id + ')">Delete</button>' +
-                        '</div>' +
-                    '</div>'
-                ).join('') +
-            '</div>';
-    }
-
-    function addPoetry() {
-        const textarea = document.getElementById('new-poetry');
-        const content = textarea.value.trim();
-        if (!content) return;
-
-        const newPoetry = {
-            id: Date.now(),
-            content: content,
-            date: new Date().toISOString()
-        };
-
-        appData.poetry.push(newPoetry);
-        saveData();
-        textarea.value = '';
-        loadPoetryTab();
-        updateDashboard();
-    }
-
-    function editPoetry(poetryId) {
-        const poetry = appData.poetry.find(poem => poem.id === poetryId);
-        if (!poetry) return;
-
-        const newContent = prompt('Edit poetry:', poetry.content);
-        if (newContent !== null && newContent.trim() !== '') {
-            poetry.content = newContent.trim();
-            saveData();
-            loadPoetryTab();
-            updateDashboard();
-        }
-    }
-
-    function deletePoetry(poetryId) {
-        if (confirm('Delete this poetry?')) {
-            appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
-            saveData();
-            loadPoetryTab();
             updateDashboard();
         }
     }
