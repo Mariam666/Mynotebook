@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-
 <html>
 <head>
     <title>My Notebook</title>
     <style>
-        body { font-family: serif; padding: 10px; background: #f9fafb; margin: 0; }
+        body { font-family: 'EB Garamond', 'Adobe Garamond Pro', 'Garamond', 'Times New Roman', serif; padding: 10px; background: #f9fafb; margin: 0; }
         .container { max-width: 1000px; margin: 0 auto; }
         h1 { color: #333; margin-bottom: 15px; font-size: 1.5rem; }
         .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
@@ -27,70 +26,65 @@
         .item-actions { display: flex; gap: 6px; align-items: center; }
         .form-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
         .form-row input, .form-row select { min-width: 80px; flex: 1; }
-
-```
-    @media (max-width: 768px) {
-        body { padding: 8px; }
-        h1 { font-size: 1.25rem; margin-bottom: 10px; }
-        .stats { gap: 8px; margin-bottom: 12px; }
-        .stat-card { padding: 8px; font-size: 12px; }
-        .nav-grid { gap: 6px; margin-bottom: 12px; }
-        .tab-btn { padding: 8px 4px; font-size: 11px; }
-        .content { padding: 12px; }
-        .item { padding: 8px; gap: 6px; }
-        .item-content { font-size: 13px; }
-        .form-row { gap: 4px; margin-bottom: 10px; }
-        .form-row input, .form-row select { min-width: 60px; font-size: 13px; }
-        .btn { padding: 5px 8px; font-size: 12px; }
-    }
-</style>
-```
-
+        
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            h1 { font-size: 1.25rem; margin-bottom: 10px; }
+            .stats { gap: 8px; margin-bottom: 12px; }
+            .stat-card { padding: 8px; font-size: 12px; }
+            .nav-grid { gap: 6px; margin-bottom: 12px; }
+            .tab-btn { padding: 8px 4px; font-size: 11px; }
+            .content { padding: 12px; }
+            .item { padding: 8px; gap: 6px; }
+            .item-content { font-size: 13px; }
+            .form-row { gap: 4px; margin-bottom: 10px; }
+            .form-row input, .form-row select { min-width: 60px; font-size: 13px; }
+            .btn { padding: 5px 8px; font-size: 12px; }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>📝 Notebook</h1>
-
-```
-    <div id="stats" class="stats">
-        <div class="stat-card" onclick="showTab('calories')">
-            <div>🔥 Calories</div>
-            <div style="font-size: 14px; color: #2563eb;" id="cal-today">0 cal today</div>
-            <div style="font-size: 14px; color: #8b5cf6;" id="protein-today">0g protein</div>
-            <div style="font-size: 14px; color: #f59e0b;" id="balance-today">Enter burned calories</div>
+        
+        <div id="stats" class="stats">
+            <div class="stat-card" onclick="showTab('calories')">
+                <div>🔥 Calories</div>
+                <div style="font-size: 14px; color: #2563eb;" id="cal-today">0 cal today</div>
+                <div style="font-size: 14px; color: #8b5cf6;" id="protein-today">0g protein</div>
+                <div style="font-size: 14px; color: #f59e0b;" id="balance-today">Enter burned calories</div>
+            </div>
+            <div class="stat-card" onclick="showTab('spending')">
+                <div>💰 Spending</div>
+                <div style="font-size: 14px; color: #2563eb;" id="spend-week">$0 this week</div>
+            </div>
         </div>
-        <div class="stat-card" onclick="showTab('spending')">
-            <div>💰 Spending</div>
-            <div style="font-size: 14px; color: #2563eb;" id="spend-week">$0 this week</div>
+        
+        <div style="margin-bottom: 15px;">
+            <button class="tab-btn active" onclick="showTab('home')" id="tab-home" style="width: 100%; padding: 20px;">
+                🏠 Home
+            </button>
         </div>
-    </div>
-    
-    <div style="margin-bottom: 15px;">
-        <button class="tab-btn active" onclick="showTab('home')" id="tab-home" style="width: 100%; padding: 20px;">
-            🏠 Home
-        </button>
-    </div>
-    
-    <div class="nav-grid">
-        <button class="tab-btn" onclick="showTab('notes')" id="tab-notes">📝<br>Notes</button>
-        <button class="tab-btn" onclick="showTab('read')" id="tab-read">📚<br>Read</button>
-        <button class="tab-btn" onclick="showTab('listen')" id="tab-listen">🎵<br>Listen</button>
-        <button class="tab-btn" onclick="showTab('watch')" id="tab-watch">📺<br>Watch</button>
-        <button class="tab-btn" onclick="showTab('cook')" id="tab-cook">🍳<br>Cook</button>
-        <button class="tab-btn" onclick="showTab('make')" id="tab-make">🔨<br>Make</button>
-        <button class="tab-btn" onclick="showTab('calories')" id="tab-calories">🔥<br>Calories</button>
-        <button class="tab-btn" onclick="showTab('spending')" id="tab-spending">💰<br>Spending</button>
-    </div>
+        
+        <div class="nav-grid">
+            <button class="tab-btn" onclick="showTab('notes')" id="tab-notes">📝<br>Notes</button>
+            <button class="tab-btn" onclick="showTab('read')" id="tab-read">📚<br>Read</button>
+            <button class="tab-btn" onclick="showTab('listen')" id="tab-listen">🎵<br>Listen</button>
+            <button class="tab-btn" onclick="showTab('watch')" id="tab-watch">📺<br>Watch</button>
+            <button class="tab-btn" onclick="showTab('cook')" id="tab-cook">🍳<br>Cook</button>
+            <button class="tab-btn" onclick="showTab('make')" id="tab-make">🔨<br>Make</button>
+            <button class="tab-btn" onclick="showTab('calories')" id="tab-calories">🔥<br>Calories</button>
+            <button class="tab-btn" onclick="showTab('spending')" id="tab-spending">💰<br>Spending</button>
+        </div>
 
-    <div style="text-align: center; margin-bottom: 20px;">
-        <button class="btn btn-green" onclick="downloadData()">📥 Download Data</button>
-        <button class="btn" onclick="document.getElementById('upload').click()" style="background: #8b5cf6; color: white;">📤 Upload Data</button>
-        <input type="file" id="upload" accept=".json" style="display: none;" onchange="uploadData(event)">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button class="btn btn-green" onclick="downloadData()">📥 Download Data</button>
+            <button class="btn" onclick="document.getElementById('upload').click()" style="background: #8b5cf6; color: white;">📤 Upload Data</button>
+            <input type="file" id="upload" accept=".json" style="display: none;" onchange="uploadData(event)">
+        </div>
+        
+        <div id="content" class="content hidden"></div>
     </div>
-    
-    <div id="content" class="content hidden"></div>
-</div>
-```
 
 <script>
 let data = {
@@ -102,12 +96,22 @@ let data = {
 };
 
 function save() {
-    localStorage.setItem('notebook', JSON.stringify(data));
+    try {
+        // Store data in memory for the session
+        window.notebookData = JSON.stringify(data);
+    } catch (e) {
+        console.error('Save error:', e);
+    }
 }
 
 function load() {
-    const saved = localStorage.getItem('notebook');
-    if (saved) data = JSON.parse(saved);
+    try {
+        if (window.notebookData) {
+            data = JSON.parse(window.notebookData);
+        }
+    } catch (e) {
+        console.error('Load error:', e);
+    }
 }
 
 function showTab(tab) {
@@ -258,377 +262,339 @@ function loadNotesTab() {
     let html = '<h2>NOTES</h2>' +
                '<div style="margin-bottom: 15px;">' +
                '<textarea id="note-input" placeholder="Write note..."></textarea>' +
-
-```
-           '<div style="display: flex; gap: 8px; margin-top: 8px;">' +
-           '<input type="date" id="note-date" value="' + new Date().toISOString().split('T')[0] + '">' +
-           '<button class="btn btn-primary" onclick="addNote()">Save</button>' +
-           '</div></div><div>';
-
-data.notes.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(note => {
-    html += '<div style="padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px;">' +
-            '<div style="cursor: pointer; margin-bottom: 8px; white-space: pre-wrap;" onclick="editNote(' + note.id + ')">' + note.content + '</div>' +
-            '<div style="display: flex; justify-content: space-between; align-items: center;">' +
-            '<small>' + new Date(note.date).toLocaleDateString() + '</small>' +
-            '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">🗑️</button>' +
-            '</div></div>';
-});
-
-content.innerHTML = html + '</div>';
-```
-
+               '<div style="display: flex; gap: 8px; margin-top: 8px;">' +
+               '<input type="date" id="note-date" value="' + new Date().toISOString().split('T')[0] + '">' +
+               '<button class="btn btn-primary" onclick="addNote()">Save</button>' +
+               '</div></div><div>';
+    
+    data.notes.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(note => {
+        html += '<div style="padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px;">' +
+                '<div style="cursor: pointer; margin-bottom: 8px; white-space: pre-wrap;" onclick="editNote(' + note.id + ')">' + note.content + '</div>' +
+                '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                '<small>' + new Date(note.date).toLocaleDateString() + '</small>' +
+                '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">🗑️</button>' +
+                '</div></div>';
+    });
+    
+    content.innerHTML = html + '</div>';
 }
 
 function addNote() {
-const input = document.getElementById(‘note-input’);
-const dateInput = document.getElementById(‘note-date’);
-
-```
-if (!input.value.trim() || !dateInput.value) return;
-
-data.notes.push({
-    id: Date.now(),
-    content: input.value.trim(),
-    date: dateInput.value
-});
-
-save();
-input.value = '';
-loadNotesTab();
-```
-
+    const input = document.getElementById('note-input');
+    const dateInput = document.getElementById('note-date');
+    
+    if (!input.value.trim() || !dateInput.value) return;
+    
+    data.notes.push({
+        id: Date.now(),
+        content: input.value.trim(),
+        date: dateInput.value
+    });
+    
+    save();
+    input.value = '';
+    loadNotesTab();
 }
 
 function editNote(id) {
-const note = data.notes.find(n => n.id === id);
-if (!note) return;
-
-```
-const newContent = prompt('Edit:', note.content);
-if (!newContent) return;
-
-const newDate = prompt('Date:', note.date);
-if (!newDate) return;
-
-note.content = newContent;
-note.date = newDate;
-save();
-loadNotesTab();
-```
-
+    const note = data.notes.find(n => n.id === id);
+    if (!note) return;
+    
+    const newContent = prompt('Edit:', note.content);
+    if (!newContent) return;
+    
+    const newDate = prompt('Date:', note.date);
+    if (!newDate) return;
+    
+    note.content = newContent;
+    note.date = newDate;
+    save();
+    loadNotesTab();
 }
 
 function deleteNote(id) {
-if (confirm(‘Delete?’)) {
-data.notes = data.notes.filter(n => n.id !== id);
-save();
-loadNotesTab();
-}
+    if (confirm('Delete?')) {
+        data.notes = data.notes.filter(n => n.id !== id);
+        save();
+        loadNotesTab();
+    }
 }
 
 function loadCaloriesTab() {
-const content = document.getElementById(‘content’);
-const today = new Date().toISOString().split(‘T’)[0];
-const todayBurned = data.caloriesBurned?.find(entry => entry.date === today);
-
-```
-let html = '<h2>CALORIES</h2>' +
-           
-           // Burned calories section
-           '<div style="background: #f0f9ff; border: 1px solid #0284c7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">' +
-           '<h3 style="margin-bottom: 10px; color: #0284c7;">Daily Calories Burned</h3>' +
-           '<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">' +
-           '<input type="number" id="burned-input" placeholder="Total burned" value="' + (todayBurned?.burned || '') + '" style="flex: 1; min-width: 150px;">' +
-           '<input type="date" id="burned-date" value="' + today + '">' +
-           '<button class="btn btn-primary" onclick="addBurnedCalories()">Save</button>' +
-           '</div>' +
-           '<small style="color: #0284c7;">Tip: Usually enter previous day\'s data from Apple Watch</small>' +
-           '</div>' +
-           
-           // Food logging
-           '<h3>Food Log</h3>' +
-           '<div class="form-row">' +
-           '<select id="meal-input" style="flex: 1;"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snack</option></select>' +
-           '<input type="number" id="cal-input" placeholder="Calories" style="flex: 1;">' +
-           '<input type="number" id="prot-input" placeholder="Protein (g)" style="flex: 1;">' +
-           '<input type="date" id="cal-date" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 1;">' +
-           '<button class="btn btn-green" onclick="addCalorie()">Add</button>' +
-           '</div><div>';
-
-data.calories.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(entry => {
-    html += '<div class="item">' +
-            '<div class="item-content" onclick="editCalorie(' + entry.id + ')">' +
-            '<strong>' + entry.meal.charAt(0).toUpperCase() + entry.meal.slice(1) + '</strong> - ' + entry.calories + ' cal' +
-            (entry.protein ? ', ' + entry.protein + 'g protein' : '') +
-            '<br><small>' + new Date(entry.date).toLocaleDateString() + '</small>' +
-            '</div>' +
-            '<button class="btn btn-delete" onclick="deleteCalorie(' + entry.id + ')">🗑️</button>' +
-            '</div>';
-});
-
-content.innerHTML = html + '</div>';
-```
-
+    const content = document.getElementById('content');
+    const today = new Date().toISOString().split('T')[0];
+    const todayBurned = data.caloriesBurned?.find(entry => entry.date === today);
+    
+    let html = '<h2>CALORIES</h2>' +
+               
+               // Burned calories section
+               '<div style="background: #f0f9ff; border: 1px solid #0284c7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">' +
+               '<h3 style="margin-bottom: 10px; color: #0284c7;">Daily Calories Burned</h3>' +
+               '<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">' +
+               '<input type="number" id="burned-input" placeholder="Total burned" value="' + (todayBurned?.burned || '') + '" style="flex: 1; min-width: 150px;">' +
+               '<input type="date" id="burned-date" value="' + today + '">' +
+               '<button class="btn btn-primary" onclick="addBurnedCalories()">Save</button>' +
+               '</div>' +
+               '<small style="color: #0284c7;">Tip: Usually enter previous day\'s data from Apple Watch</small>' +
+               '</div>' +
+               
+               // Food logging
+               '<h3>Food Log</h3>' +
+               '<div class="form-row">' +
+               '<select id="meal-input" style="flex: 1;"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snack</option></select>' +
+               '<input type="number" id="cal-input" placeholder="Calories" style="flex: 1;">' +
+               '<input type="number" id="prot-input" placeholder="Protein (g)" style="flex: 1;">' +
+               '<input type="date" id="cal-date" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 1;">' +
+               '<button class="btn btn-green" onclick="addCalorie()">Add</button>' +
+               '</div><div>';
+    
+    data.calories.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(entry => {
+        html += '<div class="item">' +
+                '<div class="item-content" onclick="editCalorie(' + entry.id + ')">' +
+                '<strong>' + entry.meal.charAt(0).toUpperCase() + entry.meal.slice(1) + '</strong> - ' + entry.calories + ' cal' +
+                (entry.protein ? ', ' + entry.protein + 'g protein' : '') +
+                '<br><small>' + new Date(entry.date).toLocaleDateString() + '</small>' +
+                '</div>' +
+                '<button class="btn btn-delete" onclick="deleteCalorie(' + entry.id + ')">🗑️</button>' +
+                '</div>';
+    });
+    
+    content.innerHTML = html + '</div>';
 }
 
 function addCalorie() {
-const cals = parseInt(document.getElementById(‘cal-input’).value);
-const protein = parseInt(document.getElementById(‘prot-input’).value) || 0;
-const meal = document.getElementById(‘meal-input’).value;
-const date = document.getElementById(‘cal-date’).value;
-
-```
-if (!cals || !date) return;
-
-data.calories.push({
-    id: Date.now(),
-    calories: cals,
-    protein: protein,
-    meal: meal,
-    date: date
-});
-
-save();
-document.getElementById('cal-input').value = '';
-document.getElementById('prot-input').value = '';
-loadCaloriesTab();
-updateStats();
-```
-
+    const cals = parseInt(document.getElementById('cal-input').value);
+    const protein = parseInt(document.getElementById('prot-input').value) || 0;
+    const meal = document.getElementById('meal-input').value;
+    const date = document.getElementById('cal-date').value;
+    
+    if (!cals || !date) return;
+    
+    data.calories.push({
+        id: Date.now(),
+        calories: cals,
+        protein: protein,
+        meal: meal,
+        date: date
+    });
+    
+    save();
+    document.getElementById('cal-input').value = '';
+    document.getElementById('prot-input').value = '';
+    loadCaloriesTab();
+    updateStats();
 }
 
 function editCalorie(id) {
-const entry = data.calories.find(e => e.id === id);
-if (!entry) return;
-
-```
-const meal = prompt('Meal (breakfast/lunch/dinner/snack):', entry.meal);
-if (!meal) return;
-
-const cals = prompt('Calories:', entry.calories);
-if (!cals) return;
-
-const protein = prompt('Protein:', entry.protein);
-const date = prompt('Date:', entry.date);
-if (!date) return;
-
-entry.meal = meal;
-entry.calories = parseInt(cals);
-entry.protein = parseInt(protein) || 0;
-entry.date = date;
-save();
-loadCaloriesTab();
-updateStats();
-```
-
+    const entry = data.calories.find(e => e.id === id);
+    if (!entry) return;
+    
+    const meal = prompt('Meal (breakfast/lunch/dinner/snack):', entry.meal);
+    if (!meal) return;
+    
+    const cals = prompt('Calories:', entry.calories);
+    if (!cals) return;
+    
+    const protein = prompt('Protein:', entry.protein);
+    const date = prompt('Date:', entry.date);
+    if (!date) return;
+    
+    entry.meal = meal;
+    entry.calories = parseInt(cals);
+    entry.protein = parseInt(protein) || 0;
+    entry.date = date;
+    save();
+    loadCaloriesTab();
+    updateStats();
 }
 
 function deleteCalorie(id) {
-if (confirm(‘Delete?’)) {
-data.calories = data.calories.filter(e => e.id !== id);
-save();
-loadCaloriesTab();
-updateStats();
-}
+    if (confirm('Delete?')) {
+        data.calories = data.calories.filter(e => e.id !== id);
+        save();
+        loadCaloriesTab();
+        updateStats();
+    }
 }
 
 function loadSpendingTab() {
-const content = document.getElementById(‘content’);
-
-```
-let html = '<h2>SPENDING</h2>' +
-           '<div class="form-row">' +
-           '<input type="text" id="desc-input" placeholder="Description" style="flex: 2;">' +
-           '<input type="number" id="amt-input" step="0.01" placeholder="Amount">' +
-           '<select id="cat-input"><option value="food">Food</option><option value="transport">Transport</option><option value="entertainment">Entertainment</option><option value="shopping">Shopping</option><option value="other">Other</option></select>' +
-           '<input type="date" id="spend-date" value="' + new Date().toISOString().split('T')[0] + '">' +
-           '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
-           '</div><div>';
-
-data.spending.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(entry => {
-    html += '<div class="item">' +
-            '<div class="item-content" onclick="editSpending(' + entry.id + ')">' +
-            '<strong>' + entry.description + '</strong> - $' + entry.amount.toFixed(2) + ' (' + entry.category + ')' +
-            '<br><small>' + new Date(entry.date).toLocaleDateString() + '</small>' +
-            '</div>' +
-            '<button class="btn btn-delete" onclick="deleteSpending(' + entry.id + ')">🗑️</button>' +
-            '</div>';
-});
-
-content.innerHTML = html + '</div>';
-```
-
+    const content = document.getElementById('content');
+    
+    let html = '<h2>SPENDING</h2>' +
+               '<div class="form-row">' +
+               '<input type="text" id="desc-input" placeholder="Description" style="flex: 2;">' +
+               '<input type="number" id="amt-input" step="0.01" placeholder="Amount">' +
+               '<select id="cat-input"><option value="food">Food</option><option value="transport">Transport</option><option value="entertainment">Entertainment</option><option value="shopping">Shopping</option><option value="other">Other</option></select>' +
+               '<input type="date" id="spend-date" value="' + new Date().toISOString().split('T')[0] + '">' +
+               '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
+               '</div><div>';
+    
+    data.spending.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(entry => {
+        html += '<div class="item">' +
+                '<div class="item-content" onclick="editSpending(' + entry.id + ')">' +
+                '<strong>' + entry.description + '</strong> - $' + entry.amount.toFixed(2) + ' (' + entry.category + ')' +
+                '<br><small>' + new Date(entry.date).toLocaleDateString() + '</small>' +
+                '</div>' +
+                '<button class="btn btn-delete" onclick="deleteSpending(' + entry.id + ')">🗑️</button>' +
+                '</div>';
+    });
+    
+    content.innerHTML = html + '</div>';
 }
 
 function addSpending() {
-const desc = document.getElementById(‘desc-input’).value.trim();
-const amt = parseFloat(document.getElementById(‘amt-input’).value);
-const cat = document.getElementById(‘cat-input’).value;
-const date = document.getElementById(‘spend-date’).value;
-
-```
-if (!desc || !amt || !date) return;
-
-data.spending.push({
-    id: Date.now(),
-    description: desc,
-    amount: amt,
-    category: cat,
-    date: date
-});
-
-save();
-document.getElementById('desc-input').value = '';
-document.getElementById('amt-input').value = '';
-loadSpendingTab();
-updateStats();
-```
-
+    const desc = document.getElementById('desc-input').value.trim();
+    const amt = parseFloat(document.getElementById('amt-input').value);
+    const cat = document.getElementById('cat-input').value;
+    const date = document.getElementById('spend-date').value;
+    
+    if (!desc || !amt || !date) return;
+    
+    data.spending.push({
+        id: Date.now(),
+        description: desc,
+        amount: amt,
+        category: cat,
+        date: date
+    });
+    
+    save();
+    document.getElementById('desc-input').value = '';
+    document.getElementById('amt-input').value = '';
+    loadSpendingTab();
+    updateStats();
 }
 
 function editSpending(id) {
-const entry = data.spending.find(e => e.id === id);
-if (!entry) return;
-
-```
-const desc = prompt('Description:', entry.description);
-if (!desc) return;
-
-const amt = prompt('Amount:', entry.amount);
-if (!amt) return;
-
-const date = prompt('Date:', entry.date);
-if (!date) return;
-
-entry.description = desc;
-entry.amount = parseFloat(amt);
-entry.date = date;
-save();
-loadSpendingTab();
-updateStats();
-```
-
+    const entry = data.spending.find(e => e.id === id);
+    if (!entry) return;
+    
+    const desc = prompt('Description:', entry.description);
+    if (!desc) return;
+    
+    const amt = prompt('Amount:', entry.amount);
+    if (!amt) return;
+    
+    const date = prompt('Date:', entry.date);
+    if (!date) return;
+    
+    entry.description = desc;
+    entry.amount = parseFloat(amt);
+    entry.date = date;
+    save();
+    loadSpendingTab();
+    updateStats();
 }
 
 function deleteSpending(id) {
-if (confirm(‘Delete?’)) {
-data.spending = data.spending.filter(e => e.id !== id);
-save();
-loadSpendingTab();
-updateStats();
-}
+    if (confirm('Delete?')) {
+        data.spending = data.spending.filter(e => e.id !== id);
+        save();
+        loadSpendingTab();
+        updateStats();
+    }
 }
 
 function addBurnedCalories() {
-const burned = parseInt(document.getElementById(‘burned-input’).value);
-const date = document.getElementById(‘burned-date’).value;
+    const burned = parseInt(document.getElementById('burned-input').value);
+    const date = document.getElementById('burned-date').value;
 
-```
-if (!burned || !date) return;
+    if (!burned || !date) return;
 
-if (!data.caloriesBurned) data.caloriesBurned = [];
+    if (!data.caloriesBurned) data.caloriesBurned = [];
 
-const existingIndex = data.caloriesBurned.findIndex(entry => entry.date === date);
+    const existingIndex = data.caloriesBurned.findIndex(entry => entry.date === date);
+    
+    if (existingIndex >= 0) {
+        data.caloriesBurned[existingIndex].burned = burned;
+    } else {
+        data.caloriesBurned.push({
+            id: Date.now(),
+            burned: burned,
+            date: date
+        });
+    }
 
-if (existingIndex >= 0) {
-    data.caloriesBurned[existingIndex].burned = burned;
-} else {
-    data.caloriesBurned.push({
-        id: Date.now(),
-        burned: burned,
-        date: date
-    });
-}
-
-save();
-loadCaloriesTab();
-updateStats();
-```
-
+    save();
+    loadCaloriesTab();
+    updateStats();
 }
 
 function updateStats() {
-const today = new Date().toISOString().split(‘T’)[0];
-const todayCals = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + e.calories, 0);
-const todayProtein = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + (e.protein || 0), 0);
-
-```
-// Get today's burned calories
-const todayBurned = data.caloriesBurned?.find(entry => entry.date === today);
-const burnedCals = todayBurned?.burned || 0;
-
-// Calculate balance and update display
-let balanceText = 'Enter burned calories';
-let balanceColor = '#f59e0b';
-
-if (burnedCals > 0) {
-    const balance = todayCals - burnedCals;
-    if (balance < -100) {
-        balanceText = balance + ' deficit ✅';
-        balanceColor = '#22c55e';
-    } else if (balance > 100) {
-        balanceText = '+' + balance + ' surplus ⚠️';
-        balanceColor = '#ef4444';
-    } else {
-        balanceText = (balance >= 0 ? '+' : '') + balance + ' maintenance ⚖️';
-        balanceColor = '#f59e0b';
+    const today = new Date().toISOString().split('T')[0];
+    const todayCals = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + e.calories, 0);
+    const todayProtein = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + (e.protein || 0), 0);
+    
+    // Get today's burned calories
+    const todayBurned = data.caloriesBurned?.find(entry => entry.date === today);
+    const burnedCals = todayBurned?.burned || 0;
+    
+    // Calculate balance and update display
+    let balanceText = 'Enter burned calories';
+    let balanceColor = '#f59e0b';
+    
+    if (burnedCals > 0) {
+        const balance = todayCals - burnedCals;
+        if (balance < -100) {
+            balanceText = balance + ' deficit ✅';
+            balanceColor = '#22c55e';
+        } else if (balance > 100) {
+            balanceText = '+' + balance + ' surplus ⚠️';
+            balanceColor = '#ef4444';
+        } else {
+            balanceText = (balance >= 0 ? '+' : '') + balance + ' maintenance ⚖️';
+            balanceColor = '#f59e0b';
+        }
     }
-}
-
-document.getElementById('cal-today').textContent = todayCals + ' cal today';
-document.getElementById('protein-today').textContent = todayProtein + 'g protein';
-document.getElementById('balance-today').textContent = balanceText;
-document.getElementById('balance-today').style.color = balanceColor;
-
-const weekStart = new Date();
-weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-const weekSpend = data.spending.filter(e => new Date(e.date) >= weekStart).reduce((sum, e) => sum + e.amount, 0);
-
-document.getElementById('spend-week').textContent = '$' + weekSpend.toFixed(2) + ' this week';
-```
-
+    
+    document.getElementById('cal-today').textContent = todayCals + ' cal today';
+    document.getElementById('protein-today').textContent = todayProtein + 'g protein';
+    document.getElementById('balance-today').textContent = balanceText;
+    document.getElementById('balance-today').style.color = balanceColor;
+    
+    const weekStart = new Date();
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+    const weekSpend = data.spending.filter(e => new Date(e.date) >= weekStart).reduce((sum, e) => sum + e.amount, 0);
+    
+    document.getElementById('spend-week').textContent = '$' + weekSpend.toFixed(2) + ' this week';
 }
 
 function downloadData() {
-const blob = new Blob([JSON.stringify(data, null, 2)], {type: ‘application/json’});
-const url = URL.createObjectURL(blob);
-const a = document.createElement(‘a’);
-a.href = url;
-a.download = ‘notebook-data.json’;
-a.click();
-URL.revokeObjectURL(url);
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'notebook-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
 function uploadData(event) {
-const file = event.target.files[0];
-if (!file) return;
-
-```
-const reader = new FileReader();
-reader.onload = function(e) {
-    try {
-        const imported = JSON.parse(e.target.result);
-        if (confirm('Replace all data with uploaded file?')) {
-            data = imported;
-            save();
-            showTab('home');
-            alert('Data imported!');
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const imported = JSON.parse(e.target.result);
+            if (confirm('Replace all data with uploaded file?')) {
+                data = imported;
+                save();
+                showTab('home');
+                alert('Data imported!');
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
         }
-    } catch (error) {
-        alert('Error: ' + error.message);
-    }
-};
-reader.readAsText(file);
-event.target.value = '';
-```
-
+    };
+    reader.readAsText(file);
+    event.target.value = '';
 }
 
 // Initialize
 load();
-showTab(‘home’);
+showTab('home');
 updateStats();
 </script>
-
 </body>
 </html>
