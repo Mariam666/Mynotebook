@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,897 +11,907 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: 'EB Garamond', 'Adobe Garamond Pro', 'Garamond', 'Times New Roman', serif;
-            background-color: #f9fafb;
-            min-height: 100vh;
-            padding: 1.5rem;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            font-size: 1.875rem;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 1rem;
-        }
-        
-        .dashboard-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 2px solid #e5e7eb;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .stat-card:hover {
-            background-color: #f3f4f6;
-        }
-        
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .tab-button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            border: 2px solid #e5e7eb;
-            background: white;
-            color: #6b7280;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .tab-button:hover {
-            background-color: #f3f4f6;
-        }
-        
-        .tab-button.active {
-            background-color: #dbeafe;
-            color: #1d4ed8;
-            border-color: #93c5fd;
-        }
-        
-        .content-area {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            border: none;
-            cursor: pointer;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        
-        .btn-primary {
-            background-color: #3b82f6;
-            color: white;
-        }
-        
-        .btn-green {
-            background-color: #10b981;
-            color: white;
-        }
-        
-        .btn-purple {
-            background-color: #8b5cf6;
-            color: white;
-        }
-        
-        .btn-delete {
-            background-color: #ef4444;
-            color: white;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-        }
-        
-        input, textarea, select {
-            padding: 0.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            font-family: inherit;
-        }
-        
-        textarea {
-            width: 100%;
-            height: 8rem;
-            resize: vertical;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .item-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
-        .list-item {
-            padding: 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.375rem;
-            background: white;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .list-item.completed {
-            background-color: #f0fdf4;
-            text-decoration: line-through;
-            color: #6b7280;
-        }
-    </style>
+
+```
+    body {
+        font-family: 'EB Garamond', 'Adobe Garamond Pro', 'Garamond', 'Times New Roman', serif;
+        background-color: #f9fafb;
+        min-height: 100vh;
+        padding: 1.5rem;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    h1 {
+        font-size: 1.875rem;
+        font-weight: bold;
+        color: #1f2937;
+        margin-bottom: 1rem;
+    }
+    
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 2px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .stat-card:hover {
+        background-color: #f3f4f6;
+    }
+    
+    .nav-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .tab-button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 2px solid #e5e7eb;
+        background: white;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .tab-button:hover {
+        background-color: #f3f4f6;
+    }
+    
+    .tab-button.active {
+        background-color: #dbeafe;
+        color: #1d4ed8;
+        border-color: #93c5fd;
+    }
+    
+    .content-area {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        border: none;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .btn-primary {
+        background-color: #3b82f6;
+        color: white;
+    }
+    
+    .btn-green {
+        background-color: #10b981;
+        color: white;
+    }
+    
+    .btn-purple {
+        background-color: #8b5cf6;
+        color: white;
+    }
+    
+    .btn-delete {
+        background-color: #ef4444;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    input, textarea, select {
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        font-family: inherit;
+    }
+    
+    textarea {
+        width: 100%;
+        height: 8rem;
+        resize: vertical;
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    .input-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .item-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .list-item {
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.375rem;
+        background: white;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .list-item.completed {
+        background-color: #f0fdf4;
+        text-decoration: line-through;
+        color: #6b7280;
+    }
+</style>
+```
+
 </head>
 <body>
     <div class="container">
         <h1>Notebook</h1>
-        
-        <!-- Dashboard Stats -->
-        <div id="dashboard-stats" class="dashboard-stats">
-            <div class="stat-card" onclick="showTab('calories')">
-                <div style="text-align: center;">
-                    <div style="font-size: 0.875rem; font-weight: 500;">🔥 Calories</div>
-                    <div style="font-size: 0.75rem; color: #059669;" id="calories-today">0 cal today</div>
-                </div>
-            </div>
-            
-            <div class="stat-card" onclick="showTab('spending')">
-                <div style="text-align: center;">
-                    <div style="font-size: 0.875rem; font-weight: 500;">💰 Spending</div>
-                    <div style="font-size: 0.75rem; color: #2563eb;" id="spending-week">$0 this week</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Navigation Grid -->
-        <div class="nav-grid">
-            <button class="tab-button active" onclick="showTab('dashboard')" id="tab-dashboard">
-                <span style="font-size: 1.5rem;">🏠</span>
-                <span>Home</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('notes')" id="tab-notes">
-                <span style="font-size: 1.5rem;">📝</span>
-                <span>Notes</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('read')" id="tab-read">
-                <span style="font-size: 1.5rem;">📚</span>
-                <span>Read</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('listen')" id="tab-listen">
-                <span style="font-size: 1.5rem;">🎵</span>
-                <span>Listen</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('watch')" id="tab-watch">
-                <span style="font-size: 1.5rem;">📺</span>
-                <span>Watch</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('cook')" id="tab-cook">
-                <span style="font-size: 1.5rem;">🍳</span>
-                <span>Cook</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('make')" id="tab-make">
-                <span style="font-size: 1.5rem;">🔨</span>
-                <span>Make</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('calories')" id="tab-calories">
-                <span style="font-size: 1.5rem;">🔥</span>
-                <span>Calories</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('spending')" id="tab-spending">
-                <span style="font-size: 1.5rem;">💰</span>
-                <span>Spending</span>
-            </button>
-        </div>
 
-        <!-- Sync Buttons -->
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; justify-content: center;">
-            <button class="btn" onclick="downloadData()" style="background: #10b981; color: white;">
-                📥 Download My Data
-            </button>
-            <button class="btn" onclick="document.getElementById('upload-input').click()" style="background: #8b5cf6; color: white;">
-                📤 Upload My Data
-            </button>
-            <input type="file" id="upload-input" accept=".json" style="display: none;" onchange="uploadData(event)">
+```
+    <!-- Dashboard Stats -->
+    <div id="dashboard-stats" class="dashboard-stats">
+        <div class="stat-card" onclick="showTab('calories')">
+            <div style="text-align: center;">
+                <div style="font-size: 0.875rem; font-weight: 500;">🔥 Calories</div>
+                <div style="font-size: 0.75rem; color: #059669;" id="calories-today">0 cal today</div>
+            </div>
         </div>
         
-        <!-- Content Area -->
-        <div id="content-area" class="content-area hidden">
-            <!-- Dynamic content will be loaded here -->
+        <div class="stat-card" onclick="showTab('spending')">
+            <div style="text-align: center;">
+                <div style="font-size: 0.875rem; font-weight: 500;">💰 Spending</div>
+                <div style="font-size: 0.75rem; color: #2563eb;" id="spending-week">$0 this week</div>
+            </div>
         </div>
     </div>
+    
+    <!-- Big Home Button -->
+    <div style="margin-bottom: 1rem;">
+        <button class="tab-button active" onclick="showTab('dashboard')" id="tab-dashboard" 
+                style="width: 100%; padding: 1.5rem; font-size: 1.125rem;">
+            <span style="font-size: 2rem;">🏠</span>
+            <span style="font-weight: 600;">Home</span>
+        </button>
+    </div>
+    
+    <!-- Navigation Grid - 8 boxes -->
+    <div class="nav-grid">
+        <button class="tab-button" onclick="showTab('notes')" id="tab-notes">
+            <span style="font-size: 1.5rem;">📝</span>
+            <span>Notes</span>
+        </button>
+        
+        <button class="tab-button" onclick="showTab('read')" id="tab-read">
+            <span style="font-size: 1.5rem;">📚</span>
+            <span>Read</span>
+        </button>
+        
+        <button class="tab-button" onclick="showTab('listen')" id="tab-listen">
+            <span style="font-size: 1.5rem;">🎵</span>
+            <span>Listen</span>
+        </button>
+        
+        <button class="tab-button" onclick="showTab('watch')" id="tab-watch">
+            <span style="font-size: 1.5rem;">📺</span>
+            <span>Watch</span>
+        </button>
+        
+        <button class="tab-button" onclick="showTab('cook')" id="tab-cook">
+            <span style="font-size: 1.5rem;">🍳</span>
+            <span>Cook</span>
+        </button>
+        
+        <button class="tab-button" onclick="showTab('make')" id="tab-make">
+            <span style="font-size: 1.5rem;">🔨</span>
+            <span>Make</span>
+        </button>
+        
+        <button class="tab-button" onclick="showTab('calories')" id="tab-calories">
+            <span style="font-size: 1.5rem;">🔥</span>
+            <span>Calories</span>
+        </button>
+        
+        <button class="tab-button" onclick="showTab('spending')" id="tab-spending">
+            <span style="font-size: 1.5rem;">💰</span>
+            <span>Spending</span>
+        </button>
+    </div>
 
-    <script>
-        // Data storage
-        let appData = {
-            lists: { read: [], listen: [], watch: [], cook: [], make: [] },
-            notes: [],
-            calories: [],
-            spending: []
-        };
+    <!-- Sync Buttons -->
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; justify-content: center;">
+        <button class="btn" onclick="downloadData()" style="background: #10b981; color: white;">
+            📥 Download My Data
+        </button>
+        <button class="btn" onclick="document.getElementById('upload-input').click()" style="background: #8b5cf6; color: white;">
+            📤 Upload My Data
+        </button>
+        <input type="file" id="upload-input" accept=".json" style="display: none;" onchange="uploadData(event)">
+    </div>
+    
+    <!-- Content Area -->
+    <div id="content-area" class="content-area hidden">
+        <!-- Dynamic content will be loaded here -->
+    </div>
+</div>
 
-        // Load data from localStorage
-        function loadData() {
-            const saved = localStorage.getItem('notebookData');
-            if (saved) {
-                appData = JSON.parse(saved);
-            }
+<script>
+    // Data storage
+    let appData = {
+        lists: { read: [], listen: [], watch: [], cook: [], make: [] },
+        notes: [],
+        calories: [],
+        spending: []
+    };
+
+    // Load data from localStorage
+    function loadData() {
+        const saved = localStorage.getItem('notebookData');
+        if (saved) {
+            appData = JSON.parse(saved);
         }
+    }
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('notebookData', JSON.stringify(appData));
+    // Save data to localStorage
+    function saveData() {
+        localStorage.setItem('notebookData', JSON.stringify(appData));
+    }
+
+    // Show specific tab
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('tab-' + tabName).classList.add('active');
+
+        if (tabName === 'dashboard') {
+            document.getElementById('dashboard-stats').style.display = 'grid';
+            document.getElementById('content-area').classList.add('hidden');
+            updateDashboard();
+        } else {
+            document.getElementById('dashboard-stats').style.display = 'none';
+            document.getElementById('content-area').classList.remove('hidden');
+            loadTabContent(tabName);
         }
+    }
 
-        // Show specific tab
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('tab-' + tabName).classList.add('active');
-
-            if (tabName === 'dashboard') {
-                document.getElementById('dashboard-stats').style.display = 'grid';
-                document.getElementById('content-area').classList.add('hidden');
-                updateDashboard();
-            } else {
-                document.getElementById('dashboard-stats').style.display = 'none';
-                document.getElementById('content-area').classList.remove('hidden');
-                loadTabContent(tabName);
-            }
+    // Load content for specific tab
+    function loadTabContent(tabName) {
+        if (['read', 'listen', 'watch', 'cook', 'make'].includes(tabName)) {
+            loadListTab(tabName);
+        } else if (tabName === 'notes') {
+            loadNotesTab();
+        } else if (tabName === 'calories') {
+            loadCaloriesTab();
+        } else if (tabName === 'spending') {
+            loadSpendingTab();
         }
+    }
 
-        // Load content for specific tab
-        function loadTabContent(tabName) {
-            if (['read', 'listen', 'watch', 'cook', 'make'].includes(tabName)) {
-                loadListTab(tabName);
-            } else if (tabName === 'notes') {
-                loadNotesTab();
-            } else if (tabName === 'calories') {
-                loadCaloriesTab();
-            } else if (tabName === 'spending') {
-                loadSpendingTab();
-            }
-        }
-
-        // Load list tab
-        function loadListTab(listName) {
-            const items = appData.lists[listName] || [];
-            const contentArea = document.getElementById('content-area');
-            
-            if (listName === 'read') {
-                // Special layout for READ with category dropdown
-                contentArea.innerHTML = 
-                    '<h2>' + listName.toUpperCase() + '</h2>' +
-                    '<div style="display: grid; grid-template-columns: 1fr auto auto auto; gap: 0.5rem; margin-bottom: 1rem;">' +
-                        '<input type="text" id="new-item-' + listName + '" placeholder="Add new ' + listName + ' item...">' +
-                        '<select id="read-category-input">' +
-                            '<option value="book">Book</option>' +
-                            '<option value="essay">Essay</option>' +
-                            '<option value="poem">Poem</option>' +
-                        '</select>' +
-                        '<input type="date" id="list-date-input-' + listName + '" value="' + new Date().toISOString().split('T')[0] + '">' +
-                        '<button class="btn btn-primary" onclick="addListItem(\'' + listName + '\')">Add</button>' +
-                    '</div>' +
-                    '<div class="item-list">' +
-                        items
-                            .sort((a, b) => new Date(b.date) - new Date(a.date))
-                            .map(item => {
-                                let categoryColor = '#f3f4f6'; // default gray
-                                let categoryTextColor = '#374151';
-                                if (item.category === 'book') {
-                                    categoryColor = '#dbeafe'; // blue
-                                    categoryTextColor = '#1d4ed8';
-                                } else if (item.category === 'essay') {
-                                    categoryColor = '#f0fdf4'; // green
-                                    categoryTextColor = '#059669';
-                                } else if (item.category === 'poem') {
-                                    categoryColor = '#faf5ff'; // purple
-                                    categoryTextColor = '#7c3aed';
-                                }
-                                
-                                return '<div class="list-item' + (item.completed ? ' completed' : '') + '" style="background: ' + categoryColor + ';">' +
-                                    '<input type="checkbox"' + (item.completed ? ' checked' : '') + ' onchange="toggleListItem(\'' + listName + '\', ' + item.id + ')">' +
-                                    '<span style="flex: 1; cursor: pointer;" onclick="editListItem(\'' + listName + '\', ' + item.id + ')">' + 
-                                        item.content + 
-                                        '<br><small style="color: ' + categoryTextColor + '; font-weight: 600;">' + (item.category || 'book').toUpperCase() + '</small>' +
-                                        '<br><small style="color: #6b7280;">' + new Date(item.date).toLocaleDateString() + '</small>' +
-                                    '</span>' +
-                                    '<button class="btn btn-delete" onclick="deleteListItem(\'' + listName + '\', ' + item.id + ')">Delete</button>' +
-                                '</div>';
-                            }).join('') +
-                    '</div>';
-            } else {
-                // Regular layout for other lists
-                contentArea.innerHTML = 
-                    '<h2>' + listName.toUpperCase() + '</h2>' +
-                    '<div style="display: grid; grid-template-columns: 1fr auto auto; gap: 0.5rem; margin-bottom: 1rem;">' +
-                        '<input type="text" id="new-item-' + listName + '" placeholder="Add new ' + listName + ' item...">' +
-                        '<input type="date" id="list-date-input-' + listName + '" value="' + new Date().toISOString().split('T')[0] + '">' +
-                        '<button class="btn btn-primary" onclick="addListItem(\'' + listName + '\')">Add</button>' +
-                    '</div>' +
-                    '<div class="item-list">' +
-                        items
-                            .sort((a, b) => new Date(b.date) - new Date(a.date))
-                            .map(item => 
-                            '<div class="list-item' + (item.completed ? ' completed' : '') + '">' +
+    // Load list tab
+    function loadListTab(listName) {
+        const items = appData.lists[listName] || [];
+        const contentArea = document.getElementById('content-area');
+        
+        if (listName === 'read') {
+            // Special layout for READ with category dropdown
+            contentArea.innerHTML = 
+                '<h2>' + listName.toUpperCase() + '</h2>' +
+                '<div style="display: grid; grid-template-columns: 1fr auto auto auto; gap: 0.5rem; margin-bottom: 1rem;">' +
+                    '<input type="text" id="new-item-' + listName + '" placeholder="Add new ' + listName + ' item...">' +
+                    '<select id="read-category-input">' +
+                        '<option value="book">Book</option>' +
+                        '<option value="essay">Essay</option>' +
+                        '<option value="poem">Poem</option>' +
+                    '</select>' +
+                    '<input type="date" id="list-date-input-' + listName + '" value="' + new Date().toISOString().split('T')[0] + '">' +
+                    '<button class="btn btn-primary" onclick="addListItem(\'' + listName + '\')">Add</button>' +
+                '</div>' +
+                '<div class="item-list">' +
+                    items
+                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .map(item => {
+                            let categoryColor = '#f3f4f6'; // default gray
+                            let categoryTextColor = '#374151';
+                            if (item.category === 'book') {
+                                categoryColor = '#dbeafe'; // blue
+                                categoryTextColor = '#1d4ed8';
+                            } else if (item.category === 'essay') {
+                                categoryColor = '#f0fdf4'; // green
+                                categoryTextColor = '#059669';
+                            } else if (item.category === 'poem') {
+                                categoryColor = '#faf5ff'; // purple
+                                categoryTextColor = '#7c3aed';
+                            }
+                            
+                            return '<div class="list-item' + (item.completed ? ' completed' : '') + '" style="background: ' + categoryColor + ';">' +
                                 '<input type="checkbox"' + (item.completed ? ' checked' : '') + ' onchange="toggleListItem(\'' + listName + '\', ' + item.id + ')">' +
                                 '<span style="flex: 1; cursor: pointer;" onclick="editListItem(\'' + listName + '\', ' + item.id + ')">' + 
                                     item.content + 
+                                    '<br><small style="color: ' + categoryTextColor + '; font-weight: 600;">' + (item.category || 'book').toUpperCase() + '</small>' +
                                     '<br><small style="color: #6b7280;">' + new Date(item.date).toLocaleDateString() + '</small>' +
                                 '</span>' +
                                 '<button class="btn btn-delete" onclick="deleteListItem(\'' + listName + '\', ' + item.id + ')">Delete</button>' +
-                            '</div>'
-                        ).join('') +
-                    '</div>';
-            }
-        }
-
-        function addListItem(listName) {
-            const input = document.getElementById('new-item-' + listName);
-            const dateInput = document.getElementById('list-date-input-' + listName);
-            const content = input.value.trim();
-            const date = dateInput.value;
-            if (!content || !date) return;
-
-            const newItem = {
-                id: Date.now(),
-                content: content,
-                completed: false,
-                date: date
-            };
-
-            // Add category for read items
-            if (listName === 'read') {
-                const categoryInput = document.getElementById('read-category-input');
-                newItem.category = categoryInput.value;
-            }
-
-            appData.lists[listName].push(newItem);
-            saveData();
-            input.value = '';
-            // Keep the date for easy multiple entries
-            loadListTab(listName);
-        }
-
-        function editListItem(listName, itemId) {
-            const item = appData.lists[listName].find(item => item.id === itemId);
-            if (!item) return;
-
-            const newContent = prompt('Edit item:', item.content);
-            if (newContent === null) return;
-            
-            const newDate = prompt('Edit date (YYYY-MM-DD):', item.date);
-            if (newDate === null) return;
-
-            if (newContent.trim() !== '' && newDate) {
-                item.content = newContent.trim();
-                item.date = newDate;
-                
-                // Add category editing for read items
-                if (listName === 'read') {
-                    const newCategory = prompt('Edit category (book/essay/poem):', item.category || 'book');
-                    if (newCategory && ['book', 'essay', 'poem'].includes(newCategory.toLowerCase())) {
-                        item.category = newCategory.toLowerCase();
-                    }
-                }
-                
-                saveData();
-                loadListTab(listName);
-            }
-        }
-
-        function toggleListItem(listName, itemId) {
-            const item = appData.lists[listName].find(item => item.id === itemId);
-            if (item) {
-                item.completed = !item.completed;
-                saveData();
-                loadListTab(listName);
-            }
-        }
-
-        function deleteListItem(listName, itemId) {
-            if (confirm('Delete this item?')) {
-                appData.lists[listName] = appData.lists[listName].filter(item => item.id !== itemId);
-                saveData();
-                loadListTab(listName);
-            }
-        }
-
-        // Load notes tab
-        function loadNotesTab() {
-            const contentArea = document.getElementById('content-area');
-            
+                            '</div>';
+                        }).join('') +
+                '</div>';
+        } else {
+            // Regular layout for other lists
             contentArea.innerHTML = 
-                '<h2>Notes</h2>' +
-                '<div style="margin-bottom: 1rem;">' +
-                    '<textarea id="new-note" placeholder="Write your note here..."></textarea>' +
-                    '<button class="btn btn-primary" onclick="addNote()" style="margin-top: 0.5rem;">Save Note</button>' +
+                '<h2>' + listName.toUpperCase() + '</h2>' +
+                '<div style="display: grid; grid-template-columns: 1fr auto auto; gap: 0.5rem; margin-bottom: 1rem;">' +
+                    '<input type="text" id="new-item-' + listName + '" placeholder="Add new ' + listName + ' item...">' +
+                    '<input type="date" id="list-date-input-' + listName + '" value="' + new Date().toISOString().split('T')[0] + '">' +
+                    '<button class="btn btn-primary" onclick="addListItem(\'' + listName + '\')">Add</button>' +
                 '</div>' +
-                '<div>' +
-                    appData.notes.map(note => 
-                        '<div style="padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.75rem;">' +
-                            '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editNote(' + note.id + ')">' + note.content + '</div>' +
-                            '<div style="display: flex; justify-content: space-between;">' +
-                                '<small>' + new Date(note.date).toLocaleDateString() + '</small>' +
-                                '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">Delete</button>' +
-                            '</div>' +
+                '<div class="item-list">' +
+                    items
+                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .map(item => 
+                        '<div class="list-item' + (item.completed ? ' completed' : '') + '">' +
+                            '<input type="checkbox"' + (item.completed ? ' checked' : '') + ' onchange="toggleListItem(\'' + listName + '\', ' + item.id + ')">' +
+                            '<span style="flex: 1; cursor: pointer;" onclick="editListItem(\'' + listName + '\', ' + item.id + ')">' + 
+                                item.content + 
+                                '<br><small style="color: #6b7280;">' + new Date(item.date).toLocaleDateString() + '</small>' +
+                            '</span>' +
+                            '<button class="btn btn-delete" onclick="deleteListItem(\'' + listName + '\', ' + item.id + ')">Delete</button>' +
                         '</div>'
                     ).join('') +
                 '</div>';
         }
+    }
 
-        function addNote() {
-            const textarea = document.getElementById('new-note');
-            const content = textarea.value.trim();
-            if (!content) return;
+    function addListItem(listName) {
+        const input = document.getElementById('new-item-' + listName);
+        const dateInput = document.getElementById('list-date-input-' + listName);
+        const content = input.value.trim();
+        const date = dateInput.value;
+        if (!content || !date) return;
 
-            const newNote = {
-                id: Date.now(),
-                content: content,
-                date: new Date().toISOString()
-            };
+        const newItem = {
+            id: Date.now(),
+            content: content,
+            completed: false,
+            date: date
+        };
 
-            appData.notes.push(newNote);
+        // Add category for read items
+        if (listName === 'read') {
+            const categoryInput = document.getElementById('read-category-input');
+            newItem.category = categoryInput.value;
+        }
+
+        appData.lists[listName].push(newItem);
+        saveData();
+        input.value = '';
+        // Keep the date for easy multiple entries
+        loadListTab(listName);
+    }
+
+    function editListItem(listName, itemId) {
+        const item = appData.lists[listName].find(item => item.id === itemId);
+        if (!item) return;
+
+        const newContent = prompt('Edit item:', item.content);
+        if (newContent === null) return;
+        
+        const newDate = prompt('Edit date (YYYY-MM-DD):', item.date);
+        if (newDate === null) return;
+
+        if (newContent.trim() !== '' && newDate) {
+            item.content = newContent.trim();
+            item.date = newDate;
+            
+            // Add category editing for read items
+            if (listName === 'read') {
+                const newCategory = prompt('Edit category (book/essay/poem):', item.category || 'book');
+                if (newCategory && ['book', 'essay', 'poem'].includes(newCategory.toLowerCase())) {
+                    item.category = newCategory.toLowerCase();
+                }
+            }
+            
             saveData();
-            textarea.value = '';
+            loadListTab(listName);
+        }
+    }
+
+    function toggleListItem(listName, itemId) {
+        const item = appData.lists[listName].find(item => item.id === itemId);
+        if (item) {
+            item.completed = !item.completed;
+            saveData();
+            loadListTab(listName);
+        }
+    }
+
+    function deleteListItem(listName, itemId) {
+        if (confirm('Delete this item?')) {
+            appData.lists[listName] = appData.lists[listName].filter(item => item.id !== itemId);
+            saveData();
+            loadListTab(listName);
+        }
+    }
+
+    // Load notes tab
+    function loadNotesTab() {
+        const contentArea = document.getElementById('content-area');
+        
+        contentArea.innerHTML = 
+            '<h2>Notes</h2>' +
+            '<div style="margin-bottom: 1rem;">' +
+                '<textarea id="new-note" placeholder="Write your note here..."></textarea>' +
+                '<button class="btn btn-primary" onclick="addNote()" style="margin-top: 0.5rem;">Save Note</button>' +
+            '</div>' +
+            '<div>' +
+                appData.notes.map(note => 
+                    '<div style="padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.75rem;">' +
+                        '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editNote(' + note.id + ')">' + note.content + '</div>' +
+                        '<div style="display: flex; justify-content: space-between;">' +
+                            '<small>' + new Date(note.date).toLocaleDateString() + '</small>' +
+                            '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">Delete</button>' +
+                        '</div>' +
+                    '</div>'
+                ).join('') +
+            '</div>';
+    }
+
+    function addNote() {
+        const textarea = document.getElementById('new-note');
+        const content = textarea.value.trim();
+        if (!content) return;
+
+        const newNote = {
+            id: Date.now(),
+            content: content,
+            date: new Date().toISOString()
+        };
+
+        appData.notes.push(newNote);
+        saveData();
+        textarea.value = '';
+        loadNotesTab();
+        updateDashboard();
+    }
+
+    function editNote(noteId) {
+        const note = appData.notes.find(note => note.id === noteId);
+        if (!note) return;
+
+        const newContent = prompt('Edit note:', note.content);
+        if (newContent !== null && newContent.trim() !== '') {
+            note.content = newContent.trim();
+            saveData();
             loadNotesTab();
             updateDashboard();
         }
+    }
 
-        function editNote(noteId) {
-            const note = appData.notes.find(note => note.id === noteId);
-            if (!note) return;
-
-            const newContent = prompt('Edit note:', note.content);
-            if (newContent !== null && newContent.trim() !== '') {
-                note.content = newContent.trim();
-                saveData();
-                loadNotesTab();
-                updateDashboard();
-            }
-        }
-
-        function deleteNote(noteId) {
-            if (confirm('Delete this note?')) {
-                appData.notes = appData.notes.filter(note => note.id !== noteId);
-                saveData();
-                loadNotesTab();
-                updateDashboard();
-            }
-        }
-
-        // Load poetry tab
-        function loadPoetryTab() {
-            const contentArea = document.getElementById('content-area');
-            
-            contentArea.innerHTML = 
-                '<h2>Poetry</h2>' +
-                '<div style="margin-bottom: 1rem;">' +
-                    '<textarea id="new-poetry" placeholder="Add a poem or quote..."></textarea>' +
-                    '<button class="btn btn-purple" onclick="addPoetry()" style="margin-top: 0.5rem;">Save Poetry</button>' +
-                '</div>' +
-                '<div>' +
-                    appData.poetry.map(poem => 
-                        '<div style="padding: 1rem; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 0.375rem; margin-bottom: 1rem;">' +
-                            '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editPoetry(' + poem.id + ')">' + poem.content + '</div>' +
-                            '<div style="display: flex; justify-content: space-between;">' +
-                                '<small>' + new Date(poem.date).toLocaleDateString() + '</small>' +
-                                '<button class="btn btn-delete" onclick="deletePoetry(' + poem.id + ')">Delete</button>' +
-                            '</div>' +
-                        '</div>'
-                    ).join('') +
-                '</div>';
-        }
-
-        function addPoetry() {
-            const textarea = document.getElementById('new-poetry');
-            const content = textarea.value.trim();
-            if (!content) return;
-
-            const newPoetry = {
-                id: Date.now(),
-                content: content,
-                date: new Date().toISOString()
-            };
-
-            appData.poetry.push(newPoetry);
+    function deleteNote(noteId) {
+        if (confirm('Delete this note?')) {
+            appData.notes = appData.notes.filter(note => note.id !== noteId);
             saveData();
-            textarea.value = '';
+            loadNotesTab();
+            updateDashboard();
+        }
+    }
+
+    // Load poetry tab
+    function loadPoetryTab() {
+        const contentArea = document.getElementById('content-area');
+        
+        contentArea.innerHTML = 
+            '<h2>Poetry</h2>' +
+            '<div style="margin-bottom: 1rem;">' +
+                '<textarea id="new-poetry" placeholder="Add a poem or quote..."></textarea>' +
+                '<button class="btn btn-purple" onclick="addPoetry()" style="margin-top: 0.5rem;">Save Poetry</button>' +
+            '</div>' +
+            '<div>' +
+                appData.poetry.map(poem => 
+                    '<div style="padding: 1rem; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 0.375rem; margin-bottom: 1rem;">' +
+                        '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editPoetry(' + poem.id + ')">' + poem.content + '</div>' +
+                        '<div style="display: flex; justify-content: space-between;">' +
+                            '<small>' + new Date(poem.date).toLocaleDateString() + '</small>' +
+                            '<button class="btn btn-delete" onclick="deletePoetry(' + poem.id + ')">Delete</button>' +
+                        '</div>' +
+                    '</div>'
+                ).join('') +
+            '</div>';
+    }
+
+    function addPoetry() {
+        const textarea = document.getElementById('new-poetry');
+        const content = textarea.value.trim();
+        if (!content) return;
+
+        const newPoetry = {
+            id: Date.now(),
+            content: content,
+            date: new Date().toISOString()
+        };
+
+        appData.poetry.push(newPoetry);
+        saveData();
+        textarea.value = '';
+        loadPoetryTab();
+        updateDashboard();
+    }
+
+    function editPoetry(poetryId) {
+        const poetry = appData.poetry.find(poem => poem.id === poetryId);
+        if (!poetry) return;
+
+        const newContent = prompt('Edit poetry:', poetry.content);
+        if (newContent !== null && newContent.trim() !== '') {
+            poetry.content = newContent.trim();
+            saveData();
             loadPoetryTab();
             updateDashboard();
         }
+    }
 
-        function editPoetry(poetryId) {
-            const poetry = appData.poetry.find(poem => poem.id === poetryId);
-            if (!poetry) return;
-
-            const newContent = prompt('Edit poetry:', poetry.content);
-            if (newContent !== null && newContent.trim() !== '') {
-                poetry.content = newContent.trim();
-                saveData();
-                loadPoetryTab();
-                updateDashboard();
-            }
-        }
-
-        function deletePoetry(poetryId) {
-            if (confirm('Delete this poetry?')) {
-                appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
-                saveData();
-                loadPoetryTab();
-                updateDashboard();
-            }
-        }
-
-        // Load calories tab - SIMPLE VERSION
-        function loadCaloriesTab() {
-            const contentArea = document.getElementById('content-area');
-            
-            contentArea.innerHTML = 
-                '<h2>CALORIES</h2>' +
-                '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">' +
-                    '<input type="text" id="food-input" placeholder="Food item">' +
-                    '<input type="number" id="calories-input" placeholder="Calories">' +
-                    '<input type="number" id="protein-input" placeholder="Protein (g)">' +
-                    '<select id="meal-input">' +
-                        '<option value="breakfast">Breakfast</option>' +
-                        '<option value="lunch">Lunch</option>' +
-                        '<option value="dinner">Dinner</option>' +
-                        '<option value="snack">Snack</option>' +
-                    '</select>' +
-                    '<input type="date" id="calorie-date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
-                    '<button class="btn btn-green" onclick="addCalorieEntry()">Add</button>' +
-                '</div>' +
-                '<div>' +
-                    appData.calories
-                        .sort((a, b) => new Date(b.date) - new Date(a.date))
-                        .map(entry => 
-                        '<div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">' +
-                            '<div style="cursor: pointer;" onclick="editCalorieEntry(' + entry.id + ')">' +
-                                '<strong>' + entry.food + '</strong> - ' + entry.calories + ' cal' +
-                                (entry.protein ? ', ' + entry.protein + 'g protein' : '') +
-                                ' (' + entry.meal + ')' +
-                                '<br><small style="color: #6b7280;">' + new Date(entry.date).toLocaleDateString() + '</small>' +
-                            '</div>' +
-                            '<button class="btn btn-delete" onclick="deleteCalorieEntry(' + entry.id + ')">Delete</button>' +
-                        '</div>'
-                    ).join('') +
-                '</div>';
-        }
-
-        function addCalorieEntry() {
-            const food = document.getElementById('food-input').value.trim();
-            const calories = parseInt(document.getElementById('calories-input').value);
-            const protein = parseInt(document.getElementById('protein-input').value) || 0;
-            const meal = document.getElementById('meal-input').value;
-            const date = document.getElementById('calorie-date-input').value;
-
-            if (!food || !calories || !date) return;
-
-            const newEntry = {
-                id: Date.now(),
-                food: food,
-                calories: calories,
-                protein: protein,
-                meal: meal,
-                date: date
-            };
-
-            appData.calories.push(newEntry);
+    function deletePoetry(poetryId) {
+        if (confirm('Delete this poetry?')) {
+            appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
             saveData();
-            
-            document.getElementById('food-input').value = '';
-            document.getElementById('calories-input').value = '';
-            document.getElementById('protein-input').value = '';
-            // Keep the date as is for easy multiple entries
-            loadCaloriesTab();
+            loadPoetryTab();
             updateDashboard();
         }
+    }
 
-        function editCalorieEntry(entryId) {
-            const entry = appData.calories.find(entry => entry.id === entryId);
-            if (!entry) return;
+    // Load calories tab - SIMPLE VERSION
+    function loadCaloriesTab() {
+        const contentArea = document.getElementById('content-area');
+        
+        contentArea.innerHTML = 
+            '<h2>CALORIES</h2>' +
+            '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">' +
+                '<input type="text" id="food-input" placeholder="Food item">' +
+                '<input type="number" id="calories-input" placeholder="Calories">' +
+                '<input type="number" id="protein-input" placeholder="Protein (g)">' +
+                '<select id="meal-input">' +
+                    '<option value="breakfast">Breakfast</option>' +
+                    '<option value="lunch">Lunch</option>' +
+                    '<option value="dinner">Dinner</option>' +
+                    '<option value="snack">Snack</option>' +
+                '</select>' +
+                '<input type="date" id="calorie-date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
+                '<button class="btn btn-green" onclick="addCalorieEntry()">Add</button>' +
+            '</div>' +
+            '<div>' +
+                appData.calories
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .map(entry => 
+                    '<div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">' +
+                        '<div style="cursor: pointer;" onclick="editCalorieEntry(' + entry.id + ')">' +
+                            '<strong>' + entry.food + '</strong> - ' + entry.calories + ' cal' +
+                            (entry.protein ? ', ' + entry.protein + 'g protein' : '') +
+                            ' (' + entry.meal + ')' +
+                            '<br><small style="color: #6b7280;">' + new Date(entry.date).toLocaleDateString() + '</small>' +
+                        '</div>' +
+                        '<button class="btn btn-delete" onclick="deleteCalorieEntry(' + entry.id + ')">Delete</button>' +
+                    '</div>'
+                ).join('') +
+            '</div>';
+    }
 
-            const newFood = prompt('Edit food:', entry.food);
-            if (!newFood) return;
-            
-            const newCalories = prompt('Edit calories:', entry.calories);
-            if (!newCalories) return;
+    function addCalorieEntry() {
+        const food = document.getElementById('food-input').value.trim();
+        const calories = parseInt(document.getElementById('calories-input').value);
+        const protein = parseInt(document.getElementById('protein-input').value) || 0;
+        const meal = document.getElementById('meal-input').value;
+        const date = document.getElementById('calorie-date-input').value;
 
-            const newProtein = prompt('Edit protein:', entry.protein || '');
-            
-            const newDate = prompt('Edit date (YYYY-MM-DD):', entry.date);
-            if (!newDate) return;
+        if (!food || !calories || !date) return;
 
-            entry.food = newFood;
-            entry.calories = parseInt(newCalories);
-            entry.protein = parseInt(newProtein) || 0;
-            entry.date = newDate;
+        const newEntry = {
+            id: Date.now(),
+            food: food,
+            calories: calories,
+            protein: protein,
+            meal: meal,
+            date: date
+        };
+
+        appData.calories.push(newEntry);
+        saveData();
+        
+        document.getElementById('food-input').value = '';
+        document.getElementById('calories-input').value = '';
+        document.getElementById('protein-input').value = '';
+        // Keep the date as is for easy multiple entries
+        loadCaloriesTab();
+        updateDashboard();
+    }
+
+    function editCalorieEntry(entryId) {
+        const entry = appData.calories.find(entry => entry.id === entryId);
+        if (!entry) return;
+
+        const newFood = prompt('Edit food:', entry.food);
+        if (!newFood) return;
+        
+        const newCalories = prompt('Edit calories:', entry.calories);
+        if (!newCalories) return;
+
+        const newProtein = prompt('Edit protein:', entry.protein || '');
+        
+        const newDate = prompt('Edit date (YYYY-MM-DD):', entry.date);
+        if (!newDate) return;
+
+        entry.food = newFood;
+        entry.calories = parseInt(newCalories);
+        entry.protein = parseInt(newProtein) || 0;
+        entry.date = newDate;
+        saveData();
+        loadCaloriesTab();
+        updateDashboard();
+    }
+
+    function deleteCalorieEntry(entryId) {
+        if (confirm('Delete this entry?')) {
+            appData.calories = appData.calories.filter(entry => entry.id !== entryId);
             saveData();
             loadCaloriesTab();
             updateDashboard();
         }
+    }
 
-        function deleteCalorieEntry(entryId) {
-            if (confirm('Delete this entry?')) {
-                appData.calories = appData.calories.filter(entry => entry.id !== entryId);
-                saveData();
-                loadCaloriesTab();
-                updateDashboard();
-            }
-        }
+    // Load spending tab - SIMPLE VERSION
+    function loadSpendingTab() {
+        const contentArea = document.getElementById('content-area');
+        
+        contentArea.innerHTML = 
+            '<h2>SPENDING</h2>' +
+            '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">' +
+                '<input type="text" id="description-input" placeholder="Description">' +
+                '<input type="number" id="amount-input" step="0.01" placeholder="Amount">' +
+                '<select id="category-input">' +
+                    '<option value="food">Food</option>' +
+                    '<option value="transport">Transport</option>' +
+                    '<option value="entertainment">Entertainment</option>' +
+                    '<option value="shopping">Shopping</option>' +
+                    '<option value="other">Other</option>' +
+                '</select>' +
+                '<input type="date" id="spending-date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
+                '<button class="btn btn-primary" onclick="addSpendingEntry()">Add</button>' +
+            '</div>' +
+            '<div>' +
+                appData.spending
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .map(entry => 
+                    '<div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">' +
+                        '<div style="cursor: pointer;" onclick="editSpendingEntry(' + entry.id + ')">' +
+                            '<strong>' + entry.description + '</strong> - $' + entry.amount.toFixed(2) + ' (' + entry.category + ')' +
+                            '<br><small style="color: #6b7280;">' + new Date(entry.date).toLocaleDateString() + '</small>' +
+                        '</div>' +
+                        '<button class="btn btn-delete" onclick="deleteSpendingEntry(' + entry.id + ')">Delete</button>' +
+                    '</div>'
+                ).join('') +
+            '</div>';
+    }
 
-        // Load spending tab - SIMPLE VERSION
-        function loadSpendingTab() {
-            const contentArea = document.getElementById('content-area');
-            
-            contentArea.innerHTML = 
-                '<h2>SPENDING</h2>' +
-                '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">' +
-                    '<input type="text" id="description-input" placeholder="Description">' +
-                    '<input type="number" id="amount-input" step="0.01" placeholder="Amount">' +
-                    '<select id="category-input">' +
-                        '<option value="food">Food</option>' +
-                        '<option value="transport">Transport</option>' +
-                        '<option value="entertainment">Entertainment</option>' +
-                        '<option value="shopping">Shopping</option>' +
-                        '<option value="other">Other</option>' +
-                    '</select>' +
-                    '<input type="date" id="spending-date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
-                    '<button class="btn btn-primary" onclick="addSpendingEntry()">Add</button>' +
-                '</div>' +
-                '<div>' +
-                    appData.spending
-                        .sort((a, b) => new Date(b.date) - new Date(a.date))
-                        .map(entry => 
-                        '<div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">' +
-                            '<div style="cursor: pointer;" onclick="editSpendingEntry(' + entry.id + ')">' +
-                                '<strong>' + entry.description + '</strong> - $' + entry.amount.toFixed(2) + ' (' + entry.category + ')' +
-                                '<br><small style="color: #6b7280;">' + new Date(entry.date).toLocaleDateString() + '</small>' +
-                            '</div>' +
-                            '<button class="btn btn-delete" onclick="deleteSpendingEntry(' + entry.id + ')">Delete</button>' +
-                        '</div>'
-                    ).join('') +
-                '</div>';
-        }
+    function addSpendingEntry() {
+        const description = document.getElementById('description-input').value.trim();
+        const amount = parseFloat(document.getElementById('amount-input').value);
+        const category = document.getElementById('category-input').value;
+        const date = document.getElementById('spending-date-input').value;
 
-        function addSpendingEntry() {
-            const description = document.getElementById('description-input').value.trim();
-            const amount = parseFloat(document.getElementById('amount-input').value);
-            const category = document.getElementById('category-input').value;
-            const date = document.getElementById('spending-date-input').value;
+        if (!description || !amount || !date) return;
 
-            if (!description || !amount || !date) return;
+        const newEntry = {
+            id: Date.now(),
+            description: description,
+            amount: amount,
+            category: category,
+            date: date
+        };
 
-            const newEntry = {
-                id: Date.now(),
-                description: description,
-                amount: amount,
-                category: category,
-                date: date
-            };
+        appData.spending.push(newEntry);
+        saveData();
+        
+        document.getElementById('description-input').value = '';
+        document.getElementById('amount-input').value = '';
+        // Keep the date as is for easy multiple entries
+        loadSpendingTab();
+        updateDashboard();
+    }
 
-            appData.spending.push(newEntry);
+    function editSpendingEntry(entryId) {
+        const entry = appData.spending.find(entry => entry.id === entryId);
+        if (!entry) return;
+
+        const newDescription = prompt('Edit description:', entry.description);
+        if (!newDescription) return;
+        
+        const newAmount = prompt('Edit amount:', entry.amount);
+        if (!newAmount) return;
+
+        const newDate = prompt('Edit date (YYYY-MM-DD):', entry.date);
+        if (!newDate) return;
+
+        entry.description = newDescription;
+        entry.amount = parseFloat(newAmount);
+        entry.date = newDate;
+        saveData();
+        loadSpendingTab();
+        updateDashboard();
+    }
+
+    function deleteSpendingEntry(entryId) {
+        if (confirm('Delete this entry?')) {
+            appData.spending = appData.spending.filter(entry => entry.id !== entryId);
             saveData();
-            
-            document.getElementById('description-input').value = '';
-            document.getElementById('amount-input').value = '';
-            // Keep the date as is for easy multiple entries
             loadSpendingTab();
             updateDashboard();
         }
+    }
 
-        function editSpendingEntry(entryId) {
-            const entry = appData.spending.find(entry => entry.id === entryId);
-            if (!entry) return;
+    // Update dashboard stats - SIMPLE VERSION
+    function updateDashboard() {
+        const today = new Date().toISOString().split('T')[0];
+        const todayEntries = appData.calories.filter(entry => entry.date && entry.date.startsWith(today));
+        const todayCalories = todayEntries.reduce((sum, entry) => sum + entry.calories, 0);
+        
+        document.getElementById('calories-today').textContent = todayCalories + ' cal today';
 
-            const newDescription = prompt('Edit description:', entry.description);
-            if (!newDescription) return;
-            
-            const newAmount = prompt('Edit amount:', entry.amount);
-            if (!newAmount) return;
+        const now = new Date();
+        const weekStart = new Date(now);
+        weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+        
+        const weekSpending = appData.spending
+            .filter(entry => {
+                if (!entry.date) return false;
+                const entryDate = new Date(entry.date);
+                return entryDate >= weekStart;
+            })
+            .reduce((sum, entry) => sum + entry.amount, 0);
+        
+        document.getElementById('spending-week').textContent = '$' + weekSpending.toFixed(2) + ' this week';
+    }
 
-            const newDate = prompt('Edit date (YYYY-MM-DD):', entry.date);
-            if (!newDate) return;
+    // Download data function
+    function downloadData() {
+        const dataStr = JSON.stringify(appData, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = 'my-notebook-data-' + new Date().toISOString().split('T')[0] + '.json';
+        link.click();
+    }
 
-            entry.description = newDescription;
-            entry.amount = parseFloat(newAmount);
-            entry.date = newDate;
-            saveData();
-            loadSpendingTab();
-            updateDashboard();
-        }
+    // Upload data function
+    function uploadData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-        function deleteSpendingEntry(entryId) {
-            if (confirm('Delete this entry?')) {
-                appData.spending = appData.spending.filter(entry => entry.id !== entryId);
-                saveData();
-                loadSpendingTab();
-                updateDashboard();
-            }
-        }
-
-        // Update dashboard stats - SIMPLE VERSION
-        function updateDashboard() {
-            const today = new Date().toISOString().split('T')[0];
-            const todayEntries = appData.calories.filter(entry => entry.date && entry.date.startsWith(today));
-            const todayCalories = todayEntries.reduce((sum, entry) => sum + entry.calories, 0);
-            
-            document.getElementById('calories-today').textContent = todayCalories + ' cal today';
-
-            const now = new Date();
-            const weekStart = new Date(now);
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-            
-            const weekSpending = appData.spending
-                .filter(entry => {
-                    if (!entry.date) return false;
-                    const entryDate = new Date(entry.date);
-                    return entryDate >= weekStart;
-                })
-                .reduce((sum, entry) => sum + entry.amount, 0);
-            
-            document.getElementById('spending-week').textContent = '$' + weekSpending.toFixed(2) + ' this week';
-        }
-
-        // Download data function
-        function downloadData() {
-            const dataStr = JSON.stringify(appData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = 'my-notebook-data-' + new Date().toISOString().split('T')[0] + '.json';
-            link.click();
-        }
-
-        // Upload data function
-        function uploadData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    
-                    // Merge with existing data instead of replacing
-                    if (confirm('Do you want to MERGE this data with your current data, or REPLACE all your current data?\n\nClick OK to MERGE (recommended)\nClick Cancel to REPLACE')) {
-                        // Merge mode
-                        mergeData(importedData);
-                    } else {
-                        // Replace mode
-                        appData = importedData;
-                    }
-                    
-                    saveData();
-                    updateDashboard();
-                    alert('Data uploaded successfully!');
-                    
-                    // Refresh current view
-                    const activeTab = document.querySelector('.tab-button.active').id.replace('tab-', '');
-                    showTab(activeTab);
-                    
-                } catch (error) {
-                    alert('Error reading file. Please make sure it\'s a valid notebook data file.');
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                
+                // Merge with existing data instead of replacing
+                if (confirm('Do you want to MERGE this data with your current data, or REPLACE all your current data?\n\nClick OK to MERGE (recommended)\nClick Cancel to REPLACE')) {
+                    // Merge mode
+                    mergeData(importedData);
+                } else {
+                    // Replace mode
+                    appData = importedData;
                 }
-            };
-            reader.readAsText(file);
-            
-            // Reset the input so you can upload the same file again if needed
-            event.target.value = '';
-        }
-
-        // Merge imported data with existing data
-        function mergeData(importedData) {
-            // Merge lists
-            if (importedData.lists) {
-                Object.keys(importedData.lists).forEach(listName => {
-                    if (!appData.lists[listName]) appData.lists[listName] = [];
-                    importedData.lists[listName].forEach(item => {
-                        // Only add if not already exists (check by content and date)
-                        const exists = appData.lists[listName].some(existing => 
-                            existing.content === item.content && existing.date === item.date
-                        );
-                        if (!exists) {
-                            appData.lists[listName].push({...item, id: Date.now() + Math.random()});
-                        }
-                    });
-                });
+                
+                saveData();
+                updateDashboard();
+                alert('Data uploaded successfully!');
+                
+                // Refresh current view
+                const activeTab = document.querySelector('.tab-button.active').id.replace('tab-', '');
+                showTab(activeTab);
+                
+            } catch (error) {
+                alert('Error reading file. Please make sure it\'s a valid notebook data file.');
             }
-            
-            // Merge notes
-            if (importedData.notes) {
-                importedData.notes.forEach(note => {
-                    const exists = appData.notes.some(existing => 
-                        existing.content === note.content && existing.date === note.date
+        };
+        reader.readAsText(file);
+        
+        // Reset the input so you can upload the same file again if needed
+        event.target.value = '';
+    }
+
+    // Merge imported data with existing data
+    function mergeData(importedData) {
+        // Merge lists
+        if (importedData.lists) {
+            Object.keys(importedData.lists).forEach(listName => {
+                if (!appData.lists[listName]) appData.lists[listName] = [];
+                importedData.lists[listName].forEach(item => {
+                    // Only add if not already exists (check by content and date)
+                    const exists = appData.lists[listName].some(existing => 
+                        existing.content === item.content && existing.date === item.date
                     );
                     if (!exists) {
-                        appData.notes.push({...note, id: Date.now() + Math.random()});
+                        appData.lists[listName].push({...item, id: Date.now() + Math.random()});
                     }
                 });
-            }
-            
-            // Merge calories
-            if (importedData.calories) {
-                importedData.calories.forEach(entry => {
-                    const exists = appData.calories.some(existing => 
-                        existing.food === entry.food && existing.date === entry.date && existing.calories === entry.calories
-                    );
-                    if (!exists) {
-                        appData.calories.push({...entry, id: Date.now() + Math.random()});
-                    }
-                });
-            }
-            
-            // Merge spending
-            if (importedData.spending) {
-                importedData.spending.forEach(entry => {
-                    const exists = appData.spending.some(existing => 
-                        existing.description === entry.description && existing.date === entry.date && existing.amount === entry.amount
-                    );
-                    if (!exists) {
-                        appData.spending.push({...entry, id: Date.now() + Math.random()});
-                    }
-                });
-            }
+            });
         }
-
-        // Initialize app
-        function init() {
-            loadData();
-            updateDashboard();
-            showTab('dashboard');
+        
+        // Merge notes
+        if (importedData.notes) {
+            importedData.notes.forEach(note => {
+                const exists = appData.notes.some(existing => 
+                    existing.content === note.content && existing.date === note.date
+                );
+                if (!exists) {
+                    appData.notes.push({...note, id: Date.now() + Math.random()});
+                }
+            });
         }
+        
+        // Merge calories
+        if (importedData.calories) {
+            importedData.calories.forEach(entry => {
+                const exists = appData.calories.some(existing => 
+                    existing.food === entry.food && existing.date === entry.date && existing.calories === entry.calories
+                );
+                if (!exists) {
+                    appData.calories.push({...entry, id: Date.now() + Math.random()});
+                }
+            });
+        }
+        
+        // Merge spending
+        if (importedData.spending) {
+            importedData.spending.forEach(entry => {
+                const exists = appData.spending.some(existing => 
+                    existing.description === entry.description && existing.date === entry.date && existing.amount === entry.amount
+                );
+                if (!exists) {
+                    appData.spending.push({...entry, id: Date.now() + Math.random()});
+                }
+            });
+        }
+    }
 
-        // Start the app when page loads
-        window.addEventListener('load', init);
-    </script>
+    // Initialize app
+    function init() {
+        loadData();
+        updateDashboard();
+        showTab('dashboard');
+    }
+
+    // Start the app when page loads
+    window.addEventListener('load', init);
+</script>
+```
+
 </body>
 </html>
