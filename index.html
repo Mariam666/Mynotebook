@@ -479,7 +479,7 @@
     </div>
 
     <script>
-        // Data storage (using in-memory storage instead of localStorage for Claude.ai compatibility)
+        // Data storage
         let appData = {
             lists: {
                 read: [],
@@ -495,10 +495,17 @@
             spending: []
         };
 
-        // Save data function (placeholder for actual storage)
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('notebookData');
+            if (saved) {
+                appData = JSON.parse(saved);
+            }
+        }
+
+        // Save data to localStorage
         function saveData() {
-            // In a real application, this would save to localStorage or a server
-            console.log('Data saved:', appData);
+            localStorage.setItem('notebookData', JSON.stringify(appData));
         }
 
         // Update dashboard stats
@@ -683,12 +690,12 @@
 
         // Delete list item - COMPLETELY REMOVES THE ITEM
         function deleteListItem(listName, itemId) {
-            console.log('Deleting item:', listName, itemId); // Debug log
-            // Remove the confirm dialog for now to test
-            appData.lists[listName] = appData.lists[listName].filter(item => item.id !== itemId);
-            saveData();
-            loadListTab(listName);
-            updateDashboard();
+            if (confirm('Are you sure you want to permanently delete this item?')) {
+                appData.lists[listName] = appData.lists[listName].filter(item => item.id !== itemId);
+                saveData();
+                loadListTab(listName);
+                updateDashboard();
+            }
         }
 
         // Load notes tab
@@ -794,11 +801,12 @@
 
         // Delete note - COMPLETELY REMOVES THE NOTE
         function deleteNote(noteId) {
-            console.log('Deleting note:', noteId); // Debug log
-            appData.notes = appData.notes.filter(note => note.id !== noteId);
-            saveData();
-            displayNotes();
-            updateDashboard();
+            if (confirm('Are you sure you want to permanently delete this note?')) {
+                appData.notes = appData.notes.filter(note => note.id !== noteId);
+                saveData();
+                displayNotes();
+                updateDashboard();
+            }
         }
 
         // Load poetry tab
@@ -865,11 +873,12 @@
 
         // Delete poetry - COMPLETELY REMOVES THE POETRY ENTRY
         function deletePoetry(poetryId) {
-            console.log('Deleting poetry:', poetryId); // Debug log
-            appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
-            saveData();
-            loadPoetryTab();
-            updateDashboard();
+            if (confirm('Are you sure you want to permanently delete this poetry entry?')) {
+                appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
+                saveData();
+                loadPoetryTab();
+                updateDashboard();
+            }
         }
 
         // Load calories tab
@@ -960,11 +969,12 @@
 
         // Delete calorie entry - COMPLETELY REMOVES THE ENTRY
         function deleteCalorieEntry(entryId) {
-            console.log('Deleting calorie entry:', entryId); // Debug log
-            appData.calories = appData.calories.filter(entry => entry.id !== entryId);
-            saveData();
-            loadCaloriesTab();
-            updateDashboard();
+            if (confirm('Are you sure you want to permanently delete this calorie entry?')) {
+                appData.calories = appData.calories.filter(entry => entry.id !== entryId);
+                saveData();
+                loadCaloriesTab();
+                updateDashboard();
+            }
         }
 
         // Load spending tab
@@ -1054,15 +1064,17 @@
 
         // Delete spending entry - COMPLETELY REMOVES THE ENTRY
         function deleteSpendingEntry(entryId) {
-            console.log('Deleting spending entry:', entryId); // Debug log
-            appData.spending = appData.spending.filter(entry => entry.id !== entryId);
-            saveData();
-            loadSpendingTab();
-            updateDashboard();
+            if (confirm('Are you sure you want to permanently delete this spending entry?')) {
+                appData.spending = appData.spending.filter(entry => entry.id !== entryId);
+                saveData();
+                loadSpendingTab();
+                updateDashboard();
+            }
         }
 
         // Initialize app
         function init() {
+            loadData();
             updateDashboard();
             showTab('dashboard');
         }
