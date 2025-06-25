@@ -172,7 +172,7 @@ function loadListTab(listName) {
         html += '<div class="form-row">' +
                 '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
                 '<input type="url" id="link-input" placeholder="Link">' +
-                '<input type="file" id="photo-input" accept="image/*" style="width: 100%; padding: 12px; font-size: 14px; border: 2px solid #3b82f6; border-radius: 8px; background: #dbeafe; color: #1d4ed8; cursor: pointer; -webkit-appearance: none;">' +
+                '<div style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; background: #f9f9f9;" contenteditable="true" id="paste-area" placeholder="Paste image here">📷 Paste image here</div>' +
                 '<input type="date" id="date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
                 '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
                 '</div>';
@@ -235,21 +235,10 @@ function addItem(listName) {
     
     // Handle photo for LOOK section
     if (listName === 'look') {
-        const photoInput = document.getElementById('photo-input');
-        if (photoInput.files && photoInput.files[0]) {
-            const file = photoInput.files[0];
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                item.photo = e.target.result;
-                data.lists[listName].push(item);
-                save();
-                itemInput.value = '';
-                linkInput.value = '';
-                photoInput.value = '';
-                loadListTab(listName);
-            };
-            reader.readAsDataURL(file);
-            return; // Exit early, let the FileReader handle the rest
+        const pasteArea = document.getElementById('paste-area');
+        const img = pasteArea.querySelector('img');
+        if (img && img.src) {
+            item.photo = img.src;
         }
     }
     
