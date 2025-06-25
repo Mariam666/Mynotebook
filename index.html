@@ -304,7 +304,6 @@
             display: none;
         }
         
-        /* Item controls styling */
         .item-controls {
             display: flex;
             align-items: center;
@@ -337,7 +336,7 @@
     <div class="container">
         <h1>Notebook</h1>
         
-        <!-- Dashboard Stats (only visible on home) -->
+        <!-- Dashboard Stats -->
         <div id="dashboard-stats" class="dashboard-stats">
             <div class="stat-card" onclick="showTab('calories')">
                 <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -363,7 +362,7 @@
             </div>
         </div>
         
-        <!-- Recent Activity & Quick Notes (only visible on home) -->
+        <!-- Recent Activity & Quick Notes -->
         <div id="dashboard-content" class="recent-notes-grid">
             <div class="section-card">
                 <div class="section-title">
@@ -510,7 +509,6 @@
 
         // Update dashboard stats
         function updateDashboard() {
-            // Update calories and protein today
             const today = new Date().toISOString().split('T')[0];
             const todayEntries = appData.calories.filter(entry => entry.date === today);
             const todayCalories = todayEntries.reduce((sum, entry) => sum + entry.calories, 0);
@@ -521,7 +519,6 @@
                 <div style="font-size: 0.65rem; color: #8b5cf6;">${todayProtein}g protein</div>
             `;
 
-            // Update spending this week
             const now = new Date();
             const weekStart = new Date(now);
             weekStart.setDate(weekStart.getDate() - weekStart.getDay());
@@ -536,7 +533,6 @@
                 .reduce((sum, entry) => sum + entry.amount, 0);
             document.getElementById('spending-week').textContent = `$${weekSpending.toFixed(2)} this week`;
 
-            // Update recent activity
             const allItems = [
                 ...appData.calories.map(item => ({ ...item, type: 'calories' })),
                 ...appData.spending.map(item => ({ ...item, type: 'spending' })),
@@ -577,13 +573,10 @@
             }).join('');
         }
 
-        // Show specific tab
         function showTab(tabName) {
-            // Update active tab button
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`tab-${tabName}`).classList.add('active');
 
-            // Show/hide dashboard elements
             if (tabName === 'dashboard') {
                 document.getElementById('dashboard-stats').style.display = 'grid';
                 document.getElementById('dashboard-content').style.display = 'grid';
@@ -596,10 +589,7 @@
             }
         }
 
-        // Load content for specific tab
         function loadTabContent(tabName) {
-            const contentArea = document.getElementById('content-area');
-            
             if (['read', 'listen', 'watch', 'look', 'cook', 'make'].includes(tabName)) {
                 loadListTab(tabName);
             } else if (tabName === 'notes') {
@@ -613,7 +603,6 @@
             }
         }
 
-        // Load list tab (read, listen, etc.)
         function loadListTab(listName) {
             const items = appData.lists[listName] || [];
             const contentArea = document.getElementById('content-area');
@@ -636,7 +625,7 @@
                     </button>
                 </div>
                 
-                <div class="item-list" id="list-items-${listName}">
+                <div class="item-list">
                     ${items.map(item => `
                         <div class="list-item ${item.completed ? 'completed' : ''}">
                             <input type="checkbox" ${item.completed ? 'checked' : ''} 
@@ -658,7 +647,6 @@
             `;
         }
 
-        // Add list item
         function addListItem(listName) {
             const input = document.getElementById(`new-item-${listName}`);
             const content = input.value.trim();
@@ -678,7 +666,6 @@
             updateDashboard();
         }
 
-        // Edit list item
         function editListItem(listName, itemId) {
             const item = appData.lists[listName].find(item => item.id === itemId);
             if (!item) return;
@@ -692,7 +679,6 @@
             }
         }
 
-        // Toggle list item completion
         function toggleListItem(listName, itemId) {
             const item = appData.lists[listName].find(item => item.id === itemId);
             if (item) {
@@ -703,7 +689,6 @@
             }
         }
 
-        // Delete list item - COMPLETELY REMOVES THE ITEM
         function deleteListItem(listName, itemId) {
             if (confirm('Are you sure you want to permanently delete this item?')) {
                 appData.lists[listName] = appData.lists[listName].filter(item => item.id !== itemId);
@@ -713,7 +698,6 @@
             }
         }
 
-        // Load notes tab
         function loadNotesTab() {
             const contentArea = document.getElementById('content-area');
             
@@ -741,7 +725,6 @@
             displayNotes();
         }
 
-        // Add note
         function addNote() {
             const textarea = document.getElementById('new-note');
             const content = textarea.value.trim();
@@ -761,11 +744,9 @@
             updateDashboard();
         }
 
-        // Display notes grouped by date
         function displayNotes() {
             const notesList = document.getElementById('notes-list');
             
-            // Group notes by date
             const notesByDate = {};
             appData.notes.forEach(note => {
                 if (!notesByDate[note.date]) {
@@ -774,7 +755,6 @@
                 notesByDate[note.date].push(note);
             });
 
-            // Sort dates descending
             const sortedDates = Object.keys(notesByDate).sort((a, b) => new Date(b) - new Date(a));
 
             notesList.innerHTML = sortedDates.map(date => {
@@ -815,7 +795,6 @@
             }).join('');
         }
 
-        // Edit note
         function editNote(noteId) {
             const note = appData.notes.find(note => note.id === noteId);
             if (!note) return;
@@ -829,7 +808,6 @@
             }
         }
 
-        // Delete note - COMPLETELY REMOVES THE NOTE
         function deleteNote(noteId) {
             if (confirm('Are you sure you want to permanently delete this note?')) {
                 appData.notes = appData.notes.filter(note => note.id !== noteId);
@@ -839,7 +817,6 @@
             }
         }
 
-        // Load poetry tab
         function loadPoetryTab() {
             const contentArea = document.getElementById('content-area');
             
@@ -883,7 +860,6 @@
             `;
         }
 
-        // Add poetry
         function addPoetry() {
             const textarea = document.getElementById('new-poetry');
             const content = textarea.value.trim();
@@ -902,7 +878,6 @@
             updateDashboard();
         }
 
-        // Edit poetry
         function editPoetry(poetryId) {
             const poetry = appData.poetry.find(poem => poem.id === poetryId);
             if (!poetry) return;
@@ -916,7 +891,6 @@
             }
         }
 
-        // Delete poetry - COMPLETELY REMOVES THE POETRY ENTRY
         function deletePoetry(poetryId) {
             if (confirm('Are you sure you want to permanently delete this poetry entry?')) {
                 appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
@@ -926,7 +900,6 @@
             }
         }
 
-        // Load calories tab
         function loadCaloriesTab() {
             const contentArea = document.getElementById('content-area');
             
@@ -984,7 +957,6 @@
             `;
         }
 
-        // Add calorie entry
         function addCalorieEntry() {
             const food = document.getElementById('food-input').value.trim();
             const calories = parseInt(document.getElementById('calories-input').value);
@@ -1012,7 +984,6 @@
             updateDashboard();
         }
 
-        // Edit calorie entry
         function editCalorieEntry(entryId) {
             const entry = appData.calories.find(entry => entry.id === entryId);
             if (!entry) return;
@@ -1035,7 +1006,6 @@
             }
         }
 
-        // Delete calorie entry - COMPLETELY REMOVES THE ENTRY
         function deleteCalorieEntry(entryId) {
             if (confirm('Are you sure you want to permanently delete this calorie entry?')) {
                 appData.calories = appData.calories.filter(entry => entry.id !== entryId);
@@ -1045,7 +1015,6 @@
             }
         }
 
-        // Load spending tab
         function loadSpendingTab() {
             const contentArea = document.getElementById('content-area');
             
@@ -1083,7 +1052,7 @@
                         .sort((a, b) => new Date(b.date) - new Date(a.date))
                         .map(entry => `
                         <div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
+                            <div style="cursor: pointer;" onclick="editSpendingEntry(${entry.id})" title="Click to edit">
                                 <span style="font-weight: 500;">${entry.description}</span>
                                 <span style="margin-left: 0.5rem; font-size: 0.875rem; color: #6b7280; text-transform: capitalize;">(${entry.category})</span>
                             </div>
@@ -1105,7 +1074,6 @@
             `;
         }
 
-        // Add spending entry
         function addSpendingEntry() {
             const description = document.getElementById('description-input').value.trim();
             const amount = parseFloat(document.getElementById('amount-input').value);
@@ -1130,7 +1098,6 @@
             updateDashboard();
         }
 
-        // Edit spending entry
         function editSpendingEntry(entryId) {
             const entry = appData.spending.find(entry => entry.id === entryId);
             if (!entry) return;
@@ -1150,7 +1117,6 @@
             }
         }
 
-        // Delete spending entry - COMPLETELY REMOVES THE ENTRY
         function deleteSpendingEntry(entryId) {
             if (confirm('Are you sure you want to permanently delete this spending entry?')) {
                 appData.spending = appData.spending.filter(entry => entry.id !== entryId);
@@ -1160,14 +1126,12 @@
             }
         }
 
-        // Initialize app
         function init() {
             loadData();
             updateDashboard();
             showTab('dashboard');
         }
 
-        // Start the app when page loads
         window.addEventListener('load', init);
     </script>
 </body>
