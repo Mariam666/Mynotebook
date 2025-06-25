@@ -185,8 +185,9 @@
         <div class="stat-card" onclick="showTab('calories')">
             <div style="text-align: center;">
                 <div style="font-size: 0.875rem; font-weight: 500;">🔥 Calories</div>
-                <div style="font-size: 0.75rem; color: #059669;" id="calories-today">0 cal today</div>
+                <div style="font-size: 0.75rem; color: #2563eb;" id="calories-today">0 cal today</div>
                 <div style="font-size: 0.75rem; color: #8b5cf6;" id="protein-today">0g protein</div>
+                <div style="font-size: 0.75rem; color: #f59e0b;" id="balance-today">Enter burned calories</div>
             </div>
         </div>
         
@@ -275,6 +276,7 @@
         lists: { read: [], listen: [], watch: [], cook: [], make: [] },
         notes: [],
         calories: [],
+        caloriesBurned: [],
         spending: []
     };
 
@@ -487,17 +489,22 @@
         const contentArea = document.getElementById('content-area');
         
         contentArea.innerHTML = 
-            '<h2>Notes</h2>' +
+            '<h2>NOTES</h2>' +
             '<div style="margin-bottom: 1rem;">' +
                 '<textarea id="new-note" placeholder="Write your note here..."></textarea>' +
-                '<button class="btn btn-primary" onclick="addNote()" style="margin-top: 0.5rem;">Save Note</button>' +
+                '<div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">' +
+                    '<input type="date" id="note-date-input" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 0 0 auto;">' +
+                    '<button class="btn btn-primary" onclick="addNote()">Save Note</button>' +
+                '</div>' +
             '</div>' +
             '<div>' +
-                appData.notes.map(note => 
+                appData.notes
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .map(note => 
                     '<div style="padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.75rem;">' +
                         '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editNote(' + note.id + ')">' + note.content + '</div>' +
                         '<div style="display: flex; justify-content: space-between;">' +
-                            '<small>' + new Date(note.date).toLocaleDateString() + '</small>' +
+                            '<small style="color: #6b7280;">' + new Date(note.date).toLocaleDateString() + '</small>' +
                             '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">Delete</button>' +
                         '</div>' +
                     '</div>'
@@ -507,18 +514,21 @@
 
     function addNote() {
         const textarea = document.getElementById('new-note');
+        const dateInput = document.getElementById('note-date-input');
         const content = textarea.value.trim();
-        if (!content) return;
+        const date = dateInput.value;
+        if (!content || !date) return;
 
         const newNote = {
             id: Date.now(),
             content: content,
-            date: new Date().toISOString()
+            date: date
         };
 
         appData.notes.push(newNote);
         saveData();
         textarea.value = '';
+        // Keep the date for easy multiple entries
         loadNotesTab();
         updateDashboard();
     }
@@ -528,8 +538,14 @@
         if (!note) return;
 
         const newContent = prompt('Edit note:', note.content);
-        if (newContent !== null && newContent.trim() !== '') {
+        if (newContent === null) return;
+        
+        const newDate = prompt('Edit date (YYYY-MM-DD):', note.date);
+        if (newDate === null) return;
+
+        if (newContent.trim() !== '' && newDate) {
             note.content = newContent.trim();
+            note.date = newDate;
             saveData();
             loadNotesTab();
             updateDashboard();
@@ -545,75 +561,39 @@
         }
     }
 
-    // Load poetry tab
-    function loadPoetryTab() {
-        const contentArea = document.getElementById('content-area');
-        
-        contentArea.innerHTML = 
-            '<h2>Poetry</h2>' +
-            '<div style="margin-bottom: 1rem;">' +
-                '<textarea id="new-poetry" placeholder="Add a poem or quote..."></textarea>' +
-                '<button class="btn btn-purple" onclick="addPoetry()" style="margin-top: 0.5rem;">Save Poetry</button>' +
-            '</div>' +
-            '<div>' +
-                appData.poetry.map(poem => 
-                    '<div style="padding: 1rem; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 0.375rem; margin-bottom: 1rem;">' +
-                        '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editPoetry(' + poem.id + ')">' + poem.content + '</div>' +
-                        '<div style="display: flex; justify-content: space-between;">' +
-                            '<small>' + new Date(poem.date).toLocaleDateString() + '</small>' +
-                            '<button class="btn btn-delete" onclick="deletePoetry(' + poem.id + ')">Delete</button>' +
-                        '</div>' +
-                    '</div>'
-                ).join('') +
-            '</div>';
-    }
-
-    function addPoetry() {
-        const textarea = document.getElementById('new-poetry');
-        const content = textarea.value.trim();
-        if (!content) return;
-
-        const newPoetry = {
-            id: Date.now(),
-            content: content,
-            date: new Date().toISOString()
-        };
-
-        appData.poetry.push(newPoetry);
-        saveData();
-        textarea.value = '';
-        loadPoetryTab();
-        updateDashboard();
-    }
-
-    function editPoetry(poetryId) {
-        const poetry = appData.poetry.find(poem => poem.id === poetryId);
-        if (!poetry) return;
-
-        const newContent = prompt('Edit poetry:', poetry.content);
-        if (newContent !== null && newContent.trim() !== '') {
-            poetry.content = newContent.trim();
-            saveData();
-            loadPoetryTab();
-            updateDashboard();
-        }
-    }
-
-    function deletePoetry(poetryId) {
-        if (confirm('Delete this poetry?')) {
-            appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
-            saveData();
-            loadPoetryTab();
-            updateDashboard();
-        }
-    }
-
     // Load calories tab - SIMPLE VERSION
     function loadCaloriesTab() {
         const contentArea = document.getElementById('content-area');
         
+        // Get today's date and yesterday's date
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+        
+        // Get burned calories for today (if any)
+        const todayBurned = appData.caloriesBurned?.find(entry => entry.date === today);
+        const yesterdayBurned = appData.caloriesBurned?.find(entry => entry.date === yesterdayStr);
+        
         contentArea.innerHTML = 
             '<h2>CALORIES</h2>' +
+            
+            // Daily burned calories entry
+            '<div style="background: #f0f9ff; border: 1px solid #0284c7; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">' +
+                '<h3 style="margin-bottom: 0.5rem; color: #0284c7;">Daily Calories Burned</h3>' +
+                '<div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">' +
+                    '<input type="number" id="burned-calories-input" placeholder="Total calories burned" value="' + (todayBurned?.burned || '') + '" style="flex: 1; min-width: 200px;">' +
+                    '<input type="date" id="burned-date-input" value="' + today + '" style="flex: 0 0 auto;">' +
+                    '<button class="btn btn-primary" onclick="addBurnedCalories()">Save</button>' +
+                '</div>' +
+                (yesterdayBurned ? '<small style="color: #0284c7;">Yesterday: ' + yesterdayBurned.burned + ' calories burned</small>' : '<small style="color: #6b7280;">Tip: Usually enter previous day\'s data from Apple Watch</small>') +
+            '</div>' +
+            
+            // Weekly summaries
+            getWeeklySummariesHTML() +
+            
+            // Food entries
+            '<h3 style="margin-bottom: 1rem;">Food Log</h3>' +
             '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">' +
                 '<input type="text" id="food-input" placeholder="Food item">' +
                 '<input type="number" id="calories-input" placeholder="Calories">' +
@@ -697,6 +677,133 @@
         updateDashboard();
     }
 
+    function addBurnedCalories() {
+        const burned = parseInt(document.getElementById('burned-calories-input').value);
+        const date = document.getElementById('burned-date-input').value;
+
+        if (!burned || !date) return;
+
+        // Initialize caloriesBurned array if it doesn't exist
+        if (!appData.caloriesBurned) appData.caloriesBurned = [];
+
+        // Check if entry for this date already exists
+        const existingIndex = appData.caloriesBurned.findIndex(entry => entry.date === date);
+        
+        if (existingIndex >= 0) {
+            // Update existing entry
+            appData.caloriesBurned[existingIndex].burned = burned;
+        } else {
+            // Add new entry
+            const newEntry = {
+                id: Date.now(),
+                burned: burned,
+                date: date
+            };
+            appData.caloriesBurned.push(newEntry);
+        }
+
+        saveData();
+        loadCaloriesTab();
+        updateDashboard();
+    }
+
+    function getWeeklySummariesHTML() {
+        if (!appData.caloriesBurned) appData.caloriesBurned = [];
+        
+        // Get all unique weeks with complete data
+        const weeks = getCompleteWeeks();
+        
+        if (weeks.length === 0) {
+            return '<div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">' +
+                   '<h3 style="margin-bottom: 0.5rem; color: #92400e;">Weekly Summaries</h3>' +
+                   '<p style="color: #92400e; margin: 0;">Add burned calories data to see weekly summaries!</p>' +
+                   '</div>';
+        }
+        
+        let html = '<div style="background: #f0fdf4; border: 1px solid #22c55e; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">' +
+                  '<h3 style="margin-bottom: 1rem; color: #166534;">Weekly Summaries</h3>';
+        
+        weeks.slice(0, 6).forEach(week => { // Show last 6 weeks max
+            const weekTotal = week.days.reduce((sum, day) => sum + day.balance, 0);
+            const weekAvg = Math.round(weekTotal / week.days.length);
+            const deficitDays = week.days.filter(day => day.balance < 0).length;
+            const surplusDays = week.days.filter(day => day.balance > 0).length;
+            
+            let weekColor = '#22c55e'; // green for deficit
+            let weekIcon = '✅';
+            if (weekAvg > 100) {
+                weekColor = '#ef4444'; // red for surplus
+                weekIcon = '⚠️';
+            } else if (weekAvg >= -100) {
+                weekColor = '#f59e0b'; // yellow for maintenance
+                weekIcon = '⚖️';
+            }
+            
+            html += '<div style="margin-bottom: 0.75rem; padding: 0.75rem; background: white; border-radius: 0.375rem; border-left: 4px solid ' + weekColor + ';">' +
+                   '<div style="font-weight: 600; color: ' + weekColor + ';">' + week.label + ': ' + (weekTotal > 0 ? '+' : '') + weekTotal + ' total (' + (weekAvg > 0 ? '+' : '') + weekAvg + ' avg/day) ' + weekIcon + '</div>' +
+                   '<div style="font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem;">' + deficitDays + ' deficit days, ' + surplusDays + ' surplus days</div>' +
+                   '</div>';
+        });
+        
+        html += '</div>';
+        return html;
+    }
+
+    function getCompleteWeeks() {
+        const weeks = [];
+        const today = new Date();
+        
+        // Go back up to 8 weeks
+        for (let weekOffset = 1; weekOffset <= 8; weekOffset++) {
+            const weekEnd = new Date(today);
+            weekEnd.setDate(today.getDate() - (weekOffset - 1) * 7);
+            weekEnd.setDate(weekEnd.getDate() - weekEnd.getDay()); // Last Sunday
+            
+            const weekStart = new Date(weekEnd);
+            weekStart.setDate(weekEnd.getDate() - 6); // Previous Monday
+            
+            const weekData = {
+                start: weekStart,
+                end: weekEnd,
+                label: formatWeekLabel(weekStart, weekEnd),
+                days: []
+            };
+            
+            // Check each day of the week
+            let hasCompleteData = true;
+            for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+                const day = new Date(weekStart);
+                day.setDate(weekStart.getDate() + dayOffset);
+                const dayStr = day.toISOString().split('T')[0];
+                
+                const consumedCals = appData.calories
+                    .filter(entry => entry.date === dayStr)
+                    .reduce((sum, entry) => sum + entry.calories, 0);
+                
+                const burnedEntry = appData.caloriesBurned?.find(entry => entry.date === dayStr);
+                const burnedCals = burnedEntry?.burned || 0;
+                
+                if (burnedCals === 0) {
+                    hasCompleteData = false;
+                    break;
+                }
+                
+                weekData.days.push({
+                    date: dayStr,
+                    consumed: consumedCals,
+                    burned: burnedCals,
+                    balance: consumedCals - burnedCals
+                });
+            }
+            
+            if (hasCompleteData) {
+                weeks.push(weekData);
+            }
+        }
+        
+        return weeks;
+    }
+
     function deleteCalorieEntry(entryId) {
         if (confirm('Delete this entry?')) {
             appData.calories = appData.calories.filter(entry => entry.id !== entryId);
@@ -704,6 +811,11 @@
             loadCaloriesTab();
             updateDashboard();
         }
+    }
+
+    function formatWeekLabel(start, end) {
+        const options = { month: 'short', day: 'numeric' };
+        return 'Week of ' + start.toLocaleDateString('en-US', options) + '-' + end.toLocaleDateString('en-US', options);
     }
 
     // Load spending tab - SIMPLE VERSION
@@ -803,8 +915,32 @@
         const todayCalories = todayEntries.reduce((sum, entry) => sum + entry.calories, 0);
         const todayProtein = todayEntries.reduce((sum, entry) => sum + (entry.protein || 0), 0);
         
+        // Get today's burned calories
+        const todayBurned = appData.caloriesBurned?.find(entry => entry.date === today);
+        const burnedCals = todayBurned?.burned || 0;
+        
+        // Calculate balance and update display
+        let balanceText = 'Enter burned calories';
+        let balanceColor = '#f59e0b'; // yellow/orange default
+        
+        if (burnedCals > 0) {
+            const balance = todayCalories - burnedCals;
+            if (balance < -100) {
+                balanceText = balance + ' deficit ✅';
+                balanceColor = '#22c55e'; // green
+            } else if (balance > 100) {
+                balanceText = '+' + balance + ' surplus ⚠️';
+                balanceColor = '#ef4444'; // red
+            } else {
+                balanceText = (balance >= 0 ? '+' : '') + balance + ' maintenance ⚖️';
+                balanceColor = '#f59e0b'; // yellow
+            }
+        }
+        
         document.getElementById('calories-today').textContent = todayCalories + ' cal today';
         document.getElementById('protein-today').textContent = todayProtein + 'g protein';
+        document.getElementById('balance-today').textContent = balanceText;
+        document.getElementById('balance-today').style.color = balanceColor;
 
         const now = new Date();
         const weekStart = new Date(now);
@@ -821,18 +957,19 @@
         document.getElementById('spending-week').textContent = '$' + weekSpending.toFixed(2) + ' this week';
     }
 
-    // Download data function
+    // Download data as JSON
     function downloadData() {
         const dataStr = JSON.stringify(appData, null, 2);
         const dataBlob = new Blob([dataStr], {type: 'application/json'});
-        
+        const url = URL.createObjectURL(dataBlob);
         const link = document.createElement('a');
-        link.href = URL.createObjectURL(dataBlob);
-        link.download = 'my-notebook-data-' + new Date().toISOString().split('T')[0] + '.json';
+        link.href = url;
+        link.download = 'notebook-data.json';
         link.click();
+        URL.revokeObjectURL(url);
     }
 
-    // Upload data function
+    // Upload data from JSON file
     function uploadData(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -842,97 +979,88 @@
             try {
                 const importedData = JSON.parse(e.target.result);
                 
-                // Merge with existing data instead of replacing
-                if (confirm('Do you want to MERGE this data with your current data, or REPLACE all your current data?\n\nClick OK to MERGE (recommended)\nClick Cancel to REPLACE')) {
-                    // Merge mode
-                    mergeData(importedData);
-                } else {
-                    // Replace mode
-                    appData = importedData;
+                // Merge lists
+                if (importedData.lists) {
+                    Object.keys(importedData.lists).forEach(listName => {
+                        if (!appData.lists[listName]) appData.lists[listName] = [];
+                        importedData.lists[listName].forEach(item => {
+                            // Only add if not already exists (check by content and date)
+                            const exists = appData.lists[listName].some(existing => 
+                                existing.content === item.content && existing.date === item.date
+                            );
+                            if (!exists) {
+                                appData.lists[listName].push({...item, id: Date.now() + Math.random()});
+                            }
+                        });
+                    });
+                }
+                
+                // Merge notes
+                if (importedData.notes) {
+                    importedData.notes.forEach(note => {
+                        const exists = appData.notes.some(existing => 
+                            existing.content === note.content && existing.date === note.date
+                        );
+                        if (!exists) {
+                            appData.notes.push({...note, id: Date.now() + Math.random()});
+                        }
+                    });
+                }
+                
+                // Merge calories
+                if (importedData.calories) {
+                    importedData.calories.forEach(entry => {
+                        const exists = appData.calories.some(existing => 
+                            existing.food === entry.food && existing.date === entry.date && existing.calories === entry.calories
+                        );
+                        if (!exists) {
+                            appData.calories.push({...entry, id: Date.now() + Math.random()});
+                        }
+                    });
+                }
+                
+                // Merge burned calories
+                if (importedData.caloriesBurned) {
+                    importedData.caloriesBurned.forEach(entry => {
+                        const exists = appData.caloriesBurned.some(existing => 
+                            existing.date === entry.date
+                        );
+                        if (!exists) {
+                            appData.caloriesBurned.push({...entry, id: Date.now() + Math.random()});
+                        }
+                    });
+                }
+                
+                // Merge spending
+                if (importedData.spending) {
+                    importedData.spending.forEach(entry => {
+                        const exists = appData.spending.some(existing => 
+                            existing.description === entry.description && existing.date === entry.date && existing.amount === entry.amount
+                        );
+                        if (!exists) {
+                            appData.spending.push({...entry, id: Date.now() + Math.random()});
+                        }
+                    });
                 }
                 
                 saveData();
                 updateDashboard();
-                alert('Data uploaded successfully!');
-                
-                // Refresh current view
-                const activeTab = document.querySelector('.tab-button.active').id.replace('tab-', '');
-                showTab(activeTab);
-                
+                alert('Data imported successfully!');
+                showTab('dashboard'); // Refresh to show updated data
             } catch (error) {
-                alert('Error reading file. Please make sure it\'s a valid notebook data file.');
+                alert('Error importing data: ' + error.message);
             }
         };
         reader.readAsText(file);
         
-        // Reset the input so you can upload the same file again if needed
+        // Clear the input so the same file can be uploaded again
         event.target.value = '';
     }
 
-    // Merge imported data with existing data
-    function mergeData(importedData) {
-        // Merge lists
-        if (importedData.lists) {
-            Object.keys(importedData.lists).forEach(listName => {
-                if (!appData.lists[listName]) appData.lists[listName] = [];
-                importedData.lists[listName].forEach(item => {
-                    // Only add if not already exists (check by content and date)
-                    const exists = appData.lists[listName].some(existing => 
-                        existing.content === item.content && existing.date === item.date
-                    );
-                    if (!exists) {
-                        appData.lists[listName].push({...item, id: Date.now() + Math.random()});
-                    }
-                });
-            });
-        }
-        
-        // Merge notes
-        if (importedData.notes) {
-            importedData.notes.forEach(note => {
-                const exists = appData.notes.some(existing => 
-                    existing.content === note.content && existing.date === note.date
-                );
-                if (!exists) {
-                    appData.notes.push({...note, id: Date.now() + Math.random()});
-                }
-            });
-        }
-        
-        // Merge calories
-        if (importedData.calories) {
-            importedData.calories.forEach(entry => {
-                const exists = appData.calories.some(existing => 
-                    existing.food === entry.food && existing.date === entry.date && existing.calories === entry.calories
-                );
-                if (!exists) {
-                    appData.calories.push({...entry, id: Date.now() + Math.random()});
-                }
-            });
-        }
-        
-        // Merge spending
-        if (importedData.spending) {
-            importedData.spending.forEach(entry => {
-                const exists = appData.spending.some(existing => 
-                    existing.description === entry.description && existing.date === entry.date && existing.amount === entry.amount
-                );
-                if (!exists) {
-                    appData.spending.push({...entry, id: Date.now() + Math.random()});
-                }
-            });
-        }
-    }
-
     // Initialize app
-    function init() {
-        loadData();
-        updateDashboard();
-        showTab('dashboard');
-    }
-
-    // Start the app when page loads
-    window.addEventListener('load', init);
+    loadData();
+    showTab('dashboard');
+    updateDashboard();
 </script>
 ```
 
