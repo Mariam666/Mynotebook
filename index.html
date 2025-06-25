@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>My Notebook</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { font-family: 'EB Garamond', 'Adobe Garamond Pro', 'Garamond', 'Times New Roman', serif; padding: 10px; background: #f9fafb; margin: 0; }
         .container { max-width: 1000px; margin: 0 auto; }
@@ -28,18 +29,22 @@
         .form-row input, .form-row select { min-width: 80px; flex: 1; }
         
         @media (max-width: 768px) {
-            body { padding: 8px; }
-            h1 { font-size: 1.25rem; margin-bottom: 10px; }
-            .stats { gap: 8px; margin-bottom: 12px; }
-            .stat-card { padding: 8px; font-size: 12px; }
-            .nav-grid { gap: 6px; margin-bottom: 12px; }
-            .tab-btn { padding: 8px 4px; font-size: 11px; }
-            .content { padding: 12px; }
-            .item { padding: 8px; gap: 6px; }
-            .item-content { font-size: 13px; }
-            .form-row { gap: 4px; margin-bottom: 10px; }
-            .form-row input, .form-row select { min-width: 60px; font-size: 13px; }
-            .btn { padding: 5px 8px; font-size: 12px; }
+            body { padding: 5px; }
+            h1 { font-size: 1.2rem; margin-bottom: 8px; }
+            .stats { gap: 6px; margin-bottom: 10px; }
+            .stat-card { padding: 6px; font-size: 11px; }
+            .nav-grid { gap: 4px; margin-bottom: 10px; grid-template-columns: repeat(4, 1fr); }
+            .tab-btn { padding: 6px 2px; font-size: 10px; line-height: 1.2; }
+            .content { padding: 10px; }
+            .item { padding: 6px; gap: 4px; margin-bottom: 6px; }
+            .item-content { font-size: 12px; }
+            .form-row { gap: 3px; margin-bottom: 8px; flex-direction: column; align-items: stretch; }
+            .form-row input, .form-row select { min-width: auto; font-size: 12px; width: 100%; margin-bottom: 3px; }
+            .btn { padding: 4px 6px; font-size: 11px; }
+            .btn-delete { padding: 3px 5px; font-size: 10px; width: auto; }
+            .form-row .btn { width: 100%; }
+            textarea { height: 60px; font-size: 12px; }
+            input, textarea, select { padding: 4px; font-size: 12px; }
         }
     </style>
 </head>
