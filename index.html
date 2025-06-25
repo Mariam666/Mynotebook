@@ -198,55 +198,59 @@
     </div>
     
     <!-- Big Home Button -->
-    <div style="margin-bottom: 1rem;">
+    <div style="margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
         <button class="tab-button active" onclick="showTab('dashboard')" id="tab-dashboard" 
-                style="width: 100%; padding: 1.5rem; font-size: 1.125rem;">
+                style="grid-column: 1 / -1; padding: 1.5rem; font-size: 1.125rem;">
             <span style="font-size: 2rem;">🏠</span>
             <span style="font-weight: 600;">Home</span>
         </button>
     </div>
     
-    <!-- Navigation Grid - 8 boxes -->
-    <div class="nav-grid">
-        <button class="tab-button" onclick="showTab('notes')" id="tab-notes">
-            <span style="font-size: 1.5rem;">📝</span>
-            <span>Notes</span>
-        </button>
+    <!-- Navigation Grid - 8 boxes aligned with stats above -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;">
+            <button class="tab-button" onclick="showTab('notes')" id="tab-notes">
+                <span style="font-size: 1.5rem;">📝</span>
+                <span>Notes</span>
+            </button>
+            
+            <button class="tab-button" onclick="showTab('read')" id="tab-read">
+                <span style="font-size: 1.5rem;">📚</span>
+                <span>Read</span>
+            </button>
+            
+            <button class="tab-button" onclick="showTab('listen')" id="tab-listen">
+                <span style="font-size: 1.5rem;">🎵</span>
+                <span>Listen</span>
+            </button>
+            
+            <button class="tab-button" onclick="showTab('watch')" id="tab-watch">
+                <span style="font-size: 1.5rem;">📺</span>
+                <span>Watch</span>
+            </button>
+        </div>
         
-        <button class="tab-button" onclick="showTab('read')" id="tab-read">
-            <span style="font-size: 1.5rem;">📚</span>
-            <span>Read</span>
-        </button>
-        
-        <button class="tab-button" onclick="showTab('listen')" id="tab-listen">
-            <span style="font-size: 1.5rem;">🎵</span>
-            <span>Listen</span>
-        </button>
-        
-        <button class="tab-button" onclick="showTab('watch')" id="tab-watch">
-            <span style="font-size: 1.5rem;">📺</span>
-            <span>Watch</span>
-        </button>
-        
-        <button class="tab-button" onclick="showTab('cook')" id="tab-cook">
-            <span style="font-size: 1.5rem;">🍳</span>
-            <span>Cook</span>
-        </button>
-        
-        <button class="tab-button" onclick="showTab('make')" id="tab-make">
-            <span style="font-size: 1.5rem;">🔨</span>
-            <span>Make</span>
-        </button>
-        
-        <button class="tab-button" onclick="showTab('calories')" id="tab-calories">
-            <span style="font-size: 1.5rem;">🔥</span>
-            <span>Calories</span>
-        </button>
-        
-        <button class="tab-button" onclick="showTab('spending')" id="tab-spending">
-            <span style="font-size: 1.5rem;">💰</span>
-            <span>Spending</span>
-        </button>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;">
+            <button class="tab-button" onclick="showTab('cook')" id="tab-cook">
+                <span style="font-size: 1.5rem;">🍳</span>
+                <span>Cook</span>
+            </button>
+            
+            <button class="tab-button" onclick="showTab('make')" id="tab-make">
+                <span style="font-size: 1.5rem;">🔨</span>
+                <span>Make</span>
+            </button>
+            
+            <button class="tab-button" onclick="showTab('calories')" id="tab-calories">
+                <span style="font-size: 1.5rem;">🔥</span>
+                <span>Calories</span>
+            </button>
+            
+            <button class="tab-button" onclick="showTab('spending')" id="tab-spending">
+                <span style="font-size: 1.5rem;">💰</span>
+                <span>Spending</span>
+            </button>
+        </div>
     </div>
 
     <!-- Sync Buttons -->
@@ -466,17 +470,22 @@
         const contentArea = document.getElementById('content-area');
         
         contentArea.innerHTML = 
-            '<h2>Notes</h2>' +
+            '<h2>NOTES</h2>' +
             '<div style="margin-bottom: 1rem;">' +
                 '<textarea id="new-note" placeholder="Write your note here..."></textarea>' +
-                '<button class="btn btn-primary" onclick="addNote()" style="margin-top: 0.5rem;">Save Note</button>' +
+                '<div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">' +
+                    '<input type="date" id="note-date-input" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 0 0 auto;">' +
+                    '<button class="btn btn-primary" onclick="addNote()">Save Note</button>' +
+                '</div>' +
             '</div>' +
             '<div>' +
-                appData.notes.map(note => 
+                appData.notes
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .map(note => 
                     '<div style="padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.75rem;">' +
                         '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editNote(' + note.id + ')">' + note.content + '</div>' +
                         '<div style="display: flex; justify-content: space-between;">' +
-                            '<small>' + new Date(note.date).toLocaleDateString() + '</small>' +
+                            '<small style="color: #6b7280;">' + new Date(note.date).toLocaleDateString() + '</small>' +
                             '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">Delete</button>' +
                         '</div>' +
                     '</div>'
@@ -486,18 +495,21 @@
 
     function addNote() {
         const textarea = document.getElementById('new-note');
+        const dateInput = document.getElementById('note-date-input');
         const content = textarea.value.trim();
-        if (!content) return;
+        const date = dateInput.value;
+        if (!content || !date) return;
 
         const newNote = {
             id: Date.now(),
             content: content,
-            date: new Date().toISOString()
+            date: date
         };
 
         appData.notes.push(newNote);
         saveData();
         textarea.value = '';
+        // Keep the date for easy multiple entries
         loadNotesTab();
         updateDashboard();
     }
@@ -507,8 +519,14 @@
         if (!note) return;
 
         const newContent = prompt('Edit note:', note.content);
-        if (newContent !== null && newContent.trim() !== '') {
+        if (newContent === null) return;
+        
+        const newDate = prompt('Edit date (YYYY-MM-DD):', note.date);
+        if (newDate === null) return;
+
+        if (newContent.trim() !== '' && newDate) {
             note.content = newContent.trim();
+            note.date = newDate;
             saveData();
             loadNotesTab();
             updateDashboard();
@@ -520,69 +538,6 @@
             appData.notes = appData.notes.filter(note => note.id !== noteId);
             saveData();
             loadNotesTab();
-            updateDashboard();
-        }
-    }
-
-    // Load poetry tab
-    function loadPoetryTab() {
-        const contentArea = document.getElementById('content-area');
-        
-        contentArea.innerHTML = 
-            '<h2>Poetry</h2>' +
-            '<div style="margin-bottom: 1rem;">' +
-                '<textarea id="new-poetry" placeholder="Add a poem or quote..."></textarea>' +
-                '<button class="btn btn-purple" onclick="addPoetry()" style="margin-top: 0.5rem;">Save Poetry</button>' +
-            '</div>' +
-            '<div>' +
-                appData.poetry.map(poem => 
-                    '<div style="padding: 1rem; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 0.375rem; margin-bottom: 1rem;">' +
-                        '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editPoetry(' + poem.id + ')">' + poem.content + '</div>' +
-                        '<div style="display: flex; justify-content: space-between;">' +
-                            '<small>' + new Date(poem.date).toLocaleDateString() + '</small>' +
-                            '<button class="btn btn-delete" onclick="deletePoetry(' + poem.id + ')">Delete</button>' +
-                        '</div>' +
-                    '</div>'
-                ).join('') +
-            '</div>';
-    }
-
-    function addPoetry() {
-        const textarea = document.getElementById('new-poetry');
-        const content = textarea.value.trim();
-        if (!content) return;
-
-        const newPoetry = {
-            id: Date.now(),
-            content: content,
-            date: new Date().toISOString()
-        };
-
-        appData.poetry.push(newPoetry);
-        saveData();
-        textarea.value = '';
-        loadPoetryTab();
-        updateDashboard();
-    }
-
-    function editPoetry(poetryId) {
-        const poetry = appData.poetry.find(poem => poem.id === poetryId);
-        if (!poetry) return;
-
-        const newContent = prompt('Edit poetry:', poetry.content);
-        if (newContent !== null && newContent.trim() !== '') {
-            poetry.content = newContent.trim();
-            saveData();
-            loadPoetryTab();
-            updateDashboard();
-        }
-    }
-
-    function deletePoetry(poetryId) {
-        if (confirm('Delete this poetry?')) {
-            appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
-            saveData();
-            loadPoetryTab();
             updateDashboard();
         }
     }
