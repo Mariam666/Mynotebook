@@ -10,7 +10,7 @@
         .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .stat-card { background: white; padding: 12px; border-radius: 8px; border: 2px solid #e5e7eb; text-align: center; cursor: pointer; font-size: 14px; }
         .stat-card:hover { background: #f3f4f6; }
-        .nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .nav-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
         .tab-btn { padding: 12px 8px; border: 2px solid #e5e7eb; background: white; border-radius: 8px; cursor: pointer; text-align: center; font-size: 12px; }
         .tab-btn:hover { background: #f3f4f6; }
         .tab-btn.active { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
@@ -49,9 +49,6 @@
             input, textarea, select { padding: 12px; font-size: 14px; border-radius: 8px; box-sizing: border-box; }
             h2 { font-size: 1.3rem; margin-bottom: 12px; }
             h3 { font-size: 1.1rem; margin-bottom: 8px; }
-            
-            /* Mobile layout changes */
-            .nav-grid.compact { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -83,6 +80,7 @@
             <button class="tab-btn" onclick="showTab('read')" id="tab-read">📚<br>Read</button>
             <button class="tab-btn" onclick="showTab('listen')" id="tab-listen">🎵<br>Listen</button>
             <button class="tab-btn" onclick="showTab('watch')" id="tab-watch">📺<br>Watch</button>
+            <button class="tab-btn" onclick="showTab('look')" id="tab-look">👁️<br>Look</button>
             <button class="tab-btn" onclick="showTab('cook')" id="tab-cook">🍳<br>Cook</button>
             <button class="tab-btn" onclick="showTab('make')" id="tab-make">🔨<br>Make</button>
             <button class="tab-btn" onclick="showTab('calories')" id="tab-calories">🔥<br>Calories</button>
@@ -100,7 +98,7 @@
 
 <script>
 let data = {
-    lists: { read: [], listen: [], watch: [], cook: [], make: [] },
+    lists: { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
     notes: [],
     calories: [],
     caloriesBurned: [],
@@ -130,17 +128,13 @@ function showTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     
     if (tab === 'home') {
-        // Home tab: show stats, hide content, home button active, 4-column grid
         document.getElementById('stats').style.display = 'grid';
         document.getElementById('content').classList.add('hidden');
-        document.getElementById('nav-grid').style.gridTemplateColumns = 'repeat(4, 1fr)';
         document.getElementById('tab-home').classList.add('active');
         updateStats();
     } else {
-        // Other tabs: hide stats, show content, selected section active, 3-column grid
         document.getElementById('stats').style.display = 'none';
         document.getElementById('content').classList.remove('hidden');
-        document.getElementById('nav-grid').style.gridTemplateColumns = 'repeat(3, 1fr)';
         document.getElementById('tab-' + tab).classList.add('active');
         loadTab(tab);
     }
@@ -149,7 +143,7 @@ function showTab(tab) {
 function loadTab(tab) {
     const content = document.getElementById('content');
     
-    if (['read', 'listen', 'watch', 'cook', 'make'].includes(tab)) {
+    if (['read', 'listen', 'watch', 'cook', 'make', 'look'].includes(tab)) {
         loadListTab(tab);
     } else if (tab === 'notes') {
         loadNotesTab();
@@ -174,6 +168,14 @@ function loadListTab(listName) {
                 '<input type="date" id="date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
                 '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
                 '</div>';
+    } else if (listName === 'look') {
+        html += '<div class="form-row">' +
+                '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
+                '<input type="url" id="link-input" placeholder="Link">' +
+                '<input type="file" id="photo-input" accept="image/*" capture="environment">' +
+                '<input type="date" id="date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
+                '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
+                '</div>';
     } else {
         html += '<div class="form-row">' +
                 '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
@@ -194,6 +196,7 @@ function loadListTab(listName) {
         
         html += '<div class="item" style="background: ' + bgColor + ';">' +
                 '<div class="item-content" onclick="editItem(\'' + listName + '\', ' + item.id + ')">' +
+                (item.photo ? '<img src="' + item.photo + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; margin-bottom: 4px; display: block; cursor: pointer;" onclick="event.stopPropagation(); this.style.width = this.style.width === \'60px\' ? \'200px\' : \'60px\'; this.style.height = this.style.height === \'60px\' ? \'200px\' : \'60px\';">' : '') +
                 item.content +
                 (listName === 'read' ? '<br><small><strong>' + (item.category || 'book').toUpperCase() + '</strong></small>' : '') +
                 '<br><small>' + item.date + '</small>' +
@@ -230,10 +233,33 @@ function addItem(listName) {
         item.link = linkInput.value.trim();
     }
     
+    // Handle photo for LOOK section
+    if (listName === 'look') {
+        const photoInput = document.getElementById('photo-input');
+        if (photoInput.files && photoInput.files[0]) {
+            const file = photoInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                item.photo = e.target.result;
+                data.lists[listName].push(item);
+                save();
+                itemInput.value = '';
+                linkInput.value = '';
+                photoInput.value = '';
+                loadListTab(listName);
+            };
+            reader.readAsDataURL(file);
+            return; // Exit early, let the FileReader handle the rest
+        }
+    }
+    
     data.lists[listName].push(item);
     save();
     itemInput.value = '';
     linkInput.value = '';
+    if (listName === 'look') {
+        document.getElementById('photo-input').value = '';
+    }
     loadListTab(listName);
 }
 
@@ -574,6 +600,34 @@ function updateStats() {
     const weekSpend = data.spending.filter(e => new Date(e.date) >= weekStart).reduce((sum, e) => sum + e.amount, 0);
     
     document.getElementById('spend-week').textContent = '$' + weekSpend.toFixed(2) + ' this week';
+}
+
+function showFullImage(imageData) {
+    const img = new Image();
+    img.src = imageData;
+    img.style.maxWidth = '100vw';
+    img.style.maxHeight = '100vh';
+    img.style.objectFit = 'contain';
+    
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.backgroundColor = 'rgba(0,0,0,0.9)';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.zIndex = '9999';
+    overlay.style.cursor = 'pointer';
+    
+    overlay.appendChild(img);
+    overlay.onclick = function() {
+        document.body.removeChild(overlay);
+    };
+    
+    document.body.appendChild(overlay);
 }
 
 function downloadData() {
