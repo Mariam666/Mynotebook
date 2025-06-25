@@ -641,7 +641,8 @@
                         <div class="list-item ${item.completed ? 'completed' : ''}">
                             <input type="checkbox" ${item.completed ? 'checked' : ''} 
                                    onchange="toggleListItem('${listName}', ${item.id})">
-                            <div class="list-item-content">${item.content}</div>
+                            <div class="list-item-content" onclick="editListItem('${listName}', ${item.id})" 
+                                 style="cursor: pointer;" title="Click to edit">${item.content}</div>
                             <div class="item-controls">
                                 <div class="item-meta">${new Date(item.dateAdded).toLocaleDateString()}</div>
                                 <button class="btn btn-delete" onclick="deleteListItem('${listName}', ${item.id})">
@@ -675,6 +676,20 @@
             input.value = '';
             loadListTab(listName);
             updateDashboard();
+        }
+
+        // Edit list item
+        function editListItem(listName, itemId) {
+            const item = appData.lists[listName].find(item => item.id === itemId);
+            if (!item) return;
+
+            const newContent = prompt('Edit item:', item.content);
+            if (newContent !== null && newContent.trim() !== '') {
+                item.content = newContent.trim();
+                saveData();
+                loadListTab(listName);
+                updateDashboard();
+            }
         }
 
         // Toggle list item completion
@@ -777,7 +792,8 @@
                         </div>
                         ${dateNotes.map(note => `
                             <div class="note-item">
-                                <div class="note-content">${note.content}</div>
+                                <div class="note-content" onclick="editNote(${note.id})" 
+                                     style="cursor: pointer;" title="Click to edit">${note.content}</div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div class="note-time">
                                         ${new Date(note.dateAdded).toLocaleTimeString('en-US', { 
@@ -797,6 +813,20 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // Edit note
+        function editNote(noteId) {
+            const note = appData.notes.find(note => note.id === noteId);
+            if (!note) return;
+
+            const newContent = prompt('Edit note:', note.content);
+            if (newContent !== null && newContent.trim() !== '') {
+                note.content = newContent.trim();
+                saveData();
+                displayNotes();
+                updateDashboard();
+            }
         }
 
         // Delete note - COMPLETELY REMOVES THE NOTE
@@ -834,7 +864,8 @@
                 <div class="item-list">
                     ${appData.poetry.map(poem => `
                         <div style="padding: 1rem; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 0.375rem; margin-bottom: 1rem;">
-                            <div style="white-space: pre-wrap; margin-bottom: 0.5rem;">${poem.content}</div>
+                            <div style="white-space: pre-wrap; margin-bottom: 0.5rem; cursor: pointer;" 
+                                 onclick="editPoetry(${poem.id})" title="Click to edit">${poem.content}</div>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div style="font-size: 0.75rem; color: #8b5cf6;">
                                     ${new Date(poem.dateAdded).toLocaleDateString()}
@@ -869,6 +900,20 @@
             textarea.value = '';
             loadPoetryTab();
             updateDashboard();
+        }
+
+        // Edit poetry
+        function editPoetry(poetryId) {
+            const poetry = appData.poetry.find(poem => poem.id === poetryId);
+            if (!poetry) return;
+
+            const newContent = prompt('Edit poetry:', poetry.content);
+            if (newContent !== null && newContent.trim() !== '') {
+                poetry.content = newContent.trim();
+                saveData();
+                loadPoetryTab();
+                updateDashboard();
+            }
         }
 
         // Delete poetry - COMPLETELY REMOVES THE POETRY ENTRY
@@ -916,7 +961,7 @@
                         .sort((a, b) => new Date(b.date) - new Date(a.date))
                         .map(entry => `
                         <div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
+                            <div style="cursor: pointer;" onclick="editCalorieEntry(${entry.id})" title="Click to edit">
                                 <span style="font-weight: 500;">${entry.food}</span>
                                 <span style="margin-left: 0.5rem; font-size: 0.875rem; color: #6b7280; text-transform: capitalize;">(${entry.meal})</span>
                             </div>
@@ -965,6 +1010,29 @@
             document.getElementById('protein-input').value = '';
             loadCaloriesTab();
             updateDashboard();
+        }
+
+        // Edit calorie entry
+        function editCalorieEntry(entryId) {
+            const entry = appData.calories.find(entry => entry.id === entryId);
+            if (!entry) return;
+
+            const newFood = prompt('Edit food item:', entry.food);
+            if (newFood === null) return;
+
+            const newCalories = prompt('Edit calories:', entry.calories);
+            if (newCalories === null) return;
+
+            const newProtein = prompt('Edit protein (g):', entry.protein || '');
+
+            if (newFood.trim() !== '' && !isNaN(newCalories) && newCalories > 0) {
+                entry.food = newFood.trim();
+                entry.calories = parseInt(newCalories);
+                entry.protein = parseInt(newProtein) || 0;
+                saveData();
+                loadCaloriesTab();
+                updateDashboard();
+            }
         }
 
         // Delete calorie entry - COMPLETELY REMOVES THE ENTRY
@@ -1060,6 +1128,26 @@
             document.getElementById('amount-input').value = '';
             loadSpendingTab();
             updateDashboard();
+        }
+
+        // Edit spending entry
+        function editSpendingEntry(entryId) {
+            const entry = appData.spending.find(entry => entry.id === entryId);
+            if (!entry) return;
+
+            const newDescription = prompt('Edit description:', entry.description);
+            if (newDescription === null) return;
+
+            const newAmount = prompt('Edit amount:', entry.amount);
+            if (newAmount === null) return;
+
+            if (newDescription.trim() !== '' && !isNaN(newAmount) && newAmount > 0) {
+                entry.description = newDescription.trim();
+                entry.amount = parseFloat(newAmount);
+                saveData();
+                loadSpendingTab();
+                updateDashboard();
+            }
         }
 
         // Delete spending entry - COMPLETELY REMOVES THE ENTRY
