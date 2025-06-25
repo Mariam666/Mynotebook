@@ -109,8 +109,7 @@ let data = {
 
 function save() {
     try {
-        // Store data in memory for the session
-        window.notebookData = JSON.stringify(data);
+        localStorage.setItem('notebookData', JSON.stringify(data));
     } catch (e) {
         console.error('Save error:', e);
     }
@@ -118,8 +117,9 @@ function save() {
 
 function load() {
     try {
-        if (window.notebookData) {
-            data = JSON.parse(window.notebookData);
+        const saved = localStorage.getItem('notebookData');
+        if (saved) {
+            data = JSON.parse(saved);
         }
     } catch (e) {
         console.error('Load error:', e);
