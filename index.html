@@ -54,29 +54,6 @@
             background-color: #f3f4f6;
         }
         
-        .recent-notes-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .section-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            border: 1px solid #e5e7eb;
-        }
-        
-        .section-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -96,7 +73,6 @@
             color: #6b7280;
             cursor: pointer;
             transition: all 0.2s;
-            text-decoration: none;
         }
         
         .tab-button:hover {
@@ -109,59 +85,11 @@
             border-color: #93c5fd;
         }
         
-        .tab-icon {
-            width: 1.5rem;
-            height: 1.5rem;
-        }
-        
-        .tab-label {
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
         .content-area {
             background: white;
             padding: 1.5rem;
             border-radius: 0.5rem;
             border: 1px solid #e5e7eb;
-        }
-        
-        .content-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .content-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .input-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        input[type="text"], input[type="number"], select, textarea {
-            padding: 0.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            font-family: 'EB Garamond', 'Adobe Garamond Pro', 'Garamond', 'Times New Roman', serif;
-        }
-        
-        textarea {
-            width: 100%;
-            height: 8rem;
-            resize: none;
         }
         
         .btn {
@@ -171,9 +99,6 @@
             cursor: pointer;
             font-size: 0.875rem;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
             transition: all 0.2s;
         }
         
@@ -182,26 +107,14 @@
             color: white;
         }
         
-        .btn-primary:hover {
-            background-color: #2563eb;
-        }
-        
         .btn-green {
             background-color: #10b981;
             color: white;
         }
         
-        .btn-green:hover {
-            background-color: #059669;
-        }
-        
         .btn-purple {
             background-color: #8b5cf6;
             color: white;
-        }
-        
-        .btn-purple:hover {
-            background-color: #7c3aed;
         }
         
         .btn-delete {
@@ -211,8 +124,28 @@
             font-size: 0.75rem;
         }
         
-        .btn-delete:hover {
-            background-color: #dc2626;
+        input, textarea, select {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-family: inherit;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 8rem;
+            resize: vertical;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
         
         .item-list {
@@ -233,102 +166,8 @@
         
         .list-item.completed {
             background-color: #f0fdf4;
-            border-color: #bbf7d0;
-        }
-        
-        .list-item-content {
-            flex: 1;
-        }
-        
-        .list-item.completed .list-item-content {
             text-decoration: line-through;
             color: #6b7280;
-        }
-        
-        .date-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .date-header {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #3b82f6;
-            margin-bottom: 0.75rem;
-        }
-        
-        .note-item {
-            padding: 1rem;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.375rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .note-content {
-            margin-bottom: 0.5rem;
-            white-space: pre-wrap;
-        }
-        
-        .note-time {
-            font-size: 0.75rem;
-            color: #6b7280;
-        }
-        
-        .activity-item {
-            padding: 0.75rem;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.375rem;
-            margin-bottom: 1rem;
-        }
-        
-        .activity-content {
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
-        
-        .activity-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.75rem;
-            color: #6b7280;
-        }
-        
-        .quick-notes {
-            height: 10rem;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .item-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-left: auto;
-        }
-        
-        .item-meta {
-            font-size: 0.75rem;
-            color: #6b7280;
-            text-align: right;
-        }
-        
-        @media (max-width: 768px) {
-            .dashboard-stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .recent-notes-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
         }
     </style>
 </head>
@@ -339,51 +178,16 @@
         <!-- Dashboard Stats -->
         <div id="dashboard-stats" class="dashboard-stats">
             <div class="stat-card" onclick="showTab('calories')">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
                 <div style="text-align: center;">
-                    <div style="font-size: 0.875rem; font-weight: 500;">Calories</div>
-                    <div style="font-size: 0.75rem; color: #059669;" id="calories-today">
-                        <div>0 cal today</div>
-                        <div style="font-size: 0.65rem; color: #8b5cf6;">0g protein</div>
-                    </div>
+                    <div style="font-size: 0.875rem; font-weight: 500;">🔥 Calories</div>
+                    <div style="font-size: 0.75rem; color: #059669;" id="calories-today">0 cal today</div>
                 </div>
             </div>
             
             <div class="stat-card" onclick="showTab('spending')">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                </svg>
                 <div style="text-align: center;">
-                    <div style="font-size: 0.875rem; font-weight: 500;">Spending</div>
+                    <div style="font-size: 0.875rem; font-weight: 500;">💰 Spending</div>
                     <div style="font-size: 0.75rem; color: #2563eb;" id="spending-week">$0 this week</div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Recent Activity & Quick Notes -->
-        <div id="dashboard-content" class="recent-notes-grid">
-            <div class="section-card">
-                <div class="section-title">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                    </svg>
-                    Recent Activity
-                </div>
-                <div id="recent-activity"></div>
-            </div>
-            
-            <div class="section-card">
-                <div class="section-title">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                    </svg>
-                    Quick Notes
-                </div>
-                <textarea class="quick-notes" placeholder="Quick notes, thoughts, or reminders..."></textarea>
-                <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #6b7280;">
-                    For detailed notes, use the Notes tab
                 </div>
             </div>
         </div>
@@ -391,83 +195,43 @@
         <!-- Navigation Grid -->
         <div class="nav-grid">
             <button class="tab-button active" onclick="showTab('dashboard')" id="tab-dashboard">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                </svg>
-                <span class="tab-label">Home</span>
+                <span style="font-size: 1.5rem;">🏠</span>
+                <span>Home</span>
             </button>
             
             <button class="tab-button" onclick="showTab('notes')" id="tab-notes">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                <span class="tab-label">Notes</span>
+                <span style="font-size: 1.5rem;">📝</span>
+                <span>Notes</span>
             </button>
             
             <button class="tab-button" onclick="showTab('read')" id="tab-read">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                </svg>
-                <span class="tab-label">Read</span>
+                <span style="font-size: 1.5rem;">📚</span>
+                <span>Read</span>
             </button>
             
             <button class="tab-button" onclick="showTab('listen')" id="tab-listen">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                </svg>
-                <span class="tab-label">Listen</span>
+                <span style="font-size: 1.5rem;">🎵</span>
+                <span>Listen</span>
             </button>
             
             <button class="tab-button" onclick="showTab('watch')" id="tab-watch">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></rect>
-                    <line x1="8" y1="21" x2="16" y2="21" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
-                    <line x1="12" y1="17" x2="12" y2="21" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></line>
-                </svg>
-                <span class="tab-label">Watch</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('look')" id="tab-look">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                </svg>
-                <span class="tab-label">Look</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('cook')" id="tab-cook">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6h15l-1 7H7l-1-7zm0 0L5 4H2m5 2l1 7m7-7v7a2 2 0 11-4 0V6"></path>
-                </svg>
-                <span class="tab-label">Cook</span>
-            </button>
-            
-            <button class="tab-button" onclick="showTab('make')" id="tab-make">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M16 14h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span class="tab-label">Make</span>
+                <span style="font-size: 1.5rem;">📺</span>
+                <span>Watch</span>
             </button>
             
             <button class="tab-button" onclick="showTab('poetry')" id="tab-poetry">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                </svg>
-                <span class="tab-label">Poetry</span>
+                <span style="font-size: 1.5rem;">✍️</span>
+                <span>Poetry</span>
             </button>
             
             <button class="tab-button" onclick="showTab('calories')" id="tab-calories">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-                <span class="tab-label">Calories</span>
+                <span style="font-size: 1.5rem;">🔥</span>
+                <span>Calories</span>
             </button>
             
             <button class="tab-button" onclick="showTab('spending')" id="tab-spending">
-                <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                </svg>
-                <span class="tab-label">Spending</span>
+                <span style="font-size: 1.5rem;">💰</span>
+                <span>Spending</span>
             </button>
         </div>
         
@@ -480,14 +244,7 @@
     <script>
         // Data storage
         let appData = {
-            lists: {
-                read: [],
-                listen: [],
-                watch: [],
-                look: [],
-                cook: [],
-                make: []
-            },
+            lists: { read: [], listen: [], watch: [] },
             notes: [],
             poetry: [],
             calories: [],
@@ -507,90 +264,25 @@
             localStorage.setItem('notebookData', JSON.stringify(appData));
         }
 
-        // Update dashboard stats
-        function updateDashboard() {
-            const today = new Date().toISOString().split('T')[0];
-            const todayEntries = appData.calories.filter(entry => entry.date === today);
-            const todayCalories = todayEntries.reduce((sum, entry) => sum + entry.calories, 0);
-            const todayProtein = todayEntries.reduce((sum, entry) => sum + (entry.protein || 0), 0);
-            
-            document.getElementById('calories-today').innerHTML = `
-                <div>${todayCalories} cal today</div>
-                <div style="font-size: 0.65rem; color: #8b5cf6;">${todayProtein}g protein</div>
-            `;
-
-            const now = new Date();
-            const weekStart = new Date(now);
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-            const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekStart.getDate() + 6);
-            
-            const weekSpending = appData.spending
-                .filter(entry => {
-                    const entryDate = new Date(entry.date);
-                    return entryDate >= weekStart && entryDate <= weekEnd;
-                })
-                .reduce((sum, entry) => sum + entry.amount, 0);
-            document.getElementById('spending-week').textContent = `$${weekSpending.toFixed(2)} this week`;
-
-            const allItems = [
-                ...appData.calories.map(item => ({ ...item, type: 'calories' })),
-                ...appData.spending.map(item => ({ ...item, type: 'spending' })),
-                ...appData.notes.map(item => ({ ...item, type: 'notes' })),
-                ...appData.poetry.map(item => ({ ...item, type: 'poetry' }))
-            ];
-
-            const recentItems = allItems
-                .sort((a, b) => new Date(b.dateAdded || b.date) - new Date(a.dateAdded || a.date))
-                .slice(0, 4);
-
-            const recentActivityEl = document.getElementById('recent-activity');
-            recentActivityEl.innerHTML = recentItems.map(item => {
-                let content, meta;
-                if (item.type === 'calories') {
-                    content = item.food;
-                    meta = `${item.calories} calories`;
-                } else if (item.type === 'spending') {
-                    content = item.description;
-                    meta = `$${item.amount}`;
-                } else if (item.type === 'notes') {
-                    content = item.content.slice(0, 40) + '...';
-                    meta = 'Note';
-                } else {
-                    content = item.content.slice(0, 40) + '...';
-                    meta = 'Poetry';
-                }
-                
-                return `
-                    <div class="activity-item">
-                        <div class="activity-content">${content}</div>
-                        <div class="activity-meta">
-                            <span>${meta}</span>
-                            <span>${new Date(item.dateAdded || item.date).toLocaleDateString()}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
+        // Show specific tab
         function showTab(tabName) {
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
 
             if (tabName === 'dashboard') {
                 document.getElementById('dashboard-stats').style.display = 'grid';
-                document.getElementById('dashboard-content').style.display = 'grid';
                 document.getElementById('content-area').classList.add('hidden');
+                updateDashboard();
             } else {
                 document.getElementById('dashboard-stats').style.display = 'none';
-                document.getElementById('dashboard-content').style.display = 'none';
                 document.getElementById('content-area').classList.remove('hidden');
                 loadTabContent(tabName);
             }
         }
 
+        // Load content for specific tab
         function loadTabContent(tabName) {
-            if (['read', 'listen', 'watch', 'look', 'cook', 'make'].includes(tabName)) {
+            if (['read', 'listen', 'watch'].includes(tabName)) {
                 loadListTab(tabName);
             } else if (tabName === 'notes') {
                 loadNotesTab();
@@ -603,67 +295,53 @@
             }
         }
 
+        // Load list tab
         function loadListTab(listName) {
             const items = appData.lists[listName] || [];
             const contentArea = document.getElementById('content-area');
             
-            contentArea.innerHTML = `
-                <div class="content-header">
-                    <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
-                    <h2 class="content-title">${listName.toUpperCase()}</h2>
-                </div>
-                
-                <div class="input-row">
-                    <input type="text" id="new-item-${listName}" placeholder="Add new ${listName.toLowerCase()} item..." />
-                    <button class="btn btn-primary" onclick="addListItem('${listName}')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Add
-                    </button>
-                </div>
-                
-                <div class="item-list">
-                    ${items.map(item => `
-                        <div class="list-item ${item.completed ? 'completed' : ''}">
-                            <input type="checkbox" ${item.completed ? 'checked' : ''} 
-                                   onchange="toggleListItem('${listName}', ${item.id})">
-                            <div class="list-item-content" onclick="editListItem('${listName}', ${item.id})" 
-                                 style="cursor: pointer;" title="Click to edit">${item.content}</div>
-                            <div class="item-controls">
-                                <div class="item-meta">${new Date(item.dateAdded).toLocaleDateString()}</div>
-                                <button class="btn btn-delete" onclick="deleteListItem('${listName}', ${item.id})">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                    </svg>
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+            contentArea.innerHTML = 
+                '<h2>' + listName.toUpperCase() + '</h2>' +
+                '<div style="display: grid; grid-template-columns: 1fr auto auto; gap: 0.5rem; margin-bottom: 1rem;">' +
+                    '<input type="text" id="new-item-' + listName + '" placeholder="Add new ' + listName + ' item...">' +
+                    '<input type="date" id="list-date-input-' + listName + '" value="' + new Date().toISOString().split('T')[0] + '">' +
+                    '<button class="btn btn-primary" onclick="addListItem(\'' + listName + '\')">Add</button>' +
+                '</div>' +
+                '<div class="item-list">' +
+                    items
+                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .map(item => 
+                        '<div class="list-item' + (item.completed ? ' completed' : '') + '">' +
+                            '<input type="checkbox"' + (item.completed ? ' checked' : '') + ' onchange="toggleListItem(\'' + listName + '\', ' + item.id + ')">' +
+                            '<span style="flex: 1; cursor: pointer;" onclick="editListItem(\'' + listName + '\', ' + item.id + ')">' + 
+                                item.content + 
+                                '<br><small style="color: #6b7280;">' + new Date(item.date).toLocaleDateString() + '</small>' +
+                            '</span>' +
+                            '<button class="btn btn-delete" onclick="deleteListItem(\'' + listName + '\', ' + item.id + ')">Delete</button>' +
+                        '</div>'
+                    ).join('') +
+                '</div>';
         }
 
         function addListItem(listName) {
-            const input = document.getElementById(`new-item-${listName}`);
+            const input = document.getElementById('new-item-' + listName);
+            const dateInput = document.getElementById('list-date-input-' + listName);
             const content = input.value.trim();
-            if (!content) return;
+            const date = dateInput.value;
+            if (!content || !date) return;
 
             const newItem = {
                 id: Date.now(),
                 content: content,
-                dateAdded: new Date().toISOString(),
-                completed: false
+                completed: false,
+                date: date
             };
 
             appData.lists[listName].push(newItem);
             saveData();
             input.value = '';
+            // Keep the date for easy multiple entries
             loadListTab(listName);
-            updateDashboard();
         }
 
         function editListItem(listName, itemId) {
@@ -671,11 +349,16 @@
             if (!item) return;
 
             const newContent = prompt('Edit item:', item.content);
-            if (newContent !== null && newContent.trim() !== '') {
+            if (newContent === null) return;
+            
+            const newDate = prompt('Edit date (YYYY-MM-DD):', item.date);
+            if (newDate === null) return;
+
+            if (newContent.trim() !== '' && newDate) {
                 item.content = newContent.trim();
+                item.date = newDate;
                 saveData();
                 loadListTab(listName);
-                updateDashboard();
             }
         }
 
@@ -685,114 +368,64 @@
                 item.completed = !item.completed;
                 saveData();
                 loadListTab(listName);
-                updateDashboard();
             }
         }
 
         function deleteListItem(listName, itemId) {
-            if (confirm('Are you sure you want to permanently delete this item?')) {
+            if (confirm('Delete this item?')) {
                 appData.lists[listName] = appData.lists[listName].filter(item => item.id !== itemId);
                 saveData();
                 loadListTab(listName);
-                updateDashboard();
             }
         }
 
+        // Load notes tab
         function loadNotesTab() {
             const contentArea = document.getElementById('content-area');
             
-            contentArea.innerHTML = `
-                <div class="content-header">
-                    <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <h2 class="content-title">Notes</h2>
-                </div>
-                
-                <div style="margin-bottom: 1rem;">
-                    <textarea id="new-note" placeholder="Write your note here..."></textarea>
-                    <button class="btn btn-primary" onclick="addNote()" style="margin-top: 0.5rem;">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Save Note
-                    </button>
-                </div>
-                
-                <div id="notes-list"></div>
-            `;
-            
-            displayNotes();
+            contentArea.innerHTML = 
+                '<h2>Notes</h2>' +
+                '<div style="margin-bottom: 1rem;">' +
+                    '<textarea id="new-note" placeholder="Write your note here..."></textarea>' +
+                    '<div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">' +
+                        '<input type="date" id="note-date-input" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 0 0 auto;">' +
+                        '<button class="btn btn-primary" onclick="addNote()">Save Note</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div>' +
+                    appData.notes
+                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .map(note => 
+                        '<div style="padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.75rem;">' +
+                            '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editNote(' + note.id + ')">' + note.content + '</div>' +
+                            '<div style="display: flex; justify-content: space-between;">' +
+                                '<small style="color: #6b7280;">' + new Date(note.date).toLocaleDateString() + '</small>' +
+                                '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">Delete</button>' +
+                            '</div>' +
+                        '</div>'
+                    ).join('') +
+                '</div>';
         }
 
         function addNote() {
             const textarea = document.getElementById('new-note');
+            const dateInput = document.getElementById('note-date-input');
             const content = textarea.value.trim();
-            if (!content) return;
+            const date = dateInput.value;
+            if (!content || !date) return;
 
             const newNote = {
                 id: Date.now(),
                 content: content,
-                date: new Date().toISOString().split('T')[0],
-                dateAdded: new Date().toISOString()
+                date: date
             };
 
             appData.notes.push(newNote);
             saveData();
             textarea.value = '';
-            displayNotes();
+            // Keep the date for easy multiple entries
+            loadNotesTab();
             updateDashboard();
-        }
-
-        function displayNotes() {
-            const notesList = document.getElementById('notes-list');
-            
-            const notesByDate = {};
-            appData.notes.forEach(note => {
-                if (!notesByDate[note.date]) {
-                    notesByDate[note.date] = [];
-                }
-                notesByDate[note.date].push(note);
-            });
-
-            const sortedDates = Object.keys(notesByDate).sort((a, b) => new Date(b) - new Date(a));
-
-            notesList.innerHTML = sortedDates.map(date => {
-                const dateNotes = notesByDate[date].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-                
-                return `
-                    <div class="date-group">
-                        <div class="date-header">
-                            ${new Date(date).toLocaleDateString('en-US', { 
-                                weekday: 'long', 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
-                            })}
-                        </div>
-                        ${dateNotes.map(note => `
-                            <div class="note-item">
-                                <div class="note-content" onclick="editNote(${note.id})" 
-                                     style="cursor: pointer;" title="Click to edit">${note.content}</div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div class="note-time">
-                                        ${new Date(note.dateAdded).toLocaleTimeString('en-US', { 
-                                            hour: '2-digit', 
-                                            minute: '2-digit' 
-                                        })}
-                                    </div>
-                                    <button class="btn btn-delete" onclick="deleteNote(${note.id})">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }).join('');
         }
 
         function editNote(noteId) {
@@ -800,80 +433,74 @@
             if (!note) return;
 
             const newContent = prompt('Edit note:', note.content);
-            if (newContent !== null && newContent.trim() !== '') {
+            if (newContent === null) return;
+            
+            const newDate = prompt('Edit date (YYYY-MM-DD):', note.date);
+            if (newDate === null) return;
+
+            if (newContent.trim() !== '' && newDate) {
                 note.content = newContent.trim();
+                note.date = newDate;
                 saveData();
-                displayNotes();
+                loadNotesTab();
                 updateDashboard();
             }
         }
 
         function deleteNote(noteId) {
-            if (confirm('Are you sure you want to permanently delete this note?')) {
+            if (confirm('Delete this note?')) {
                 appData.notes = appData.notes.filter(note => note.id !== noteId);
                 saveData();
-                displayNotes();
+                loadNotesTab();
                 updateDashboard();
             }
         }
 
+        // Load poetry tab
         function loadPoetryTab() {
             const contentArea = document.getElementById('content-area');
             
-            contentArea.innerHTML = `
-                <div class="content-header">
-                    <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                    </svg>
-                    <h2 class="content-title">Poetry</h2>
-                </div>
-                
-                <div style="margin-bottom: 1rem;">
-                    <textarea id="new-poetry" placeholder="Add a poem or quote you want to save..."></textarea>
-                    <button class="btn btn-purple" onclick="addPoetry()" style="margin-top: 0.5rem;">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Save Poetry
-                    </button>
-                </div>
-                
-                <div class="item-list">
-                    ${appData.poetry.map(poem => `
-                        <div style="padding: 1rem; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 0.375rem; margin-bottom: 1rem;">
-                            <div style="white-space: pre-wrap; margin-bottom: 0.5rem; cursor: pointer;" 
-                                 onclick="editPoetry(${poem.id})" title="Click to edit">${poem.content}</div>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div style="font-size: 0.75rem; color: #8b5cf6;">
-                                    ${new Date(poem.dateAdded).toLocaleDateString()}
-                                </div>
-                                <button class="btn btn-delete" onclick="deletePoetry(${poem.id})">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                    </svg>
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+            contentArea.innerHTML = 
+                '<h2>Poetry</h2>' +
+                '<div style="margin-bottom: 1rem;">' +
+                    '<textarea id="new-poetry" placeholder="Add a poem or quote..."></textarea>' +
+                    '<div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">' +
+                        '<input type="date" id="poetry-date-input" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 0 0 auto;">' +
+                        '<button class="btn btn-purple" onclick="addPoetry()">Save Poetry</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div>' +
+                    appData.poetry
+                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .map(poem => 
+                        '<div style="padding: 1rem; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 0.375rem; margin-bottom: 1rem;">' +
+                            '<div style="cursor: pointer; margin-bottom: 0.5rem; white-space: pre-wrap;" onclick="editPoetry(' + poem.id + ')">' + poem.content + '</div>' +
+                            '<div style="display: flex; justify-content: space-between;">' +
+                                '<small style="color: #8b5cf6;">' + new Date(poem.date).toLocaleDateString() + '</small>' +
+                                '<button class="btn btn-delete" onclick="deletePoetry(' + poem.id + ')">Delete</button>' +
+                            '</div>' +
+                        '</div>'
+                    ).join('') +
+                '</div>';
         }
 
         function addPoetry() {
             const textarea = document.getElementById('new-poetry');
+            const dateInput = document.getElementById('poetry-date-input');
             const content = textarea.value.trim();
-            if (!content) return;
+            const date = dateInput.value;
+            if (!content || !date) return;
 
             const newPoetry = {
                 id: Date.now(),
                 content: content,
-                dateAdded: new Date().toISOString()
+                date: date
             };
 
             appData.poetry.push(newPoetry);
             saveData();
             textarea.value = '';
+            // Keep the date for easy multiple entries
             loadPoetryTab();
             updateDashboard();
         }
@@ -883,8 +510,14 @@
             if (!poetry) return;
 
             const newContent = prompt('Edit poetry:', poetry.content);
-            if (newContent !== null && newContent.trim() !== '') {
+            if (newContent === null) return;
+            
+            const newDate = prompt('Edit date (YYYY-MM-DD):', poetry.date);
+            if (newDate === null) return;
+
+            if (newContent.trim() !== '' && newDate) {
                 poetry.content = newContent.trim();
+                poetry.date = newDate;
                 saveData();
                 loadPoetryTab();
                 updateDashboard();
@@ -892,7 +525,7 @@
         }
 
         function deletePoetry(poetryId) {
-            if (confirm('Are you sure you want to permanently delete this poetry entry?')) {
+            if (confirm('Delete this poetry?')) {
                 appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
                 saveData();
                 loadPoetryTab();
@@ -900,61 +533,40 @@
             }
         }
 
+        // Load calories tab - SIMPLE VERSION
         function loadCaloriesTab() {
             const contentArea = document.getElementById('content-area');
             
-            contentArea.innerHTML = `
-                <div class="content-header">
-                    <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
-                    <h2 class="content-title">Calorie Tracker</h2>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
-                    <input type="text" id="food-input" placeholder="Food item" />
-                    <input type="number" id="calories-input" placeholder="Calories" />
-                    <input type="number" id="protein-input" placeholder="Protein (g)" />
-                    <select id="meal-input">
-                        <option value="breakfast">Breakfast</option>
-                        <option value="lunch">Lunch</option>
-                        <option value="dinner">Dinner</option>
-                        <option value="snack">Snack</option>
-                    </select>
-                    <button class="btn btn-green" onclick="addCalorieEntry()">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Add
-                    </button>
-                </div>
-                
-                <div class="item-list">
-                    ${appData.calories
+            contentArea.innerHTML = 
+                '<h2>Calorie Tracker</h2>' +
+                '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">' +
+                    '<input type="text" id="food-input" placeholder="Food item">' +
+                    '<input type="number" id="calories-input" placeholder="Calories">' +
+                    '<input type="number" id="protein-input" placeholder="Protein (g)">' +
+                    '<select id="meal-input">' +
+                        '<option value="breakfast">Breakfast</option>' +
+                        '<option value="lunch">Lunch</option>' +
+                        '<option value="dinner">Dinner</option>' +
+                        '<option value="snack">Snack</option>' +
+                    '</select>' +
+                    '<input type="date" id="calorie-date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
+                    '<button class="btn btn-green" onclick="addCalorieEntry()">Add</button>' +
+                '</div>' +
+                '<div>' +
+                    appData.calories
                         .sort((a, b) => new Date(b.date) - new Date(a.date))
-                        .map(entry => `
-                        <div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; display: flex; justify-content: space-between; align-items: center;">
-                            <div style="cursor: pointer;" onclick="editCalorieEntry(${entry.id})" title="Click to edit">
-                                <span style="font-weight: 500;">${entry.food}</span>
-                                <span style="margin-left: 0.5rem; font-size: 0.875rem; color: #6b7280; text-transform: capitalize;">(${entry.meal})</span>
-                            </div>
-                            <div style="text-align: right; display: flex; align-items: center; gap: 1rem;">
-                                <div>
-                                    <div style="font-weight: bold; color: #10b981;">${entry.calories} cal</div>
-                                    ${entry.protein ? `<div style="font-weight: bold; color: #8b5cf6;">${entry.protein}g protein</div>` : ''}
-                                    <div style="font-size: 0.75rem; color: #6b7280;">${entry.date}</div>
-                                </div>
-                                <button class="btn btn-delete" onclick="deleteCalorieEntry(${entry.id})">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                    </svg>
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+                        .map(entry => 
+                        '<div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">' +
+                            '<div style="cursor: pointer;" onclick="editCalorieEntry(' + entry.id + ')">' +
+                                '<strong>' + entry.food + '</strong> - ' + entry.calories + ' cal' +
+                                (entry.protein ? ', ' + entry.protein + 'g protein' : '') +
+                                ' (' + entry.meal + ')' +
+                                '<br><small style="color: #6b7280;">' + new Date(entry.date).toLocaleDateString() + '</small>' +
+                            '</div>' +
+                            '<button class="btn btn-delete" onclick="deleteCalorieEntry(' + entry.id + ')">Delete</button>' +
+                        '</div>'
+                    ).join('') +
+                '</div>';
         }
 
         function addCalorieEntry() {
@@ -962,8 +574,9 @@
             const calories = parseInt(document.getElementById('calories-input').value);
             const protein = parseInt(document.getElementById('protein-input').value) || 0;
             const meal = document.getElementById('meal-input').value;
+            const date = document.getElementById('calorie-date-input').value;
 
-            if (!food || !calories) return;
+            if (!food || !calories || !date) return;
 
             const newEntry = {
                 id: Date.now(),
@@ -971,7 +584,7 @@
                 calories: calories,
                 protein: protein,
                 meal: meal,
-                date: new Date().toISOString().split('T')[0]
+                date: date
             };
 
             appData.calories.push(newEntry);
@@ -980,6 +593,7 @@
             document.getElementById('food-input').value = '';
             document.getElementById('calories-input').value = '';
             document.getElementById('protein-input').value = '';
+            // Keep the date as is for easy multiple entries
             loadCaloriesTab();
             updateDashboard();
         }
@@ -988,26 +602,28 @@
             const entry = appData.calories.find(entry => entry.id === entryId);
             if (!entry) return;
 
-            const newFood = prompt('Edit food item:', entry.food);
-            if (newFood === null) return;
-
+            const newFood = prompt('Edit food:', entry.food);
+            if (!newFood) return;
+            
             const newCalories = prompt('Edit calories:', entry.calories);
-            if (newCalories === null) return;
+            if (!newCalories) return;
 
-            const newProtein = prompt('Edit protein (g):', entry.protein || '');
+            const newProtein = prompt('Edit protein:', entry.protein || '');
+            
+            const newDate = prompt('Edit date (YYYY-MM-DD):', entry.date);
+            if (!newDate) return;
 
-            if (newFood.trim() !== '' && !isNaN(newCalories) && newCalories > 0) {
-                entry.food = newFood.trim();
-                entry.calories = parseInt(newCalories);
-                entry.protein = parseInt(newProtein) || 0;
-                saveData();
-                loadCaloriesTab();
-                updateDashboard();
-            }
+            entry.food = newFood;
+            entry.calories = parseInt(newCalories);
+            entry.protein = parseInt(newProtein) || 0;
+            entry.date = newDate;
+            saveData();
+            loadCaloriesTab();
+            updateDashboard();
         }
 
         function deleteCalorieEntry(entryId) {
-            if (confirm('Are you sure you want to permanently delete this calorie entry?')) {
+            if (confirm('Delete this entry?')) {
                 appData.calories = appData.calories.filter(entry => entry.id !== entryId);
                 saveData();
                 loadCaloriesTab();
@@ -1015,78 +631,54 @@
             }
         }
 
+        // Load spending tab - SIMPLE VERSION
         function loadSpendingTab() {
             const contentArea = document.getElementById('content-area');
             
-            contentArea.innerHTML = `
-                <div class="content-header">
-                    <svg class="tab-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
-                    </svg>
-                    <h2 class="content-title">Spending Tracker</h2>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
-                    <input type="text" id="description-input" placeholder="Description" />
-                    <input type="number" id="amount-input" step="0.01" placeholder="Amount" />
-                    <select id="category-input">
-                        <option value="food">Food</option>
-                        <option value="transport">Transport</option>
-                        <option value="entertainment">Entertainment</option>
-                        <option value="shopping">Shopping</option>
-                        <option value="subscriptions">Subscriptions</option>
-                        <option value="bills">Bills</option>
-                        <option value="health">Health</option>
-                        <option value="other">Other</option>
-                    </select>
-                    <button class="btn btn-primary" onclick="addSpendingEntry()">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Add
-                    </button>
-                </div>
-                
-                <div class="item-list">
-                    ${appData.spending
+            contentArea.innerHTML = 
+                '<h2>Spending Tracker</h2>' +
+                '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">' +
+                    '<input type="text" id="description-input" placeholder="Description">' +
+                    '<input type="number" id="amount-input" step="0.01" placeholder="Amount">' +
+                    '<select id="category-input">' +
+                        '<option value="food">Food</option>' +
+                        '<option value="transport">Transport</option>' +
+                        '<option value="entertainment">Entertainment</option>' +
+                        '<option value="shopping">Shopping</option>' +
+                        '<option value="other">Other</option>' +
+                    '</select>' +
+                    '<input type="date" id="spending-date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
+                    '<button class="btn btn-primary" onclick="addSpendingEntry()">Add</button>' +
+                '</div>' +
+                '<div>' +
+                    appData.spending
                         .sort((a, b) => new Date(b.date) - new Date(a.date))
-                        .map(entry => `
-                        <div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; display: flex; justify-content: space-between; align-items: center;">
-                            <div style="cursor: pointer;" onclick="editSpendingEntry(${entry.id})" title="Click to edit">
-                                <span style="font-weight: 500;">${entry.description}</span>
-                                <span style="margin-left: 0.5rem; font-size: 0.875rem; color: #6b7280; text-transform: capitalize;">(${entry.category})</span>
-                            </div>
-                            <div style="text-align: right; display: flex; align-items: center; gap: 1rem;">
-                                <div>
-                                    <div style="font-weight: bold; color: #3b82f6;">${entry.amount.toFixed(2)}</div>
-                                    <div style="font-size: 0.75rem; color: #6b7280;">${entry.date}</div>
-                                </div>
-                                <button class="btn btn-delete" onclick="deleteSpendingEntry(${entry.id})">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                    </svg>
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+                        .map(entry => 
+                        '<div style="padding: 1rem; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">' +
+                            '<div style="cursor: pointer;" onclick="editSpendingEntry(' + entry.id + ')">' +
+                                '<strong>' + entry.description + '</strong> - $' + entry.amount.toFixed(2) + ' (' + entry.category + ')' +
+                                '<br><small style="color: #6b7280;">' + new Date(entry.date).toLocaleDateString() + '</small>' +
+                            '</div>' +
+                            '<button class="btn btn-delete" onclick="deleteSpendingEntry(' + entry.id + ')">Delete</button>' +
+                        '</div>'
+                    ).join('') +
+                '</div>';
         }
 
         function addSpendingEntry() {
             const description = document.getElementById('description-input').value.trim();
             const amount = parseFloat(document.getElementById('amount-input').value);
             const category = document.getElementById('category-input').value;
+            const date = document.getElementById('spending-date-input').value;
 
-            if (!description || !amount) return;
+            if (!description || !amount || !date) return;
 
             const newEntry = {
                 id: Date.now(),
                 description: description,
                 amount: amount,
                 category: category,
-                date: new Date().toISOString().split('T')[0]
+                date: date
             };
 
             appData.spending.push(newEntry);
@@ -1094,6 +686,7 @@
             
             document.getElementById('description-input').value = '';
             document.getElementById('amount-input').value = '';
+            // Keep the date as is for easy multiple entries
             loadSpendingTab();
             updateDashboard();
         }
@@ -1103,22 +696,24 @@
             if (!entry) return;
 
             const newDescription = prompt('Edit description:', entry.description);
-            if (newDescription === null) return;
-
+            if (!newDescription) return;
+            
             const newAmount = prompt('Edit amount:', entry.amount);
-            if (newAmount === null) return;
+            if (!newAmount) return;
 
-            if (newDescription.trim() !== '' && !isNaN(newAmount) && newAmount > 0) {
-                entry.description = newDescription.trim();
-                entry.amount = parseFloat(newAmount);
-                saveData();
-                loadSpendingTab();
-                updateDashboard();
-            }
+            const newDate = prompt('Edit date (YYYY-MM-DD):', entry.date);
+            if (!newDate) return;
+
+            entry.description = newDescription;
+            entry.amount = parseFloat(newAmount);
+            entry.date = newDate;
+            saveData();
+            loadSpendingTab();
+            updateDashboard();
         }
 
         function deleteSpendingEntry(entryId) {
-            if (confirm('Are you sure you want to permanently delete this spending entry?')) {
+            if (confirm('Delete this entry?')) {
                 appData.spending = appData.spending.filter(entry => entry.id !== entryId);
                 saveData();
                 loadSpendingTab();
@@ -1126,12 +721,37 @@
             }
         }
 
+        // Update dashboard stats - SIMPLE VERSION
+        function updateDashboard() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayEntries = appData.calories.filter(entry => entry.date && entry.date.startsWith(today));
+            const todayCalories = todayEntries.reduce((sum, entry) => sum + entry.calories, 0);
+            
+            document.getElementById('calories-today').textContent = todayCalories + ' cal today';
+
+            const now = new Date();
+            const weekStart = new Date(now);
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+            
+            const weekSpending = appData.spending
+                .filter(entry => {
+                    if (!entry.date) return false;
+                    const entryDate = new Date(entry.date);
+                    return entryDate >= weekStart;
+                })
+                .reduce((sum, entry) => sum + entry.amount, 0);
+            
+            document.getElementById('spending-week').textContent = '$' + weekSpending.toFixed(2) + ' this week';
+        }
+
+        // Initialize app
         function init() {
             loadData();
             updateDashboard();
             showTab('dashboard');
         }
 
+        // Start the app when page loads
         window.addEventListener('load', init);
     </script>
 </body>
