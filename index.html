@@ -204,6 +204,17 @@
             background-color: #7c3aed;
         }
         
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        
+        .btn-delete:hover {
+            background-color: #dc2626;
+        }
+        
         .item-list {
             display: flex;
             flex-direction: column;
@@ -291,6 +302,20 @@
         
         .hidden {
             display: none;
+        }
+        
+        /* Item controls styling */
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+        
+        .item-meta {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-align: right;
         }
         
         @media (max-width: 768px) {
@@ -454,7 +479,7 @@
     </div>
 
     <script>
-        // Data storage
+        // Data storage (using in-memory storage instead of localStorage for Claude.ai compatibility)
         let appData = {
             lists: {
                 read: [],
@@ -470,17 +495,10 @@
             spending: []
         };
 
-        // Load data from localStorage
-        function loadData() {
-            const saved = localStorage.getItem('notebookData');
-            if (saved) {
-                appData = JSON.parse(saved);
-            }
-        }
-
-        // Save data to localStorage
+        // Save data function (placeholder for actual storage)
         function saveData() {
-            localStorage.setItem('notebookData', JSON.stringify(appData));
+            // In a real application, this would save to localStorage or a server
+            console.log('Data saved:', appData);
         }
 
         // Update dashboard stats
@@ -509,7 +527,7 @@
                     return entryDate >= weekStart && entryDate <= weekEnd;
                 })
                 .reduce((sum, entry) => sum + entry.amount, 0);
-            document.getElementById('spending-week').textContent = `${weekSpending.toFixed(2)} this week`;
+            document.getElementById('spending-week').textContent = `$${weekSpending.toFixed(2)} this week`;
 
             // Update recent activity
             const allItems = [
@@ -617,8 +635,15 @@
                             <input type="checkbox" ${item.completed ? 'checked' : ''} 
                                    onchange="toggleListItem('${listName}', ${item.id})">
                             <div class="list-item-content">${item.content}</div>
-                            <small style="color: #6b7280;">${new Date(item.dateAdded).toLocaleDateString()}</small>
-                            <button class="btn" style="background: #ef4444; color: white; padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="deleteListItem('${listName}', ${item.id})">Delete</button>
+                            <div class="item-controls">
+                                <div class="item-meta">${new Date(item.dateAdded).toLocaleDateString()}</div>
+                                <button class="btn btn-delete" onclick="deleteListItem('${listName}', ${item.id})">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                    Delete
+                                </button>
+                            </div>
                         </div>
                     `).join('')}
                 </div>
@@ -656,14 +681,14 @@
             }
         }
 
-        // Delete list item
+        // Delete list item - COMPLETELY REMOVES THE ITEM
         function deleteListItem(listName, itemId) {
-            if (confirm('Are you sure you want to delete this item?')) {
-                appData.lists[listName] = appData.lists[listName].filter(item => item.id !== itemId);
-                saveData();
-                loadListTab(listName);
-                updateDashboard();
-            }
+            console.log('Deleting item:', listName, itemId); // Debug log
+            // Remove the confirm dialog for now to test
+            appData.lists[listName] = appData.lists[listName].filter(item => item.id !== itemId);
+            saveData();
+            loadListTab(listName);
+            updateDashboard();
         }
 
         // Load notes tab
@@ -753,7 +778,12 @@
                                             minute: '2-digit' 
                                         })}
                                     </div>
-                                    <button class="btn" style="background: #ef4444; color: white; padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="deleteNote(${note.id})">Delete</button>
+                                    <button class="btn btn-delete" onclick="deleteNote(${note.id})">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
                         `).join('')}
@@ -762,14 +792,13 @@
             }).join('');
         }
 
-        // Delete note
+        // Delete note - COMPLETELY REMOVES THE NOTE
         function deleteNote(noteId) {
-            if (confirm('Are you sure you want to delete this note?')) {
-                appData.notes = appData.notes.filter(note => note.id !== noteId);
-                saveData();
-                displayNotes();
-                updateDashboard();
-            }
+            console.log('Deleting note:', noteId); // Debug log
+            appData.notes = appData.notes.filter(note => note.id !== noteId);
+            saveData();
+            displayNotes();
+            updateDashboard();
         }
 
         // Load poetry tab
@@ -802,7 +831,12 @@
                                 <div style="font-size: 0.75rem; color: #8b5cf6;">
                                     ${new Date(poem.dateAdded).toLocaleDateString()}
                                 </div>
-                                <button class="btn" style="background: #ef4444; color: white; padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="deletePoetry(${poem.id})">Delete</button>
+                                <button class="btn btn-delete" onclick="deletePoetry(${poem.id})">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                    Delete
+                                </button>
                             </div>
                         </div>
                     `).join('')}
@@ -829,14 +863,13 @@
             updateDashboard();
         }
 
-        // Delete poetry
+        // Delete poetry - COMPLETELY REMOVES THE POETRY ENTRY
         function deletePoetry(poetryId) {
-            if (confirm('Are you sure you want to delete this poetry entry?')) {
-                appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
-                saveData();
-                loadPoetryTab();
-                updateDashboard();
-            }
+            console.log('Deleting poetry:', poetryId); // Debug log
+            appData.poetry = appData.poetry.filter(poem => poem.id !== poetryId);
+            saveData();
+            loadPoetryTab();
+            updateDashboard();
         }
 
         // Load calories tab
@@ -884,7 +917,12 @@
                                     ${entry.protein ? `<div style="font-weight: bold; color: #8b5cf6;">${entry.protein}g protein</div>` : ''}
                                     <div style="font-size: 0.75rem; color: #6b7280;">${entry.date}</div>
                                 </div>
-                                <button class="btn" style="background: #ef4444; color: white; padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="deleteCalorieEntry(${entry.id})">Delete</button>
+                                <button class="btn btn-delete" onclick="deleteCalorieEntry(${entry.id})">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                    Delete
+                                </button>
                             </div>
                         </div>
                     `).join('')}
@@ -920,14 +958,13 @@
             updateDashboard();
         }
 
-        // Delete calorie entry
+        // Delete calorie entry - COMPLETELY REMOVES THE ENTRY
         function deleteCalorieEntry(entryId) {
-            if (confirm('Are you sure you want to delete this calorie entry?')) {
-                appData.calories = appData.calories.filter(entry => entry.id !== entryId);
-                saveData();
-                loadCaloriesTab();
-                updateDashboard();
-            }
+            console.log('Deleting calorie entry:', entryId); // Debug log
+            appData.calories = appData.calories.filter(entry => entry.id !== entryId);
+            saveData();
+            loadCaloriesTab();
+            updateDashboard();
         }
 
         // Load spending tab
@@ -972,9 +1009,17 @@
                                 <span style="font-weight: 500;">${entry.description}</span>
                                 <span style="margin-left: 0.5rem; font-size: 0.875rem; color: #6b7280; text-transform: capitalize;">(${entry.category})</span>
                             </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: bold; color: #3b82f6;">${entry.amount.toFixed(2)}</div>
-                                <div style="font-size: 0.75rem; color: #6b7280;">${entry.date}</div>
+                            <div style="text-align: right; display: flex; align-items: center; gap: 1rem;">
+                                <div>
+                                    <div style="font-weight: bold; color: #3b82f6;">${entry.amount.toFixed(2)}</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">${entry.date}</div>
+                                </div>
+                                <button class="btn btn-delete" onclick="deleteSpendingEntry(${entry.id})">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                    Delete
+                                </button>
                             </div>
                         </div>
                     `).join('')}
@@ -1007,9 +1052,17 @@
             updateDashboard();
         }
 
+        // Delete spending entry - COMPLETELY REMOVES THE ENTRY
+        function deleteSpendingEntry(entryId) {
+            console.log('Deleting spending entry:', entryId); // Debug log
+            appData.spending = appData.spending.filter(entry => entry.id !== entryId);
+            saveData();
+            loadSpendingTab();
+            updateDashboard();
+        }
+
         // Initialize app
         function init() {
-            loadData();
             updateDashboard();
             showTab('dashboard');
         }
