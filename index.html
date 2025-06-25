@@ -29,25 +29,28 @@
         .form-row input, .form-row select { min-width: 80px; flex: 1; }
         
         @media (max-width: 768px) {
-            body { padding: 3px; font-size: 14px; }
+            body { padding: 3px; font-size: 16px; }
             .container { max-width: 100%; padding: 0; }
-            h1 { font-size: 1.1rem; margin-bottom: 6px; text-align: center; }
+            h1 { font-size: 1.3rem; margin-bottom: 8px; text-align: center; }
             .stats { gap: 4px; margin-bottom: 8px; }
-            .stat-card { padding: 4px; font-size: 10px; line-height: 1.1; }
-            .nav-grid { gap: 2px; margin-bottom: 8px; grid-template-columns: repeat(4, 1fr); }
-            .tab-btn { padding: 4px 1px; font-size: 9px; line-height: 1.1; }
-            .content { padding: 6px; }
-            .item { padding: 4px; gap: 3px; margin-bottom: 4px; }
-            .item-content { font-size: 11px; line-height: 1.2; }
-            .form-row { gap: 2px; margin-bottom: 6px; flex-direction: column; align-items: stretch; }
-            .form-row input, .form-row select { min-width: auto; font-size: 11px; width: 100%; margin-bottom: 2px; }
-            .btn { padding: 3px 5px; font-size: 10px; }
-            .btn-delete { padding: 2px 4px; font-size: 9px; width: auto; }
+            .stat-card { padding: 6px; font-size: 12px; line-height: 1.2; }
+            .nav-grid { gap: 2px; margin-bottom: 8px; }
+            .tab-btn { padding: 6px 2px; font-size: 11px; line-height: 1.2; }
+            .content { padding: 8px; }
+            .item { padding: 6px; gap: 4px; margin-bottom: 6px; }
+            .item-content { font-size: 13px; line-height: 1.3; }
+            .form-row { gap: 3px; margin-bottom: 8px; flex-direction: column; align-items: stretch; }
+            .form-row input, .form-row select { min-width: auto; font-size: 13px; width: 100%; margin-bottom: 3px; }
+            .btn { padding: 4px 6px; font-size: 12px; }
+            .btn-delete { padding: 3px 5px; font-size: 10px; width: auto; }
             .form-row .btn { width: 100%; }
-            textarea { height: 50px; font-size: 11px; }
-            input, textarea, select { padding: 3px; font-size: 11px; }
-            h2 { font-size: 1rem; margin-bottom: 6px; }
-            h3 { font-size: 0.9rem; margin-bottom: 4px; }
+            textarea { height: 60px; font-size: 13px; }
+            input, textarea, select { padding: 4px; font-size: 13px; }
+            h2 { font-size: 1.1rem; margin-bottom: 8px; }
+            h3 { font-size: 1rem; margin-bottom: 6px; }
+            
+            /* Mobile layout changes */
+            .nav-grid.compact { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 </head>
@@ -68,13 +71,13 @@
             </div>
         </div>
         
-        <div style="margin-bottom: 15px;">
+        <div id="home-button" style="margin-bottom: 15px;">
             <button class="tab-btn active" onclick="showTab('home')" id="tab-home" style="width: 100%; padding: 20px;">
                 🏠 Home
             </button>
         </div>
         
-        <div class="nav-grid">
+        <div class="nav-grid" id="nav-grid">
             <button class="tab-btn" onclick="showTab('notes')" id="tab-notes">📝<br>Notes</button>
             <button class="tab-btn" onclick="showTab('read')" id="tab-read">📚<br>Read</button>
             <button class="tab-btn" onclick="showTab('listen')" id="tab-listen">🎵<br>Listen</button>
@@ -127,12 +130,16 @@ function showTab(tab) {
     document.getElementById('tab-' + tab).classList.add('active');
 
     if (tab === 'home') {
+        // Home tab: show stats and nav grid in 4 columns
         document.getElementById('stats').style.display = 'grid';
         document.getElementById('content').classList.add('hidden');
+        document.getElementById('nav-grid').classList.remove('compact');
         updateStats();
     } else {
+        // Other tabs: hide stats, show nav grid in 3 columns on mobile
         document.getElementById('stats').style.display = 'none';
         document.getElementById('content').classList.remove('hidden');
+        document.getElementById('nav-grid').classList.add('compact');
         loadTab(tab);
     }
 }
