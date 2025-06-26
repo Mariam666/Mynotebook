@@ -177,14 +177,16 @@ function loadListTab(listName) {
                 '<select id="cat-input"><option value="book">Book</option><option value="essay">Essay</option><option value="poem">Poem</option></select>' +
                 '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
                 '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
-                '</div>';
+                '</div>' +
+                '<div style="margin: 8px 0;"><input type="text" id="search-' + listName + '" placeholder="🔍 Search..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" oninput="simpleFilter(\'' + listName + '\')"></div>';
     } else {
         html += '<div class="form-row">' +
                 '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
                 '<input type="url" id="link-input" placeholder="Link">' +
                 '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
                 '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
-                '</div>';
+                '</div>' +
+                '<div style="margin: 8px 0;"><input type="text" id="search-' + listName + '" placeholder="🔍 Search..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" oninput="simpleFilter(\'' + listName + '\')"></div>';
     }
     
     html += '<div>';
@@ -208,7 +210,7 @@ function loadListTab(listName) {
                 '</div>' +
                 '</div>';
     });
-    html += '</div>';
+    html += '</div></div>';
     
     content.innerHTML = html;
 }
@@ -606,6 +608,70 @@ function showFullImage(imageData) {
     };
     
     document.body.appendChild(overlay);
+}
+
+function filterItems(listName) {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    
+    // Store the search term temporarily
+    window.currentSearch = searchTerm;
+    
+    // Reload the tab with filtering
+    loadListTab(listName);
+}
+
+function renderFilteredItems(listName, items, container) {
+    let html = '';
+    
+    if (listName === 'notes') {
+        items.forEach(note => {
+            html += '<div class="item" style="background: #f8f9fa;">' +
+                    '<div class="item-content" onclick="editNote(' + note.id + ')">' +
+                    note.content +
+                    '<br><small>' + note.date + '</small>' +
+                    '</div>' +
+                    '<div class="item-actions">' +
+                    '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">🗑️</button>' +
+                    '</div>' +
+                    '</div>';
+        });
+    } else {
+        items.forEach(item => {
+            const today = getPSTDate();
+            const isToday = item.date === today;
+            const bgColor = isToday ? '#e0f2fe' : '#f8f9fa';
+            
+            html += '<div class="item" style="background: ' + bgColor + ';">' +
+                    '<div class="item-content" onclick="editItem(\'' + listName + '\', ' + item.id + ')">' +
+                    item.content +
+                    (listName === 'read' ? '<br><small><strong>' + (item.category || 'book').toUpperCase() + '</strong></small>' : '') +
+                    '<br><small>' + item.date + '</small>' +
+                    '</div>' +
+                    '<div class="item-actions">' +
+                    (item.link ? '<button class="btn-green" style="padding: 4px 8px; font-size: 12px;" onclick="window.open(\'' + item.link + '\')">🔗</button>' : '') +
+                    '<button class="btn btn-delete" onclick="deleteItem(\'' + listName + '\', ' + item.id + ')">🗑️</button>' +
+                    '</div>' +
+                    '</div>';
+        });
+    }
+    
+    container.innerHTML = html;
+}
+
+function simpleFilter(listName) {
+    const searchInput = document.getElementById('search-' + listName);
+    const searchTerm = searchInput.value.toLowerCase();
+    
+    const allItems = document.querySelectorAll('.item');
+    
+    allItems.forEach(item => {
+        const content = item.textContent.toLowerCase();
+        if (searchTerm === '' || content.includes(searchTerm)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
 }
 
 function downloadData() {
