@@ -178,14 +178,6 @@ function loadListTab(listName) {
                 '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
                 '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
                 '</div>';
-    } else if (listName === 'look') {
-        html += '<div class="form-row">' +
-                '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
-                '<input type="url" id="link-input" placeholder="Link">' +
-                '<div style="width: 100%; height: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; background: #f9f9f9; overflow: hidden; display: flex; align-items: center; justify-content: center;" contenteditable="true" id="paste-area">📷 Paste image here</div>' +
-                '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
-                '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
-                '</div>';
     } else {
         html += '<div class="form-row">' +
                 '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
@@ -206,7 +198,6 @@ function loadListTab(listName) {
         
         html += '<div class="item" style="background: ' + bgColor + ';">' +
                 '<div class="item-content" onclick="editItem(\'' + listName + '\', ' + item.id + ')">' +
-                (item.photo ? '<img src="' + item.photo + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; margin-bottom: 4px; display: block; cursor: pointer;" onclick="event.stopPropagation(); this.style.width = this.style.width === \'60px\' ? \'200px\' : \'60px\'; this.style.height = this.style.height === \'60px\' ? \'200px\' : \'60px\';">' : '') +
                 item.content +
                 (listName === 'read' ? '<br><small><strong>' + (item.category || 'book').toUpperCase() + '</strong></small>' : '') +
                 '<br><small>' + item.date + '</small>' +
@@ -243,23 +234,10 @@ function addItem(listName) {
         item.link = linkInput.value.trim();
     }
     
-    // Handle photo for LOOK section
-    if (listName === 'look') {
-        const pasteArea = document.getElementById('paste-area');
-        const img = pasteArea.querySelector('img');
-        if (img && img.src) {
-            item.photo = img.src;
-        }
-    }
-    
     data.lists[listName].push(item);
     save();
     itemInput.value = '';
     linkInput.value = '';
-    if (listName === 'look') {
-        const pasteArea = document.getElementById('paste-area');
-        if (pasteArea) pasteArea.innerHTML = '📷 Paste image here';
-    }
     loadListTab(listName);
 }
 
