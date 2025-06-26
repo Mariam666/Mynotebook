@@ -28,6 +28,8 @@
         .form-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
         .form-row input, .form-row select { min-width: 80px; flex: 1; }
         
+        #paste-area img { max-width: 80px; max-height: 80px; object-fit: cover; border-radius: 4px; }
+        
         @media (max-width: 768px) {
             body { padding: 8px; font-size: 16px; }
             .container { max-width: 100%; padding: 0; }
@@ -180,7 +182,7 @@ function loadListTab(listName) {
         html += '<div class="form-row">' +
                 '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
                 '<input type="url" id="link-input" placeholder="Link">' +
-                '<div style="width: 100%; height: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; background: #f9f9f9; overflow: hidden;" contenteditable="true" id="paste-area" placeholder="Paste image here">📷 Paste image here</div>' +
+                '<div style="width: 100%; height: 100px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; background: #f9f9f9; overflow: hidden; display: flex; align-items: center; justify-content: center;" contenteditable="true" id="paste-area">📷 Paste image here</div>' +
                 '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
                 '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
                 '</div>';
@@ -255,7 +257,8 @@ function addItem(listName) {
     itemInput.value = '';
     linkInput.value = '';
     if (listName === 'look') {
-        document.getElementById('photo-input').value = '';
+        const pasteArea = document.getElementById('paste-area');
+        if (pasteArea) pasteArea.innerHTML = '📷 Paste image here';
     }
     loadListTab(listName);
 }
