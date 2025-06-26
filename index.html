@@ -105,6 +105,12 @@ let data = {
     spending: []
 };
 
+function getPSTDate() {
+    const now = new Date();
+    const pst = new Date(now.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
+    return pst.toISOString().split('T')[0];
+}
+
 function save() {
     try {
         localStorage.setItem('notebookData', JSON.stringify(data));
@@ -165,7 +171,7 @@ function loadListTab(listName) {
                 '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
                 '<input type="url" id="link-input" placeholder="Link">' +
                 '<select id="cat-input"><option value="book">Book</option><option value="essay">Essay</option><option value="poem">Poem</option></select>' +
-                '<input type="date" id="date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
+                '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
                 '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
                 '</div>';
     } else if (listName === 'look') {
@@ -173,7 +179,7 @@ function loadListTab(listName) {
                 '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
                 '<input type="url" id="link-input" placeholder="Link">' +
                 '<div style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; background: #f9f9f9;" contenteditable="true" id="paste-area" placeholder="Paste image here">📷 Paste image here</div>' +
-                '<input type="date" id="date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
+                '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
                 '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
                 '</div>';
     } else {
@@ -295,7 +301,7 @@ function loadNotesTab() {
                '<div style="margin-bottom: 15px;">' +
                '<textarea id="note-input" placeholder="Write note..."></textarea>' +
                '<div style="display: flex; gap: 8px; margin-top: 8px;">' +
-               '<input type="date" id="note-date" value="' + new Date().toISOString().split('T')[0] + '">' +
+               '<input type="date" id="note-date" value="' + getPSTDate() + '">' +
                '<button class="btn btn-primary" onclick="addNote()">Save</button>' +
                '</div></div><div>';
     
@@ -354,7 +360,7 @@ function deleteNote(id) {
 
 function loadCaloriesTab() {
     const content = document.getElementById('content');
-    const today = new Date().toISOString().split('T')[0];
+    const today = getPSTDate();
     const todayBurned = data.caloriesBurned?.find(entry => entry.date === today);
     
     let html = '<h2>CALORIES</h2>' +
@@ -376,7 +382,7 @@ function loadCaloriesTab() {
                '<select id="meal-input" style="flex: 1;"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snack</option></select>' +
                '<input type="number" id="cal-input" placeholder="Calories" style="flex: 1;">' +
                '<input type="number" id="prot-input" placeholder="Protein (g)" style="flex: 1;">' +
-               '<input type="date" id="cal-date" value="' + new Date().toISOString().split('T')[0] + '" style="flex: 1;">' +
+               '<input type="date" id="cal-date" value="' + getPSTDate() + '" style="flex: 1;">' +
                '<button class="btn btn-green" onclick="addCalorie()">Add</button>' +
                '</div><div>';
     
@@ -457,7 +463,7 @@ function loadSpendingTab() {
                '<input type="text" id="desc-input" placeholder="Description" style="flex: 2;">' +
                '<input type="number" id="amt-input" step="0.01" placeholder="Amount">' +
                '<select id="cat-input"><option value="food">Food</option><option value="transport">Transport</option><option value="entertainment">Entertainment</option><option value="shopping">Shopping</option><option value="other">Other</option></select>' +
-               '<input type="date" id="spend-date" value="' + new Date().toISOString().split('T')[0] + '">' +
+               '<input type="date" id="spend-date" value="' + getPSTDate() + '">' +
                '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
                '</div><div>';
     
@@ -553,7 +559,7 @@ function addBurnedCalories() {
 }
 
 function updateStats() {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getPSTDate();
     const todayCals = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + e.calories, 0);
     const todayProtein = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + (e.protein || 0), 0);
     
