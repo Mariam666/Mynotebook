@@ -362,17 +362,20 @@ function loadNotesTab() {
     let html = '<h2>NOTES</h2>';
     
     html += '<div class="form-row">' +
-            '<textarea id="note-input" placeholder="Write your note here..." style="flex: 2;"></textarea>' +
-            '<input type="date" id="note-date" value="' + getPSTDate() + '">' +
-            '<button class="btn btn-primary" onclick="addNote()">Add Note</button>' +
+            '<textarea id="note-input" placeholder="Write your note..." style="flex: 1; min-height: 80px;"></textarea>' +
+            '<button class="btn btn-primary" onclick="addNote()" style="align-self: flex-start;">Add Note</button>' +
             '</div>';
     
-    html += '<div id="paste-area" style="border: 2px dashed #ccc; padding: 20px; margin: 10px 0; text-align: center; border-radius: 8px;" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">Drag and drop images here or paste content</div>';
+    html += '<div id="paste-area" style="border: 2px dashed #ccc; padding: 15px; margin: 10px 0; text-align: center; cursor: pointer;" onclick="document.getElementById(\'file-input\').click()">' +
+            'Click to upload image or drag & drop' +
+            '<input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleFileUpload(event)">' +
+            '</div>';
     
     html += '<div>';
     data.notes.sort((a, b) => b.date.localeCompare(a.date)).forEach(note => {
         html += '<div class="item">' +
                 '<div class="item-content" onclick="editNote(' + note.id + ')">' +
+                (note.image ? '<img src="' + note.image + '" style="max-width: 100px; max-height: 100px; float: right; margin-left: 10px; border-radius: 4px;">' : '') +
                 note.content.replace(/\n/g, '<br>') +
                 '<br><small>' + note.date + '</small>' +
                 '</div>' +
@@ -384,25 +387,21 @@ function loadNotesTab() {
     html += '</div>';
     
     content.innerHTML = html;
-    
-    // Add paste event listener
-    document.getElementById('paste-area').addEventListener('paste', handlePaste);
 }
 
 function addNote() {
-    const noteInput = document.getElementById('note-input');
-    const dateInput = document.getElementById('note-date');
+    const input = document.getElementById('note-input');
+    if (!input.value.trim()) return;
     
-    if (!noteInput.value.trim() || !dateInput.value) return;
-    
-    data.notes.push({
+    const note = {
         id: Date.now(),
-        content: noteInput.value.trim(),
-        date: dateInput.value
-    });
+        content: input.value.trim(),
+        date: getPSTDate()
+    };
     
+    data.notes.push(note);
     save();
-    noteInput.value = '';
+    input.value = '';
     loadNotesTab();
 }
 
@@ -411,15 +410,11 @@ function editNote(id) {
     if (!note) return;
     
     const newContent = prompt('Edit note:', note.content);
-    if (!newContent) return;
-    
-    const newDate = prompt('Date (YYYY-MM-DD):', note.date);
-    if (!newDate) return;
-    
-    note.content = newContent;
-    note.date = newDate;
-    save();
-    loadNotesTab();
+    if (newContent !== null) {
+        note.content = newContent;
+        save();
+        loadNotesTab();
+    }
 }
 
 function deleteNote(id) {
@@ -429,71 +424,59 @@ function deleteNote(id) {
     loadNotesTab();
 }
 
-function handleDragOver(e) {
-    e.preventDefault();
-    e.currentTarget.style.backgroundColor = '#f0f9ff';
-}
-
-function handleDrop(e) {
-    e.preventDefault();
-    e.currentTarget.style.backgroundColor = '';
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
     
-    const files = e.dataTransfer.files;
-    for (let file of files) {
-        if (file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                document.getElementById('paste-area').appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        }
-    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const pasteArea = document.getElementById('paste-area');
+        pasteArea.innerHTML += '<img src="' + e.target.result + '" style="max-width: 80px; max-height: 80px; margin: 5px; border-radius: 4px;">';
+        
+        // Add note with image
+        const note = {
+            id: Date.now(),
+            content: 'Image uploaded',
+            image: e.target.result,
+            date: getPSTDate()
+        };
+        data.notes.push(note);
+        save();
+        loadNotesTab();
+    };
+    reader.readAsDataURL(file);
 }
 
-function handlePaste(e) {
-    const items = e.clipboardData.items;
-    for (let item of items) {
-        if (item.type.startsWith('image/')) {
-            const blob = item.getAsFile();
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                document.getElementById('paste-area').appendChild(img);
-            };
-            reader.readAsDataURL(blob);
-        }
-    }
-}
-
+// Enhanced calorie tracking functions
 function loadCaloriesTab() {
     const content = document.getElementById('content');
     let html = '<h2>🔥 CALORIES</h2>';
     
-    // Legacy calorie input form
-    html += '<div class="form-row">' +
-            '<input type="number" id="cal-input" placeholder="Calories">' +
-            '<input type="number" id="protein-input" placeholder="Protein (g)">' +
+    // Legacy input forms for backwards compatibility
+    html += '<div style="margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 8px;">' +
+            '<h3>Quick Entry</h3>' +
+            '<div class="form-row">' +
             '<input type="date" id="cal-date" value="' + getPSTDate() + '">' +
-            '<button class="btn btn-primary" onclick="addCalorie()">Add Calories</button>' +
-            '</div>';
-    
-    html += '<div class="form-row">' +
-            '<input type="number" id="burned-input" placeholder="Calories Burned">' +
+            '<input type="number" id="cal-input" placeholder="Calories consumed" style="flex: 1;">' +
+            '<input type="number" id="protein-input" placeholder="Protein (g)" style="flex: 1;">' +
+            '<button class="btn btn-primary" onclick="addCalorie()">Add</button>' +
+            '</div>' +
+            '<div class="form-row">' +
             '<input type="date" id="burned-date" value="' + getPSTDate() + '">' +
+            '<input type="number" id="burned-input" placeholder="Calories burned" style="flex: 1;">' +
             '<button class="btn btn-green" onclick="addBurnedCalorie()">Add Burned</button>' +
+            '</div>' +
             '</div>';
     
     // Enhanced calorie table
-    html += '<h3>📊 Daily Calorie Tracking</h3>';
-    html += '<div style="margin-bottom: 10px;">' +
-            '<button class="btn btn-primary" onclick="addTableRow()">Add New Day</button>' +
-            '<button class="btn" onclick="fillMissingDays()" style="margin-left: 8px;">Fill Last 30 Days</button>' +
-            '</div>';
-    
-    html += '<table class="calorie-table">' +
+    html += '<div style="margin-bottom: 20px;">' +
+            '<h3>Calorie Tracking Table</h3>' +
+            '<div style="margin-bottom: 10px;">' +
+            '<button class="btn btn-primary" onclick="addTableRow()">➕ Add Day</button>' +
+            '<button class="btn" onclick="fillMissingDays()" style="background: #8b5cf6; color: white; margin-left: 8px;">📅 Fill Missing Days</button>' +
+            '</div>' +
+            '<div style="overflow-x: auto;">' +
+            '<table class="calorie-table">' +
             '<thead>' +
             '<tr>' +
             '<th>Date</th>' +
@@ -505,14 +488,14 @@ function loadCaloriesTab() {
             '</thead>' +
             '<tbody id="calorie-table-body">' +
             '</tbody>' +
-            '</table>';
+            '</table>' +
+            '</div>' +
+            '</div>';
     
     content.innerHTML = html;
     
-    // Populate the table
+    // Populate table and weekly analysis
     populateCalorieTable();
-    
-    // Generate weekly analysis
     generateWeeklyAnalysis();
 }
 
@@ -634,35 +617,36 @@ function fillMissingDays() {
 
 function generateWeeklyAnalysis() {
     const content = document.getElementById('content');
-    
-    if (!data.calorieTable || data.calorieTable.length === 0) {
-        return;
+    const existingAnalysis = document.getElementById('weekly-analysis');
+    if (existingAnalysis) {
+        existingAnalysis.remove();
     }
     
-    // Group data by weeks
+    // Group data by week
     const weeks = {};
     data.calorieTable.forEach(row => {
-        const rowDate = new Date(row.date);
-        const weekStart = getWeekStart(rowDate);
+        const date = new Date(row.date);
+        const weekStart = getWeekStart(date);
         const weekKey = weekStart.toISOString().split('T')[0];
         
         if (!weeks[weekKey]) {
             weeks[weekKey] = {
                 start: weekStart,
+                days: [],
                 totalIn: 0,
                 totalOut: 0,
-                totalNet: 0,
-                days: 0
+                totalNet: 0
             };
         }
         
+        weeks[weekKey].days.push(row);
         weeks[weekKey].totalIn += row.caloriesIn || 0;
         weeks[weekKey].totalOut += row.caloriesOut || 0;
         weeks[weekKey].totalNet += (row.caloriesOut || 0) - (row.caloriesIn || 0);
-        weeks[weekKey].days++;
     });
     
-    const sortedWeeks = Object.entries(weeks).sort((a, b) => b[1].start - a[1].start);
+    // Sort weeks by start date (most recent first)
+    const sortedWeeks = Object.entries(weeks).sort((a, b) => b[1].start.getTime() - a[1].start.getTime());
     
     let analysisHtml = '<div id="weekly-analysis"><h3>📊 Weekly Analysis</h3>';
     
@@ -899,21 +883,21 @@ function addCalorie() {
     save();
     calInput.value = '';
     proteinInput.value = '';
-    updateStats();
     populateCalorieTable();
     generateWeeklyAnalysis();
+    updateStats();
 }
 
 function addBurnedCalorie() {
     const dateInput = document.getElementById('burned-date');
-    const burnedInput = document.getElementById('burned-input');
+    const burnInput = document.getElementById('burned-input');
     
-    if (!burnedInput.value || !dateInput.value) return;
+    if (!burnInput.value || !dateInput.value) return;
     
-    const burned = parseInt(burnedInput.value);
+    const burned = parseInt(burnInput.value);
     const date = dateInput.value;
     
-    // Add to legacy burned calories array
+    // Add to legacy burned array
     data.caloriesBurned.push({
         id: Date.now(),
         amount: burned,
@@ -929,10 +913,10 @@ function addBurnedCalorie() {
     tableRow.caloriesOut += burned;
     
     save();
-    burnedInput.value = '';
-    updateStats();
+    burnInput.value = '';
     populateCalorieTable();
     generateWeeklyAnalysis();
+    updateStats();
 }
 
 function loadSpendingTab() {
@@ -940,21 +924,21 @@ function loadSpendingTab() {
     let html = '<h2>💰 SPENDING</h2>';
     
     html += '<div class="form-row">' +
-            '<input type="number" id="spend-input" placeholder="Amount" step="0.01">' +
-            '<input type="text" id="spend-desc" placeholder="Description">' +
             '<input type="date" id="spend-date" value="' + getPSTDate() + '">' +
-            '<button class="btn btn-primary" onclick="addSpending()">Add Spending</button>' +
+            '<input type="number" id="spend-input" placeholder="Amount" step="0.01" style="flex: 1;">' +
+            '<input type="text" id="spend-desc" placeholder="Description" style="flex: 2;">' +
+            '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
             '</div>';
     
     html += '<div>';
-    data.spending.sort((a, b) => b.date.localeCompare(a.date)).forEach(spend => {
+    data.spending.sort((a, b) => b.date.localeCompare(a.date)).forEach(item => {
         html += '<div class="item">' +
-                '<div class="item-content" onclick="editSpending(' + spend.id + ')">' +
-                '$' + spend.amount.toFixed(2) + ' - ' + spend.description +
-                '<br><small>' + spend.date + '</small>' +
+                '<div class="item-content" onclick="editSpending(' + item.id + ')">' +
+                '$' + item.amount.toFixed(2) + ' - ' + item.description +
+                '<br><small>' + item.date + '</small>' +
                 '</div>' +
                 '<div class="item-actions">' +
-                '<button class="btn btn-delete" onclick="deleteSpending(' + spend.id + ')">🗑️</button>' +
+                '<button class="btn btn-delete" onclick="deleteSpending(' + item.id + ')">🗑️</button>' +
                 '</div>' +
                 '</div>';
     });
@@ -964,71 +948,72 @@ function loadSpendingTab() {
 }
 
 function addSpending() {
-    const spendInput = document.getElementById('spend-input');
-    const descInput = document.getElementById('spend-desc');
     const dateInput = document.getElementById('spend-date');
+    const amountInput = document.getElementById('spend-input');
+    const descInput = document.getElementById('spend-desc');
     
-    if (!spendInput.value || !descInput.value || !dateInput.value) return;
+    if (!amountInput.value || !dateInput.value || !descInput.value.trim()) return;
     
     data.spending.push({
         id: Date.now(),
-        amount: parseFloat(spendInput.value),
+        amount: parseFloat(amountInput.value),
         description: descInput.value.trim(),
         date: dateInput.value
     });
     
     save();
-    spendInput.value = '';
+    amountInput.value = '';
     descInput.value = '';
-    updateStats();
     loadSpendingTab();
+    updateStats();
 }
 
 function editSpending(id) {
-    const spend = data.spending.find(s => s.id === id);
-    if (!spend) return;
+    const item = data.spending.find(s => s.id === id);
+    if (!item) return;
     
-    const newAmount = parseFloat(prompt('Amount:', spend.amount));
-    if (isNaN(newAmount)) return;
+    const newAmount = prompt('Amount:', item.amount);
+    if (!newAmount) return;
     
-    const newDesc = prompt('Description:', spend.description);
+    const newDesc = prompt('Description:', item.description);
     if (!newDesc) return;
     
-    const newDate = prompt('Date (YYYY-MM-DD):', spend.date);
+    const newDate = prompt('Date (YYYY-MM-DD):', item.date);
     if (!newDate) return;
     
-    spend.amount = newAmount;
-    spend.description = newDesc;
-    spend.date = newDate;
+    item.amount = parseFloat(newAmount);
+    item.description = newDesc;
+    item.date = newDate;
+    
     save();
-    updateStats();
     loadSpendingTab();
+    updateStats();
 }
 
 function deleteSpending(id) {
     if (!confirm('Delete this spending entry?')) return;
     data.spending = data.spending.filter(s => s.id !== id);
     save();
-    updateStats();
     loadSpendingTab();
+    updateStats();
 }
 
 function updateStats() {
     const today = getPSTDate();
     
     // Calculate today's calories and protein from legacy data
-    const todayCalories = data.calories.filter(c => c.date === today).reduce((sum, c) => sum + c.amount, 0);
-    const todayProtein = data.calories.filter(c => c.date === today).reduce((sum, c) => sum + (c.protein || 0), 0);
-    const todayBurned = data.caloriesBurned.filter(c => c.date === today).reduce((sum, c) => sum + c.amount, 0);
+    const todayCalories = data.calories ? data.calories.filter(c => c.date === today).reduce((sum, c) => sum + (c.amount || 0), 0) : 0;
+    const todayProtein = data.calories ? data.calories.filter(c => c.date === today).reduce((sum, c) => sum + (c.protein || 0), 0) : 0;
+    const todayBurned = data.caloriesBurned ? data.caloriesBurned.filter(c => c.date === today).reduce((sum, c) => sum + (c.amount || 0), 0) : 0;
     
     // Also check calorie table data
-    const tableToday = data.calorieTable.find(r => r.date === today);
-    const tableCaloriesIn = tableToday ? tableToday.caloriesIn : 0;
-    const tableCaloriesOut = tableToday ? tableToday.caloriesOut : 0;
+    const tableToday = data.calorieTable ? data.calorieTable.find(r => r.date === today) : null;
+    const tableCaloriesIn = tableToday ? (tableToday.caloriesIn || 0) : 0;
+    const tableCaloriesOut = tableToday ? (tableToday.caloriesOut || 0) : 0;
     
     // Use the higher values between legacy and table data
-    const totalCaloriesIn = Math.max(todayCalories, tableCaloriesIn);
-    const totalCaloriesOut = Math.max(todayBurned, tableCaloriesOut);
+    const totalCaloriesIn = Math.max(todayCalories || 0, tableCaloriesIn || 0);
+    const totalCaloriesOut = Math.max(todayBurned || 0, tableCaloriesOut || 0);
     
     document.getElementById('cal-today').textContent = totalCaloriesIn + ' cal today';
     document.getElementById('protein-today').textContent = todayProtein + 'g protein';
@@ -1058,7 +1043,7 @@ function updateStats() {
                       String(weekAgo.getMonth() + 1).padStart(2, '0') + '-' + 
                       String(weekAgo.getDate()).padStart(2, '0');
     
-    const weekSpend = data.spending.filter(s => s.date >= weekAgoStr).reduce((sum, s) => sum + s.amount, 0);
+    const weekSpend = data.spending ? data.spending.filter(s => s.date >= weekAgoStr).reduce((sum, s) => sum + (s.amount || 0), 0) : 0;
     document.getElementById('spend-week').textContent = '$' + weekSpend.toFixed(2) + ' this week';
 }
 
@@ -1080,21 +1065,31 @@ function uploadData(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
-            const uploadedData = JSON.parse(e.target.result);
-            data = uploadedData;
-            save();
-            updateStats();
-            alert('Data uploaded successfully!');
-        } catch (err) {
-            alert('Error uploading data: ' + err.message);
+            const importedData = JSON.parse(e.target.result);
+            
+            if (confirm('This will replace all current data. Continue?')) {
+                data = { ...data, ...importedData };
+                // Ensure calorieTable exists for backwards compatibility
+                if (!data.calorieTable) {
+                    data.calorieTable = [];
+                }
+                save();
+                updateStats();
+                alert('Data imported successfully!');
+                showTab('home');
+            }
+        } catch (error) {
+            alert('Error importing data: ' + error.message);
         }
     };
     reader.readAsText(file);
 }
 
-// Initialize the app
+// Initialize app
 load();
 updateStats();
+showTab('home');
+
 </script>
 </body>
 </html>
