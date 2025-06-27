@@ -452,20 +452,39 @@ function loadCaloriesTab() {
     const content = document.getElementById('content');
     let html = '<h2>🔥 CALORIES</h2>';
     
-    // Legacy input forms for backwards compatibility
-    html += '<div style="margin-bottom: 20px; padding: 15px; background: #f8fafc; border-radius: 8px;">' +
-            '<h3>Quick Entry</h3>' +
+    // Individual meal tracking
+    html += '<div style="margin-bottom: 20px; padding: 15px; background: #f0fdf4; border-radius: 8px;">' +
+            '<h3>🍽️ Add Individual Meals</h3>' +
             '<div class="form-row">' +
-            '<input type="date" id="cal-date" value="' + getPSTDate() + '">' +
-            '<input type="number" id="cal-input" placeholder="Calories consumed" style="flex: 1;">' +
-            '<input type="number" id="protein-input" placeholder="Protein (g)" style="flex: 1;">' +
-            '<button class="btn btn-primary" onclick="addCalorie()">Add</button>' +
+            '<input type="text" id="meal-desc" placeholder="Meal description (e.g. Breakfast, chicken salad)" style="flex: 2;">' +
+            '<input type="number" id="meal-calories" placeholder="Calories" style="flex: 1;">' +
+            '<input type="number" id="meal-protein" placeholder="Protein (g)" style="flex: 1;">' +
+            '<input type="date" id="meal-date" value="' + getPSTDate() + '">' +
+            '<button class="btn btn-primary" onclick="addMeal()">Add Meal</button>' +
             '</div>' +
+            '</div>' +
+            
+            // Show meal list
+            '<div style="margin-bottom: 20px;">' +
+            '<h3>📝 Recent Meals</h3>' +
+            '<div id="meals-list"></div>' +
+            '</div>' +
+            
+            // Exercise tracking
+            '<div style="margin-bottom: 20px; padding: 15px; background: #fef3c7; border-radius: 8px;">' +
+            '<h3>🏃 Add Exercise/Burned Calories</h3>' +
             '<div class="form-row">' +
-            '<input type="date" id="burned-date" value="' + getPSTDate() + '">' +
-            '<input type="number" id="burned-input" placeholder="Calories burned" style="flex: 1;">' +
-            '<button class="btn btn-green" onclick="addBurnedCalorie()">Add Burned</button>' +
+            '<input type="text" id="exercise-desc" placeholder="Exercise description" style="flex: 2;">' +
+            '<input type="number" id="exercise-calories" placeholder="Calories burned" style="flex: 1;">' +
+            '<input type="date" id="exercise-date" value="' + getPSTDate() + '">' +
+            '<button class="btn btn-green" onclick="addExercise()">Add Exercise</button>' +
             '</div>' +
+            '</div>' +
+            
+            // Show exercise list
+            '<div style="margin-bottom: 20px;">' +
+            '<h3>💪 Recent Exercise</h3>' +
+            '<div id="exercise-list"></div>' +
             '</div>';
     
     // Enhanced calorie table
@@ -494,9 +513,174 @@ function loadCaloriesTab() {
     
     content.innerHTML = html;
     
-    // Populate table and weekly analysis
+    // Populate table and lists
+    populateCalorieTable();
+    populateMealsList();
+    populateExerciseList();
+    generateWeeklyAnalysis();
+}
+
+function addMeal() {
+    const descInput = document.getElementById('meal-desc');
+    const caloriesInput = document.getElementById('meal-calories');
+    const proteinInput = document.getElementById('meal-protein');
+    const dateInput = document.getElementById('meal-date');
+    
+    if (!descInput.value.trim() || !caloriesInput.value || !dateInput.value) return;
+    
+    const meal = {
+        id: Date.now(),
+        description: descInput.value.trim(),
+        amount: parseInt(caloriesInput.value),
+        protein: parseInt(proteinInput.value) || 0,
+        date: dateInput.value
+    };
+    
+    // Add to calories array for legacy compatibility
+    data.calories.push(meal);
+    
+    // Also update the calorie table
+    let tableRow = data.calorieTable.find(r => r.date === dateInput.value);
+    if (!tableRow) {
+        tableRow = { date: dateInput.value, caloriesIn: 0, caloriesOut: 0 };
+        data.calorieTable.push(tableRow);
+    }
+    tableRow.caloriesIn += meal.amount;
+    
+    save();
+    descInput.value = '';
+    caloriesInput.value = '';
+    proteinInput.value = '';
+    
+    populateMealsList();
     populateCalorieTable();
     generateWeeklyAnalysis();
+    updateStats();
+}
+
+function addExercise() {
+    const descInput = document.getElementById('exercise-desc');
+    const caloriesInput = document.getElementById('exercise-calories');
+    const dateInput = document.getElementById('exercise-date');
+    
+    if (!descInput.value.trim() || !caloriesInput.value || !dateInput.value) return;
+    
+    const exercise = {
+        id: Date.now(),
+        description: descInput.value.trim(),
+        amount: parseInt(caloriesInput.value),
+        date: dateInput.value
+    };
+    
+    // Add to burned calories array
+    data.caloriesBurned.push(exercise);
+    
+    // Also update the calorie table
+    let tableRow = data.calorieTable.find(r => r.date === dateInput.value);
+    if (!tableRow) {
+        tableRow = { date: dateInput.value, caloriesIn: 0, caloriesOut: 0 };
+        data.calorieTable.push(tableRow);
+    }
+    tableRow.caloriesOut += exercise.amount;
+    
+    save();
+    descInput.value = '';
+    caloriesInput.value = '';
+    
+    populateExerciseList();
+    populateCalorieTable();
+    generateWeeklyAnalysis();
+    updateStats();
+}
+
+function populateMealsList() {
+    const container = document.getElementById('meals-list');
+    if (!container) return;
+    
+    const recentMeals = data.calories.slice(-10).reverse(); // Show last 10 meals
+    
+    let html = '';
+    recentMeals.forEach(meal => {
+        html += '<div class="item">' +
+                '<div class="item-content">' +
+                '<strong>' + meal.description + '</strong> - ' + meal.amount + ' cal, ' + (meal.protein || 0) + 'g protein' +
+                '<br><small>' + meal.date + '</small>' +
+                '</div>' +
+                '<div class="item-actions">' +
+                '<button class="btn btn-delete" onclick="deleteMeal(' + meal.id + ')">🗑️</button>' +
+                '</div>' +
+                '</div>';
+    });
+    
+    container.innerHTML = html;
+}
+
+function populateExerciseList() {
+    const container = document.getElementById('exercise-list');
+    if (!container) return;
+    
+    const recentExercise = data.caloriesBurned.slice(-10).reverse(); // Show last 10 exercises
+    
+    let html = '';
+    recentExercise.forEach(exercise => {
+        html += '<div class="item">' +
+                '<div class="item-content">' +
+                '<strong>' + exercise.description + '</strong> - ' + exercise.amount + ' cal burned' +
+                '<br><small>' + exercise.date + '</small>' +
+                '</div>' +
+                '<div class="item-actions">' +
+                '<button class="btn btn-delete" onclick="deleteExercise(' + exercise.id + ')">🗑️</button>' +
+                '</div>' +
+                '</div>';
+    });
+    
+    container.innerHTML = html;
+}
+
+function deleteMeal(id) {
+    if (!confirm('Delete this meal?')) return;
+    
+    // Find and remove the meal
+    const mealIndex = data.calories.findIndex(m => m.id === id);
+    if (mealIndex !== -1) {
+        const meal = data.calories[mealIndex];
+        data.calories.splice(mealIndex, 1);
+        
+        // Update calorie table
+        const tableRow = data.calorieTable.find(r => r.date === meal.date);
+        if (tableRow) {
+            tableRow.caloriesIn = Math.max(0, tableRow.caloriesIn - meal.amount);
+        }
+        
+        save();
+        populateMealsList();
+        populateCalorieTable();
+        generateWeeklyAnalysis();
+        updateStats();
+    }
+}
+
+function deleteExercise(id) {
+    if (!confirm('Delete this exercise?')) return;
+    
+    // Find and remove the exercise
+    const exerciseIndex = data.caloriesBurned.findIndex(e => e.id === id);
+    if (exerciseIndex !== -1) {
+        const exercise = data.caloriesBurned[exerciseIndex];
+        data.caloriesBurned.splice(exerciseIndex, 1);
+        
+        // Update calorie table
+        const tableRow = data.calorieTable.find(r => r.date === exercise.date);
+        if (tableRow) {
+            tableRow.caloriesOut = Math.max(0, tableRow.caloriesOut - exercise.amount);
+        }
+        
+        save();
+        populateExerciseList();
+        populateCalorieTable();
+        generateWeeklyAnalysis();
+        updateStats();
+    }
 }
 
 function populateCalorieTable() {
@@ -654,18 +838,13 @@ function generateWeeklyAnalysis() {
         const weekEnd = new Date(week.start);
         weekEnd.setDate(weekEnd.getDate() + 6);
         
-        const avgIn = Math.round(week.totalIn / 7);
-        const avgOut = Math.round(week.totalOut / 7);
-        const avgNet = Math.round(week.totalNet / 7);
-        
         // Compare with previous week for progress indicator
         let progressIndicator = '';
         if (index < sortedWeeks.length - 1) {
             const prevWeek = sortedWeeks[index + 1][1];
-            const prevAvgNet = Math.round(prevWeek.totalNet / 7);
-            if (avgNet > prevAvgNet) {
+            if (week.totalNet > prevWeek.totalNet) {
                 progressIndicator = '<span class="progress-indicator">📈</span>';
-            } else if (avgNet < prevAvgNet) {
+            } else if (week.totalNet < prevWeek.totalNet) {
                 progressIndicator = '<span class="progress-indicator">📉</span>';
             } else {
                 progressIndicator = '<span class="progress-indicator">➡️</span>';
@@ -690,26 +869,11 @@ function generateWeeklyAnalysis() {
                        '<div class="week-stat-label">Net Total</div>' +
                        '<div class="week-stat-value ' + (week.totalNet > 0 ? 'net-positive' : week.totalNet < 0 ? 'net-negative' : 'net-neutral') + '">' + week.totalNet + '</div>' +
                        '</div>' +
-                       '<div class="week-stat">' +
-                       '<div class="week-stat-label">Daily Avg In</div>' +
-                       '<div class="week-stat-value" style="color: #dc2626;">' + avgIn + '</div>' +
-                       '</div>' +
-                       '<div class="week-stat">' +
-                       '<div class="week-stat-label">Daily Avg Out</div>' +
-                       '<div class="week-stat-value" style="color: #059669;">' + avgOut + '</div>' +
-                       '</div>' +
-                       '<div class="week-stat">' +
-                       '<div class="week-stat-label">Daily Avg Net</div>' +
-                       '<div class="week-stat-value ' + (avgNet > 0 ? 'net-positive' : avgNet < 0 ? 'net-negative' : 'net-neutral') + '">' + avgNet + '</div>' +
-                       '</div>' +
                        '</div>' +
                        '</div>';
     });
     
     analysisHtml += '</div>';
-    
-    // Generate monthly analysis
-    analysisHtml += generateMonthlyAnalysis();
     
     content.innerHTML += analysisHtml;
 }
@@ -725,132 +889,7 @@ function formatDate(date) {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function generateMonthlyAnalysis() {
-    if (!data.calorieTable || data.calorieTable.length === 0) {
-        return '<div id="monthly-analysis"><h3>📅 Monthly Analysis</h3><p>No data available for monthly analysis.</p></div>';
-    }
-    
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-    
-    // Get first day of current month
-    const monthStart = new Date(currentYear, currentMonth, 1);
-    const monthEnd = new Date(currentYear, currentMonth + 1, 0);
-    
-    // Filter data for current month
-    const monthData = data.calorieTable.filter(row => {
-        const rowDate = new Date(row.date);
-        return rowDate >= monthStart && rowDate <= monthEnd;
-    });
-    
-    if (monthData.length === 0) {
-        return '<div id="monthly-analysis"><h3>📅 Monthly Analysis</h3><p>No data for current month.</p></div>';
-    }
-    
-    // Group by weeks
-    const weeks = {};
-    monthData.forEach(row => {
-        const rowDate = new Date(row.date);
-        const weekStart = getWeekStart(rowDate);
-        const weekKey = weekStart.toISOString().split('T')[0];
-        
-        if (!weeks[weekKey]) {
-            weeks[weekKey] = {
-                start: weekStart,
-                days: [],
-                totalIn: 0,
-                totalOut: 0,
-                totalNet: 0
-            };
-        }
-        
-        weeks[weekKey].days.push(row);
-        weeks[weekKey].totalIn += row.caloriesIn || 0;
-        weeks[weekKey].totalOut += row.caloriesOut || 0;
-        weeks[weekKey].totalNet += (row.caloriesOut || 0) - (row.caloriesIn || 0);
-    });
-    
-    const sortedWeeks = Object.entries(weeks).sort((a, b) => b[1].start - a[1].start);
-    
-    // Calculate monthly totals
-    const monthTotalIn = monthData.reduce((sum, row) => sum + (row.caloriesIn || 0), 0);
-    const monthTotalOut = monthData.reduce((sum, row) => sum + (row.caloriesOut || 0), 0);
-    const monthTotalNet = monthTotalOut - monthTotalIn;
-    const monthDays = monthData.length;
-    
-    const monthName = monthStart.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-    
-    let html = '<div id="monthly-analysis"><h3>📅 Monthly Analysis - ' + monthName + '</h3>';
-    
-    // Monthly summary
-    html += '<div class="week-summary" style="margin-bottom: 20px;">' +
-            '<div class="week-header">Month Summary (' + monthDays + ' days tracked)</div>' +
-            '<div class="week-stats">' +
-            '<div class="week-stat">' +
-            '<div class="week-stat-label">Total In</div>' +
-            '<div class="week-stat-value" style="color: #dc2626;">' + monthTotalIn + '</div>' +
-            '</div>' +
-            '<div class="week-stat">' +
-            '<div class="week-stat-label">Total Out</div>' +
-            '<div class="week-stat-value" style="color: #059669;">' + monthTotalOut + '</div>' +
-            '</div>' +
-            '<div class="week-stat">' +
-            '<div class="week-stat-label">Net Total</div>' +
-            '<div class="week-stat-value ' + (monthTotalNet > 0 ? 'net-positive' : monthTotalNet < 0 ? 'net-negative' : 'net-neutral') + '">' + monthTotalNet + '</div>' +
-            '</div>' +
-            '<div class="week-stat">' +
-            '<div class="week-stat-label">Daily Avg In</div>' +
-            '<div class="week-stat-value" style="color: #dc2626;">' + Math.round(monthTotalIn / monthDays) + '</div>' +
-            '</div>' +
-            '<div class="week-stat">' +
-            '<div class="week-stat-label">Daily Avg Out</div>' +
-            '<div class="week-stat-value" style="color: #059669;">' + Math.round(monthTotalOut / monthDays) + '</div>' +
-            '</div>' +
-            '<div class="week-stat">' +
-            '<div class="week-stat-label">Daily Avg Net</div>' +
-            '<div class="week-stat-value ' + (monthTotalNet > 0 ? 'net-positive' : monthTotalNet < 0 ? 'net-negative' : 'net-neutral') + '">' + Math.round(monthTotalNet / monthDays) + '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-    
-    // Weekly breakdown
-    html += '<h4>Weekly Breakdown</h4>';
-    sortedWeeks.forEach(([weekKey, week], index) => {
-        const weekEnd = new Date(week.start);
-        weekEnd.setDate(weekEnd.getDate() + 6);
-        
-        const weekNumber = index + 1;
-        const avgIn = Math.round(week.totalIn / week.days.length);
-        const avgOut = Math.round(week.totalOut / week.days.length);
-        const avgNet = Math.round(week.totalNet / week.days.length);
-        
-        html += '<div class="week-summary" style="margin-bottom: 10px;">' +
-                '<div class="week-header">Week ' + weekNumber + ': ' + formatDate(week.start) + ' - ' + formatDate(weekEnd) + ' (' + week.days.length + ' days)</div>' +
-                '<div class="week-stats">' +
-                '<div class="week-stat">' +
-                '<div class="week-stat-label">Avg In</div>' +
-                '<div class="week-stat-value" style="color: #dc2626;">' + avgIn + '</div>' +
-                '</div>' +
-                '<div class="week-stat">' +
-                '<div class="week-stat-label">Avg Out</div>' +
-                '<div class="week-stat-value" style="color: #059669;">' + avgOut + '</div>' +
-                '</div>' +
-                '<div class="week-stat">' +
-                '<div class="week-stat-label">Avg Net</div>' +
-                '<div class="week-stat-value ' + (avgNet > 0 ? 'net-positive' : avgNet < 0 ? 'net-negative' : 'net-neutral') + '">' + avgNet + '</div>' +
-                '</div>' +
-                '<div class="week-stat">' +
-                '<div class="week-stat-label">Total Net</div>' +
-                '<div class="week-stat-value ' + (week.totalNet > 0 ? 'net-positive' : week.totalNet < 0 ? 'net-negative' : 'net-neutral') + '">' + week.totalNet + '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-    });
-    
-    html += '</div>';
-    return html;
-}
+
 
 // Legacy calorie functions for backwards compatibility
 function addCalorie() {
@@ -1048,7 +1087,19 @@ function updateStats() {
 }
 
 function downloadData() {
-    const dataStr = JSON.stringify(data, null, 2);
+    // Create a clean export with all current data structures
+    const exportData = {
+        version: "2.0", // Version to help with future compatibility
+        exportDate: getPSTDate(),
+        lists: data.lists || { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
+        notes: data.notes || [],
+        calories: data.calories || [], // Individual meals
+        caloriesBurned: data.caloriesBurned || [], // Individual exercises
+        spending: data.spending || [],
+        calorieTable: data.calorieTable || [] // Daily summary table
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
@@ -1056,6 +1107,8 @@ function downloadData() {
     link.download = 'notebook-data-' + getPSTDate() + '.json';
     link.click();
     URL.revokeObjectURL(url);
+    
+    console.log('Data exported with structure:', Object.keys(exportData));
 }
 
 function uploadData(event) {
@@ -1068,21 +1121,71 @@ function uploadData(event) {
             const importedData = JSON.parse(e.target.result);
             
             if (confirm('This will replace all current data. Continue?')) {
-                data = { ...data, ...importedData };
-                // Ensure calorieTable exists for backwards compatibility
-                if (!data.calorieTable) {
-                    data.calorieTable = [];
+                // Handle both old and new data formats
+                const newData = {
+                    lists: importedData.lists || { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
+                    notes: importedData.notes || [],
+                    calories: importedData.calories || [],
+                    caloriesBurned: importedData.caloriesBurned || [],
+                    spending: importedData.spending || [],
+                    calorieTable: importedData.calorieTable || []
+                };
+                
+                // If importing old format without calorieTable, try to rebuild it from individual entries
+                if (!importedData.calorieTable && (importedData.calories || importedData.caloriesBurned)) {
+                    console.log('Converting old format to new format...');
+                    newData.calorieTable = rebuildCalorieTable(newData.calories, newData.caloriesBurned);
                 }
+                
+                data = newData;
                 save();
+                
+                // Refresh all UI components
                 updateStats();
-                alert('Data imported successfully!');
+                populateCalorieTable();
+                generateWeeklyAnalysis();
+                
+                const version = importedData.version || "1.0";
+                alert(`Data imported successfully! (Format version: ${version})`);
                 showTab('home');
             }
         } catch (error) {
             alert('Error importing data: ' + error.message);
+            console.error('Import error:', error);
         }
     };
     reader.readAsText(file);
+}
+
+function rebuildCalorieTable(calories, caloriesBurned) {
+    const table = [];
+    const dateMap = {};
+    
+    // Process calories (meals)
+    if (calories) {
+        calories.forEach(meal => {
+            if (!dateMap[meal.date]) {
+                dateMap[meal.date] = { date: meal.date, caloriesIn: 0, caloriesOut: 0 };
+            }
+            dateMap[meal.date].caloriesIn += meal.amount || 0;
+        });
+    }
+    
+    // Process burned calories (exercises)
+    if (caloriesBurned) {
+        caloriesBurned.forEach(exercise => {
+            if (!dateMap[exercise.date]) {
+                dateMap[exercise.date] = { date: exercise.date, caloriesIn: 0, caloriesOut: 0 };
+            }
+            dateMap[exercise.date].caloriesOut += exercise.amount || 0;
+        });
+    }
+    
+    // Convert to array
+    Object.values(dateMap).forEach(day => table.push(day));
+    
+    console.log('Rebuilt calorie table with', table.length, 'days');
+    return table;
 }
 
 // Initialize app
