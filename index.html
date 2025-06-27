@@ -472,19 +472,12 @@ function loadCaloriesTab() {
             
             // Exercise tracking
             '<div style="margin-bottom: 20px; padding: 15px; background: #fef3c7; border-radius: 8px;">' +
-            '<h3>🏃 Add Exercise/Burned Calories</h3>' +
+            '<h3>🏃 Add Burned Calories</h3>' +
             '<div class="form-row">' +
-            '<input type="text" id="exercise-desc" placeholder="Exercise description" style="flex: 2;">' +
-            '<input type="number" id="exercise-calories" placeholder="Calories burned" style="flex: 1;">' +
-            '<input type="date" id="exercise-date" value="' + getPSTDate() + '">' +
-            '<button class="btn btn-green" onclick="addExercise()">Add Exercise</button>' +
+            '<input type="number" id="burned-input" placeholder="Calories burned" style="flex: 1;">' +
+            '<input type="date" id="burned-date" value="' + getPSTDate() + '">' +
+            '<button class="btn btn-green" onclick="addBurnedCalorie()">Add Burned</button>' +
             '</div>' +
-            '</div>' +
-            
-            // Show exercise list
-            '<div style="margin-bottom: 20px;">' +
-            '<h3>💪 Recent Exercise</h3>' +
-            '<div id="exercise-list"></div>' +
             '</div>';
     
     // Enhanced calorie table
@@ -516,7 +509,6 @@ function loadCaloriesTab() {
     // Populate table and lists
     populateCalorieTable();
     populateMealsList();
-    populateExerciseList();
     generateWeeklyAnalysis();
 }
 
@@ -558,40 +550,7 @@ function addMeal() {
     updateStats();
 }
 
-function addExercise() {
-    const descInput = document.getElementById('exercise-desc');
-    const caloriesInput = document.getElementById('exercise-calories');
-    const dateInput = document.getElementById('exercise-date');
-    
-    if (!descInput.value.trim() || !caloriesInput.value || !dateInput.value) return;
-    
-    const exercise = {
-        id: Date.now(),
-        description: descInput.value.trim(),
-        amount: parseInt(caloriesInput.value),
-        date: dateInput.value
-    };
-    
-    // Add to burned calories array
-    data.caloriesBurned.push(exercise);
-    
-    // Also update the calorie table
-    let tableRow = data.calorieTable.find(r => r.date === dateInput.value);
-    if (!tableRow) {
-        tableRow = { date: dateInput.value, caloriesIn: 0, caloriesOut: 0 };
-        data.calorieTable.push(tableRow);
-    }
-    tableRow.caloriesOut += exercise.amount;
-    
-    save();
-    descInput.value = '';
-    caloriesInput.value = '';
-    
-    populateExerciseList();
-    populateCalorieTable();
-    generateWeeklyAnalysis();
-    updateStats();
-}
+
 
 function populateMealsList() {
     const container = document.getElementById('meals-list');
@@ -615,27 +574,7 @@ function populateMealsList() {
     container.innerHTML = html;
 }
 
-function populateExerciseList() {
-    const container = document.getElementById('exercise-list');
-    if (!container) return;
-    
-    const recentExercise = data.caloriesBurned.slice(-10).reverse(); // Show last 10 exercises
-    
-    let html = '';
-    recentExercise.forEach(exercise => {
-        html += '<div class="item">' +
-                '<div class="item-content">' +
-                '<strong>' + exercise.description + '</strong> - ' + exercise.amount + ' cal burned' +
-                '<br><small>' + exercise.date + '</small>' +
-                '</div>' +
-                '<div class="item-actions">' +
-                '<button class="btn btn-delete" onclick="deleteExercise(' + exercise.id + ')">🗑️</button>' +
-                '</div>' +
-                '</div>';
-    });
-    
-    container.innerHTML = html;
-}
+
 
 function deleteMeal(id) {
     if (!confirm('Delete this meal?')) return;
@@ -660,28 +599,7 @@ function deleteMeal(id) {
     }
 }
 
-function deleteExercise(id) {
-    if (!confirm('Delete this exercise?')) return;
-    
-    // Find and remove the exercise
-    const exerciseIndex = data.caloriesBurned.findIndex(e => e.id === id);
-    if (exerciseIndex !== -1) {
-        const exercise = data.caloriesBurned[exerciseIndex];
-        data.caloriesBurned.splice(exerciseIndex, 1);
-        
-        // Update calorie table
-        const tableRow = data.calorieTable.find(r => r.date === exercise.date);
-        if (tableRow) {
-            tableRow.caloriesOut = Math.max(0, tableRow.caloriesOut - exercise.amount);
-        }
-        
-        save();
-        populateExerciseList();
-        populateCalorieTable();
-        generateWeeklyAnalysis();
-        updateStats();
-    }
-}
+
 
 function populateCalorieTable() {
     const tbody = document.getElementById('calorie-table-body');
