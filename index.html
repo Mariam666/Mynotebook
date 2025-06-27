@@ -28,6 +28,71 @@
         .form-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
         .form-row input, .form-row select { min-width: 80px; flex: 1; }
         
+        /* Enhanced table styles for calorie tracking */
+        .calorie-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .calorie-table th, .calorie-table td { 
+            border: 1px solid #e5e7eb; 
+            padding: 8px 12px; 
+            text-align: center; 
+            font-size: 14px;
+        }
+        .calorie-table th { 
+            background: #f3f4f6; 
+            font-weight: 600; 
+            color: #374151;
+        }
+        .calorie-table tr:nth-child(even) { background: #f9fafb; }
+        .calorie-table tr:hover { background: #f3f4f6; }
+        .editable-cell { 
+            cursor: pointer; 
+            min-width: 80px;
+            position: relative;
+        }
+        .editable-cell:hover { background: #e0f2fe; }
+        .editing { background: #fff3cd !important; }
+        .net-positive { color: #059669; font-weight: 600; }
+        .net-negative { color: #dc2626; font-weight: 600; }
+        .net-neutral { color: #6b7280; }
+        
+        .week-summary { 
+            background: #f8fafc; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 8px; 
+            padding: 12px; 
+            margin: 15px 0;
+        }
+        .week-header { 
+            font-weight: 600; 
+            color: #1e40af; 
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .week-stats { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+            gap: 8px;
+        }
+        .week-stat { 
+            text-align: center; 
+            padding: 6px;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+        }
+        .week-stat-label { 
+            font-size: 12px; 
+            color: #6b7280; 
+            margin-bottom: 2px;
+        }
+        .week-stat-value { 
+            font-size: 14px; 
+            font-weight: 600;
+        }
+        .progress-indicator { 
+            font-size: 18px; 
+            margin-left: 8px;
+        }
+        
         #paste-area img { max-width: 80px; max-height: 80px; object-fit: cover; border-radius: 4px; }
         
         @media (max-width: 768px) {
@@ -51,6 +116,12 @@
             input, textarea, select { padding: 12px; font-size: 14px; border-radius: 8px; box-sizing: border-box; }
             h2 { font-size: 1.3rem; margin-bottom: 12px; }
             h3 { font-size: 1.1rem; margin-bottom: 8px; }
+            
+            /* Mobile table adjustments */
+            .calorie-table { font-size: 12px; }
+            .calorie-table th, .calorie-table td { padding: 6px 4px; }
+            .week-stats { grid-template-columns: repeat(2, 1fr); }
+            .week-stat { padding: 8px 4px; }
         }
     </style>
 </head>
@@ -104,7 +175,8 @@ let data = {
     notes: [],
     calories: [],
     caloriesBurned: [],
-    spending: []
+    spending: [],
+    calorieTable: [] // New field for enhanced calorie tracking
 };
 
 function getPSTDate() {
@@ -127,7 +199,12 @@ function load() {
     try {
         const saved = localStorage.getItem('notebookData');
         if (saved) {
-            data = JSON.parse(saved);
+            const loadedData = JSON.parse(saved);
+            data = { ...data, ...loadedData };
+            // Ensure calorieTable exists for backwards compatibility
+            if (!data.calorieTable) {
+                data.calorieTable = [];
+            }
         }
     } catch (e) {
         console.error('Load error:', e);
@@ -257,14 +334,8 @@ function editItem(listName, id) {
     item.date = newDate;
     
     if (listName === 'read') {
-        const newCat = prompt('Category (book/essay/poem):', item.category);
-        if (newCat) item.category = newCat;
-    }
-    
-    const newLink = prompt('Link (optional):', item.link || '');
-    if (newLink !== null) {
-        if (newLink.trim()) item.link = newLink.trim();
-        else delete item.link;
+        const newCategory = prompt('Category (book/essay/poem):', item.category || 'book');
+        if (newCategory) item.category = newCategory;
     }
     
     save();
@@ -272,50 +343,66 @@ function editItem(listName, id) {
 }
 
 function deleteItem(listName, id) {
-    if (confirm('Delete?')) {
-        data.lists[listName] = data.lists[listName].filter(i => i.id !== id);
-        save();
-        loadListTab(listName);
-    }
+    if (!confirm('Delete this item?')) return;
+    data.lists[listName] = data.lists[listName].filter(i => i.id !== id);
+    save();
+    loadListTab(listName);
+}
+
+function simpleFilter(listName) {
+    const query = document.getElementById('search-' + listName).value.toLowerCase();
+    document.querySelectorAll('.item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(query) ? 'flex' : 'none';
+    });
 }
 
 function loadNotesTab() {
     const content = document.getElementById('content');
+    let html = '<h2>NOTES</h2>';
     
-    let html = '<h2>NOTES</h2>' +
-               '<div style="margin-bottom: 15px;">' +
-               '<textarea id="note-input" placeholder="Write note..."></textarea>' +
-               '<div style="display: flex; gap: 8px; margin-top: 8px;">' +
-               '<input type="date" id="note-date" value="' + getPSTDate() + '">' +
-               '<button class="btn btn-primary" onclick="addNote()">Save</button>' +
-               '</div></div><div>';
+    html += '<div class="form-row">' +
+            '<textarea id="note-input" placeholder="Write your note here..." style="flex: 2;"></textarea>' +
+            '<input type="date" id="note-date" value="' + getPSTDate() + '">' +
+            '<button class="btn btn-primary" onclick="addNote()">Add Note</button>' +
+            '</div>';
     
+    html += '<div id="paste-area" style="border: 2px dashed #ccc; padding: 20px; margin: 10px 0; text-align: center; border-radius: 8px;" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">Drag and drop images here or paste content</div>';
+    
+    html += '<div>';
     data.notes.sort((a, b) => b.date.localeCompare(a.date)).forEach(note => {
-        html += '<div style="padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px;">' +
-                '<div style="cursor: pointer; margin-bottom: 8px; white-space: pre-wrap;" onclick="editNote(' + note.id + ')">' + note.content + '</div>' +
-                '<div style="display: flex; justify-content: space-between; align-items: center;">' +
-                '<small>' + note.date + '</small>' +
+        html += '<div class="item">' +
+                '<div class="item-content" onclick="editNote(' + note.id + ')">' +
+                note.content.replace(/\n/g, '<br>') +
+                '<br><small>' + note.date + '</small>' +
+                '</div>' +
+                '<div class="item-actions">' +
                 '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">🗑️</button>' +
-                '</div></div>';
+                '</div>' +
+                '</div>';
     });
+    html += '</div>';
     
-    content.innerHTML = html + '</div>';
+    content.innerHTML = html;
+    
+    // Add paste event listener
+    document.getElementById('paste-area').addEventListener('paste', handlePaste);
 }
 
 function addNote() {
-    const input = document.getElementById('note-input');
+    const noteInput = document.getElementById('note-input');
     const dateInput = document.getElementById('note-date');
     
-    if (!input.value.trim() || !dateInput.value) return;
+    if (!noteInput.value.trim() || !dateInput.value) return;
     
     data.notes.push({
         id: Date.now(),
-        content: input.value.trim(),
+        content: noteInput.value.trim(),
         date: dateInput.value
     });
     
     save();
-    input.value = '';
+    noteInput.value = '';
     loadNotesTab();
 }
 
@@ -323,10 +410,10 @@ function editNote(id) {
     const note = data.notes.find(n => n.id === id);
     if (!note) return;
     
-    const newContent = prompt('Edit:', note.content);
+    const newContent = prompt('Edit note:', note.content);
     if (!newContent) return;
     
-    const newDate = prompt('Date:', note.date);
+    const newDate = prompt('Date (YYYY-MM-DD):', note.date);
     if (!newDate) return;
     
     note.content = newContent;
@@ -336,351 +423,653 @@ function editNote(id) {
 }
 
 function deleteNote(id) {
-    if (confirm('Delete?')) {
-        data.notes = data.notes.filter(n => n.id !== id);
-        save();
-        loadNotesTab();
+    if (!confirm('Delete this note?')) return;
+    data.notes = data.notes.filter(n => n.id !== id);
+    save();
+    loadNotesTab();
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.currentTarget.style.backgroundColor = '#f0f9ff';
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.currentTarget.style.backgroundColor = '';
+    
+    const files = e.dataTransfer.files;
+    for (let file of files) {
+        if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                document.getElementById('paste-area').appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+}
+
+function handlePaste(e) {
+    const items = e.clipboardData.items;
+    for (let item of items) {
+        if (item.type.startsWith('image/')) {
+            const blob = item.getAsFile();
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                document.getElementById('paste-area').appendChild(img);
+            };
+            reader.readAsDataURL(blob);
+        }
     }
 }
 
 function loadCaloriesTab() {
     const content = document.getElementById('content');
-    const today = getPSTDate();
-    const todayBurned = data.caloriesBurned?.find(entry => entry.date === today);
+    let html = '<h2>🔥 CALORIES</h2>';
     
-    let html = '<h2>CALORIES</h2>' +
-               
-               // Burned calories section
-               '<div style="background: #f0f9ff; border: 1px solid #0284c7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">' +
-               '<h3 style="margin-bottom: 10px; color: #0284c7;">Daily Calories Burned</h3>' +
-               '<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">' +
-               '<input type="number" id="burned-input" placeholder="Total burned" value="' + (todayBurned?.burned || '') + '" style="flex: 1; min-width: 150px;">' +
-               '<input type="date" id="burned-date" value="' + getPSTDate() + '">' +
-               '<button class="btn btn-primary" onclick="addBurnedCalories()">Save</button>' +
-               '</div>' +
-               '<small style="color: #0284c7;">Tip: Usually enter previous day\'s data from Apple Watch</small>' +
-               '</div>' +
-               
-               // Food logging
-               '<h3>Food Log</h3>' +
-               '<div class="form-row">' +
-               '<select id="meal-input" style="flex: 1;"><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snack</option></select>' +
-               '<input type="number" id="cal-input" placeholder="Calories" style="flex: 1;">' +
-               '<input type="number" id="prot-input" placeholder="Protein (g)" style="flex: 1;">' +
-               '<input type="date" id="cal-date" value="' + getPSTDate() + '" style="flex: 1;">' +
-               '<button class="btn btn-green" onclick="addCalorie()">Add</button>' +
-               '</div><div>';
+    // Legacy calorie input form
+    html += '<div class="form-row">' +
+            '<input type="number" id="cal-input" placeholder="Calories">' +
+            '<input type="number" id="protein-input" placeholder="Protein (g)">' +
+            '<input type="date" id="cal-date" value="' + getPSTDate() + '">' +
+            '<button class="btn btn-primary" onclick="addCalorie()">Add Calories</button>' +
+            '</div>';
     
-    data.calories.sort((a, b) => b.date.localeCompare(a.date)).forEach(entry => {
-        html += '<div class="item">' +
-                '<div class="item-content" onclick="editCalorie(' + entry.id + ')">' +
-                '<strong>' + entry.meal.charAt(0).toUpperCase() + entry.meal.slice(1) + '</strong> - ' + entry.calories + ' cal' +
-                (entry.protein ? ', ' + entry.protein + 'g protein' : '') +
-                '<br><small>' + entry.date + '</small>' +
+    html += '<div class="form-row">' +
+            '<input type="number" id="burned-input" placeholder="Calories Burned">' +
+            '<input type="date" id="burned-date" value="' + getPSTDate() + '">' +
+            '<button class="btn btn-green" onclick="addBurnedCalorie()">Add Burned</button>' +
+            '</div>';
+    
+    // Enhanced calorie table
+    html += '<h3>📊 Daily Calorie Tracking</h3>';
+    html += '<div style="margin-bottom: 10px;">' +
+            '<button class="btn btn-primary" onclick="addTableRow()">Add New Day</button>' +
+            '<button class="btn" onclick="fillMissingDays()" style="margin-left: 8px;">Fill Last 30 Days</button>' +
+            '</div>';
+    
+    html += '<table class="calorie-table">' +
+            '<thead>' +
+            '<tr>' +
+            '<th>Date</th>' +
+            '<th>Calories In</th>' +
+            '<th>Calories Out</th>' +
+            '<th>Net (Out-In)</th>' +
+            '<th>Actions</th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody id="calorie-table-body">' +
+            '</tbody>' +
+            '</table>';
+    
+    content.innerHTML = html;
+    
+    // Populate the table
+    populateCalorieTable();
+    
+    // Generate weekly analysis
+    generateWeeklyAnalysis();
+}
+
+function populateCalorieTable() {
+    const tbody = document.getElementById('calorie-table-body');
+    if (!tbody) return;
+    
+    // Sort by date descending
+    const sortedData = [...data.calorieTable].sort((a, b) => b.date.localeCompare(a.date));
+    
+    let html = '';
+    sortedData.forEach(row => {
+        const net = (row.caloriesOut || 0) - (row.caloriesIn || 0);
+        const netClass = net > 0 ? 'net-positive' : net < 0 ? 'net-negative' : 'net-neutral';
+        
+        html += '<tr>' +
+                '<td>' + row.date + '</td>' +
+                '<td class="editable-cell" onclick="editCell(this, \'' + row.date + '\', \'caloriesIn\')">' + (row.caloriesIn || 0) + '</td>' +
+                '<td class="editable-cell" onclick="editCell(this, \'' + row.date + '\', \'caloriesOut\')">' + (row.caloriesOut || 0) + '</td>' +
+                '<td class="' + netClass + '">' + net + '</td>' +
+                '<td><button class="btn btn-delete" onclick="deleteTableRow(\'' + row.date + '\')">🗑️</button></td>' +
+                '</tr>';
+    });
+    
+    tbody.innerHTML = html;
+}
+
+function addTableRow() {
+    const date = prompt('Enter date (YYYY-MM-DD):', getPSTDate());
+    if (!date) return;
+    
+    // Check if date already exists
+    const existingRow = data.calorieTable.find(row => row.date === date);
+    if (existingRow) {
+        alert('Date already exists in table');
+        return;
+    }
+    
+    data.calorieTable.push({
+        date: date,
+        caloriesIn: 0,
+        caloriesOut: 0
+    });
+    
+    save();
+    populateCalorieTable();
+    generateWeeklyAnalysis();
+}
+
+function deleteTableRow(date) {
+    if (!confirm('Delete this day\'s data?')) return;
+    
+    data.calorieTable = data.calorieTable.filter(row => row.date !== date);
+    save();
+    populateCalorieTable();
+    generateWeeklyAnalysis();
+}
+
+function editCell(cell, date, field) {
+    const currentValue = cell.textContent;
+    cell.classList.add('editing');
+    
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.value = currentValue;
+    input.style.width = '100%';
+    input.style.border = 'none';
+    input.style.background = 'transparent';
+    input.style.textAlign = 'center';
+    
+    cell.innerHTML = '';
+    cell.appendChild(input);
+    input.focus();
+    input.select();
+    
+    function saveEdit() {
+        const newValue = parseInt(input.value) || 0;
+        const row = data.calorieTable.find(r => r.date === date);
+        if (row) {
+            row[field] = newValue;
+            save();
+            populateCalorieTable();
+            generateWeeklyAnalysis();
+        }
+    }
+    
+    input.addEventListener('blur', saveEdit);
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            saveEdit();
+        }
+    });
+}
+
+function fillMissingDays() {
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+    
+    const existingDates = new Set(data.calorieTable.map(row => row.date));
+    
+    for (let d = new Date(thirtyDaysAgo); d <= today; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.getFullYear() + '-' + 
+                       String(d.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(d.getDate()).padStart(2, '0');
+        
+        if (!existingDates.has(dateStr)) {
+            data.calorieTable.push({
+                date: dateStr,
+                caloriesIn: 0,
+                caloriesOut: 0
+            });
+        }
+    }
+    
+    save();
+    populateCalorieTable();
+    generateWeeklyAnalysis();
+}
+
+function generateWeeklyAnalysis() {
+    const content = document.getElementById('content');
+    
+    if (!data.calorieTable || data.calorieTable.length === 0) {
+        return;
+    }
+    
+    // Group data by weeks
+    const weeks = {};
+    data.calorieTable.forEach(row => {
+        const rowDate = new Date(row.date);
+        const weekStart = getWeekStart(rowDate);
+        const weekKey = weekStart.toISOString().split('T')[0];
+        
+        if (!weeks[weekKey]) {
+            weeks[weekKey] = {
+                start: weekStart,
+                totalIn: 0,
+                totalOut: 0,
+                totalNet: 0,
+                days: 0
+            };
+        }
+        
+        weeks[weekKey].totalIn += row.caloriesIn || 0;
+        weeks[weekKey].totalOut += row.caloriesOut || 0;
+        weeks[weekKey].totalNet += (row.caloriesOut || 0) - (row.caloriesIn || 0);
+        weeks[weekKey].days++;
+    });
+    
+    const sortedWeeks = Object.entries(weeks).sort((a, b) => b[1].start - a[1].start);
+    
+    let analysisHtml = '<div id="weekly-analysis"><h3>📊 Weekly Analysis</h3>';
+    
+    sortedWeeks.slice(0, 8).forEach(([weekKey, week], index) => {
+        const weekEnd = new Date(week.start);
+        weekEnd.setDate(weekEnd.getDate() + 6);
+        
+        const avgIn = Math.round(week.totalIn / 7);
+        const avgOut = Math.round(week.totalOut / 7);
+        const avgNet = Math.round(week.totalNet / 7);
+        
+        // Compare with previous week for progress indicator
+        let progressIndicator = '';
+        if (index < sortedWeeks.length - 1) {
+            const prevWeek = sortedWeeks[index + 1][1];
+            const prevAvgNet = Math.round(prevWeek.totalNet / 7);
+            if (avgNet > prevAvgNet) {
+                progressIndicator = '<span class="progress-indicator">📈</span>';
+            } else if (avgNet < prevAvgNet) {
+                progressIndicator = '<span class="progress-indicator">📉</span>';
+            } else {
+                progressIndicator = '<span class="progress-indicator">➡️</span>';
+            }
+        }
+        
+        analysisHtml += '<div class="week-summary">' +
+                       '<div class="week-header">' +
+                       'Week of ' + formatDate(week.start) + ' - ' + formatDate(weekEnd) +
+                       progressIndicator +
+                       '</div>' +
+                       '<div class="week-stats">' +
+                       '<div class="week-stat">' +
+                       '<div class="week-stat-label">Total In</div>' +
+                       '<div class="week-stat-value" style="color: #dc2626;">' + week.totalIn + '</div>' +
+                       '</div>' +
+                       '<div class="week-stat">' +
+                       '<div class="week-stat-label">Total Out</div>' +
+                       '<div class="week-stat-value" style="color: #059669;">' + week.totalOut + '</div>' +
+                       '</div>' +
+                       '<div class="week-stat">' +
+                       '<div class="week-stat-label">Net Total</div>' +
+                       '<div class="week-stat-value ' + (week.totalNet > 0 ? 'net-positive' : week.totalNet < 0 ? 'net-negative' : 'net-neutral') + '">' + week.totalNet + '</div>' +
+                       '</div>' +
+                       '<div class="week-stat">' +
+                       '<div class="week-stat-label">Daily Avg In</div>' +
+                       '<div class="week-stat-value" style="color: #dc2626;">' + avgIn + '</div>' +
+                       '</div>' +
+                       '<div class="week-stat">' +
+                       '<div class="week-stat-label">Daily Avg Out</div>' +
+                       '<div class="week-stat-value" style="color: #059669;">' + avgOut + '</div>' +
+                       '</div>' +
+                       '<div class="week-stat">' +
+                       '<div class="week-stat-label">Daily Avg Net</div>' +
+                       '<div class="week-stat-value ' + (avgNet > 0 ? 'net-positive' : avgNet < 0 ? 'net-negative' : 'net-neutral') + '">' + avgNet + '</div>' +
+                       '</div>' +
+                       '</div>' +
+                       '</div>';
+    });
+    
+    analysisHtml += '</div>';
+    
+    // Generate monthly analysis
+    analysisHtml += generateMonthlyAnalysis();
+    
+    content.innerHTML += analysisHtml;
+}
+
+function getWeekStart(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day;
+    return new Date(d.setDate(diff));
+}
+
+function formatDate(date) {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function generateMonthlyAnalysis() {
+    if (!data.calorieTable || data.calorieTable.length === 0) {
+        return '<div id="monthly-analysis"><h3>📅 Monthly Analysis</h3><p>No data available for monthly analysis.</p></div>';
+    }
+    
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    // Get first day of current month
+    const monthStart = new Date(currentYear, currentMonth, 1);
+    const monthEnd = new Date(currentYear, currentMonth + 1, 0);
+    
+    // Filter data for current month
+    const monthData = data.calorieTable.filter(row => {
+        const rowDate = new Date(row.date);
+        return rowDate >= monthStart && rowDate <= monthEnd;
+    });
+    
+    if (monthData.length === 0) {
+        return '<div id="monthly-analysis"><h3>📅 Monthly Analysis</h3><p>No data for current month.</p></div>';
+    }
+    
+    // Group by weeks
+    const weeks = {};
+    monthData.forEach(row => {
+        const rowDate = new Date(row.date);
+        const weekStart = getWeekStart(rowDate);
+        const weekKey = weekStart.toISOString().split('T')[0];
+        
+        if (!weeks[weekKey]) {
+            weeks[weekKey] = {
+                start: weekStart,
+                days: [],
+                totalIn: 0,
+                totalOut: 0,
+                totalNet: 0
+            };
+        }
+        
+        weeks[weekKey].days.push(row);
+        weeks[weekKey].totalIn += row.caloriesIn || 0;
+        weeks[weekKey].totalOut += row.caloriesOut || 0;
+        weeks[weekKey].totalNet += (row.caloriesOut || 0) - (row.caloriesIn || 0);
+    });
+    
+    const sortedWeeks = Object.entries(weeks).sort((a, b) => b[1].start - a[1].start);
+    
+    // Calculate monthly totals
+    const monthTotalIn = monthData.reduce((sum, row) => sum + (row.caloriesIn || 0), 0);
+    const monthTotalOut = monthData.reduce((sum, row) => sum + (row.caloriesOut || 0), 0);
+    const monthTotalNet = monthTotalOut - monthTotalIn;
+    const monthDays = monthData.length;
+    
+    const monthName = monthStart.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    
+    let html = '<div id="monthly-analysis"><h3>📅 Monthly Analysis - ' + monthName + '</h3>';
+    
+    // Monthly summary
+    html += '<div class="week-summary" style="margin-bottom: 20px;">' +
+            '<div class="week-header">Month Summary (' + monthDays + ' days tracked)</div>' +
+            '<div class="week-stats">' +
+            '<div class="week-stat">' +
+            '<div class="week-stat-label">Total In</div>' +
+            '<div class="week-stat-value" style="color: #dc2626;">' + monthTotalIn + '</div>' +
+            '</div>' +
+            '<div class="week-stat">' +
+            '<div class="week-stat-label">Total Out</div>' +
+            '<div class="week-stat-value" style="color: #059669;">' + monthTotalOut + '</div>' +
+            '</div>' +
+            '<div class="week-stat">' +
+            '<div class="week-stat-label">Net Total</div>' +
+            '<div class="week-stat-value ' + (monthTotalNet > 0 ? 'net-positive' : monthTotalNet < 0 ? 'net-negative' : 'net-neutral') + '">' + monthTotalNet + '</div>' +
+            '</div>' +
+            '<div class="week-stat">' +
+            '<div class="week-stat-label">Daily Avg In</div>' +
+            '<div class="week-stat-value" style="color: #dc2626;">' + Math.round(monthTotalIn / monthDays) + '</div>' +
+            '</div>' +
+            '<div class="week-stat">' +
+            '<div class="week-stat-label">Daily Avg Out</div>' +
+            '<div class="week-stat-value" style="color: #059669;">' + Math.round(monthTotalOut / monthDays) + '</div>' +
+            '</div>' +
+            '<div class="week-stat">' +
+            '<div class="week-stat-label">Daily Avg Net</div>' +
+            '<div class="week-stat-value ' + (monthTotalNet > 0 ? 'net-positive' : monthTotalNet < 0 ? 'net-negative' : 'net-neutral') + '">' + Math.round(monthTotalNet / monthDays) + '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+    
+    // Weekly breakdown
+    html += '<h4>Weekly Breakdown</h4>';
+    sortedWeeks.forEach(([weekKey, week], index) => {
+        const weekEnd = new Date(week.start);
+        weekEnd.setDate(weekEnd.getDate() + 6);
+        
+        const weekNumber = index + 1;
+        const avgIn = Math.round(week.totalIn / week.days.length);
+        const avgOut = Math.round(week.totalOut / week.days.length);
+        const avgNet = Math.round(week.totalNet / week.days.length);
+        
+        html += '<div class="week-summary" style="margin-bottom: 10px;">' +
+                '<div class="week-header">Week ' + weekNumber + ': ' + formatDate(week.start) + ' - ' + formatDate(weekEnd) + ' (' + week.days.length + ' days)</div>' +
+                '<div class="week-stats">' +
+                '<div class="week-stat">' +
+                '<div class="week-stat-label">Avg In</div>' +
+                '<div class="week-stat-value" style="color: #dc2626;">' + avgIn + '</div>' +
                 '</div>' +
-                '<button class="btn btn-delete" onclick="deleteCalorie(' + entry.id + ')">🗑️</button>' +
+                '<div class="week-stat">' +
+                '<div class="week-stat-label">Avg Out</div>' +
+                '<div class="week-stat-value" style="color: #059669;">' + avgOut + '</div>' +
+                '</div>' +
+                '<div class="week-stat">' +
+                '<div class="week-stat-label">Avg Net</div>' +
+                '<div class="week-stat-value ' + (avgNet > 0 ? 'net-positive' : avgNet < 0 ? 'net-negative' : 'net-neutral') + '">' + avgNet + '</div>' +
+                '</div>' +
+                '<div class="week-stat">' +
+                '<div class="week-stat-label">Total Net</div>' +
+                '<div class="week-stat-value ' + (week.totalNet > 0 ? 'net-positive' : week.totalNet < 0 ? 'net-negative' : 'net-neutral') + '">' + week.totalNet + '</div>' +
+                '</div>' +
+                '</div>' +
                 '</div>';
     });
     
-    content.innerHTML = html + '</div>';
+    html += '</div>';
+    return html;
 }
 
+// Legacy calorie functions for backwards compatibility
 function addCalorie() {
-    const cals = parseInt(document.getElementById('cal-input').value);
-    const protein = parseInt(document.getElementById('prot-input').value) || 0;
-    const meal = document.getElementById('meal-input').value;
-    const date = document.getElementById('cal-date').value;
+    const dateInput = document.getElementById('cal-date');
+    const calInput = document.getElementById('cal-input');
+    const proteinInput = document.getElementById('protein-input');
     
-    if (!cals || !date) return;
+    if (!calInput.value || !dateInput.value) return;
     
+    const calories = parseInt(calInput.value);
+    const protein = parseInt(proteinInput.value) || 0;
+    const date = dateInput.value;
+    
+    // Add to legacy calories array
     data.calories.push({
         id: Date.now(),
-        calories: cals,
+        amount: calories,
         protein: protein,
-        meal: meal,
         date: date
     });
     
-    save();
-    document.getElementById('cal-input').value = '';
-    document.getElementById('prot-input').value = '';
-    loadCaloriesTab();
-    updateStats();
-}
-
-function editCalorie(id) {
-    const entry = data.calories.find(e => e.id === id);
-    if (!entry) return;
-    
-    const meal = prompt('Meal (breakfast/lunch/dinner/snack):', entry.meal);
-    if (!meal) return;
-    
-    const cals = prompt('Calories:', entry.calories);
-    if (!cals) return;
-    
-    const protein = prompt('Protein:', entry.protein);
-    const date = prompt('Date:', entry.date);
-    if (!date) return;
-    
-    entry.meal = meal;
-    entry.calories = parseInt(cals);
-    entry.protein = parseInt(protein) || 0;
-    entry.date = date;
-    save();
-    loadCaloriesTab();
-    updateStats();
-}
-
-function deleteCalorie(id) {
-    if (confirm('Delete?')) {
-        data.calories = data.calories.filter(e => e.id !== id);
-        save();
-        loadCaloriesTab();
-        updateStats();
+    // Update or add to calorie table
+    let tableRow = data.calorieTable.find(r => r.date === date);
+    if (!tableRow) {
+        tableRow = { date: date, caloriesIn: 0, caloriesOut: 0 };
+        data.calorieTable.push(tableRow);
     }
+    tableRow.caloriesIn += calories;
+    
+    save();
+    calInput.value = '';
+    proteinInput.value = '';
+    updateStats();
+    populateCalorieTable();
+    generateWeeklyAnalysis();
+}
+
+function addBurnedCalorie() {
+    const dateInput = document.getElementById('burned-date');
+    const burnedInput = document.getElementById('burned-input');
+    
+    if (!burnedInput.value || !dateInput.value) return;
+    
+    const burned = parseInt(burnedInput.value);
+    const date = dateInput.value;
+    
+    // Add to legacy burned calories array
+    data.caloriesBurned.push({
+        id: Date.now(),
+        amount: burned,
+        date: date
+    });
+    
+    // Update or add to calorie table
+    let tableRow = data.calorieTable.find(r => r.date === date);
+    if (!tableRow) {
+        tableRow = { date: date, caloriesIn: 0, caloriesOut: 0 };
+        data.calorieTable.push(tableRow);
+    }
+    tableRow.caloriesOut += burned;
+    
+    save();
+    burnedInput.value = '';
+    updateStats();
+    populateCalorieTable();
+    generateWeeklyAnalysis();
 }
 
 function loadSpendingTab() {
     const content = document.getElementById('content');
+    let html = '<h2>💰 SPENDING</h2>';
     
-    let html = '<h2>SPENDING</h2>' +
-               '<div class="form-row">' +
-               '<input type="text" id="desc-input" placeholder="Description" style="flex: 2;">' +
-               '<input type="number" id="amt-input" step="0.01" placeholder="Amount">' +
-               '<select id="cat-input"><option value="food">Food</option><option value="transport">Transport</option><option value="entertainment">Entertainment</option><option value="shopping">Shopping</option><option value="other">Other</option></select>' +
-               '<input type="date" id="spend-date" value="' + getPSTDate() + '">' +
-               '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
-               '</div><div>';
+    html += '<div class="form-row">' +
+            '<input type="number" id="spend-input" placeholder="Amount" step="0.01">' +
+            '<input type="text" id="spend-desc" placeholder="Description">' +
+            '<input type="date" id="spend-date" value="' + getPSTDate() + '">' +
+            '<button class="btn btn-primary" onclick="addSpending()">Add Spending</button>' +
+            '</div>';
     
-    data.spending.sort((a, b) => b.date.localeCompare(a.date)).forEach(entry => {
+    html += '<div>';
+    data.spending.sort((a, b) => b.date.localeCompare(a.date)).forEach(spend => {
         html += '<div class="item">' +
-                '<div class="item-content" onclick="editSpending(' + entry.id + ')">' +
-                '<strong>' + entry.description + '</strong> - $' + entry.amount.toFixed(2) + ' (' + entry.category + ')' +
-                '<br><small>' + entry.date + '</small>' +
+                '<div class="item-content" onclick="editSpending(' + spend.id + ')">' +
+                '$' + spend.amount.toFixed(2) + ' - ' + spend.description +
+                '<br><small>' + spend.date + '</small>' +
                 '</div>' +
-                '<button class="btn btn-delete" onclick="deleteSpending(' + entry.id + ')">🗑️</button>' +
+                '<div class="item-actions">' +
+                '<button class="btn btn-delete" onclick="deleteSpending(' + spend.id + ')">🗑️</button>' +
+                '</div>' +
                 '</div>';
     });
+    html += '</div>';
     
-    content.innerHTML = html + '</div>';
+    content.innerHTML = html;
 }
 
 function addSpending() {
-    const desc = document.getElementById('desc-input').value.trim();
-    const amt = parseFloat(document.getElementById('amt-input').value);
-    const cat = document.getElementById('cat-input').value;
-    const date = document.getElementById('spend-date').value;
+    const spendInput = document.getElementById('spend-input');
+    const descInput = document.getElementById('spend-desc');
+    const dateInput = document.getElementById('spend-date');
     
-    if (!desc || !amt || !date) return;
+    if (!spendInput.value || !descInput.value || !dateInput.value) return;
     
     data.spending.push({
         id: Date.now(),
-        description: desc,
-        amount: amt,
-        category: cat,
-        date: date
+        amount: parseFloat(spendInput.value),
+        description: descInput.value.trim(),
+        date: dateInput.value
     });
     
     save();
-    document.getElementById('desc-input').value = '';
-    document.getElementById('amt-input').value = '';
-    loadSpendingTab();
+    spendInput.value = '';
+    descInput.value = '';
     updateStats();
+    loadSpendingTab();
 }
 
 function editSpending(id) {
-    const entry = data.spending.find(e => e.id === id);
-    if (!entry) return;
+    const spend = data.spending.find(s => s.id === id);
+    if (!spend) return;
     
-    const desc = prompt('Description:', entry.description);
-    if (!desc) return;
+    const newAmount = parseFloat(prompt('Amount:', spend.amount));
+    if (isNaN(newAmount)) return;
     
-    const amt = prompt('Amount:', entry.amount);
-    if (!amt) return;
+    const newDesc = prompt('Description:', spend.description);
+    if (!newDesc) return;
     
-    const date = prompt('Date:', entry.date);
-    if (!date) return;
+    const newDate = prompt('Date (YYYY-MM-DD):', spend.date);
+    if (!newDate) return;
     
-    entry.description = desc;
-    entry.amount = parseFloat(amt);
-    entry.date = date;
+    spend.amount = newAmount;
+    spend.description = newDesc;
+    spend.date = newDate;
     save();
-    loadSpendingTab();
     updateStats();
+    loadSpendingTab();
 }
 
 function deleteSpending(id) {
-    if (confirm('Delete?')) {
-        data.spending = data.spending.filter(e => e.id !== id);
-        save();
-        loadSpendingTab();
-        updateStats();
-    }
-}
-
-function addBurnedCalories() {
-    const burned = parseInt(document.getElementById('burned-input').value);
-    const date = document.getElementById('burned-date').value;
-
-    if (!burned || !date) return;
-
-    if (!data.caloriesBurned) data.caloriesBurned = [];
-
-    const existingIndex = data.caloriesBurned.findIndex(entry => entry.date === date);
-    
-    if (existingIndex >= 0) {
-        data.caloriesBurned[existingIndex].burned = burned;
-    } else {
-        data.caloriesBurned.push({
-            id: Date.now(),
-            burned: burned,
-            date: date
-        });
-    }
-
+    if (!confirm('Delete this spending entry?')) return;
+    data.spending = data.spending.filter(s => s.id !== id);
     save();
-    loadCaloriesTab();
     updateStats();
+    loadSpendingTab();
 }
 
 function updateStats() {
     const today = getPSTDate();
-    const todayCals = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + e.calories, 0);
-    const todayProtein = data.calories.filter(e => e.date === today).reduce((sum, e) => sum + (e.protein || 0), 0);
     
-    // Get today's burned calories
-    const todayBurned = data.caloriesBurned?.find(entry => entry.date === today);
-    const burnedCals = todayBurned?.burned || 0;
+    // Calculate today's calories and protein from legacy data
+    const todayCalories = data.calories.filter(c => c.date === today).reduce((sum, c) => sum + c.amount, 0);
+    const todayProtein = data.calories.filter(c => c.date === today).reduce((sum, c) => sum + (c.protein || 0), 0);
+    const todayBurned = data.caloriesBurned.filter(c => c.date === today).reduce((sum, c) => sum + c.amount, 0);
     
-    // Calculate balance and update display
-    let balanceText = 'Enter burned calories';
-    let balanceColor = '#f59e0b';
+    // Also check calorie table data
+    const tableToday = data.calorieTable.find(r => r.date === today);
+    const tableCaloriesIn = tableToday ? tableToday.caloriesIn : 0;
+    const tableCaloriesOut = tableToday ? tableToday.caloriesOut : 0;
     
-    if (burnedCals > 0) {
-        const balance = todayCals - burnedCals;
-        if (balance < -100) {
-            balanceText = balance + ' deficit ✅';
-            balanceColor = '#22c55e';
-        } else if (balance > 100) {
-            balanceText = '+' + balance + ' surplus ⚠️';
-            balanceColor = '#ef4444';
-        } else {
-            balanceText = (balance >= 0 ? '+' : '') + balance + ' maintenance ⚖️';
-            balanceColor = '#f59e0b';
-        }
+    // Use the higher values between legacy and table data
+    const totalCaloriesIn = Math.max(todayCalories, tableCaloriesIn);
+    const totalCaloriesOut = Math.max(todayBurned, tableCaloriesOut);
+    
+    document.getElementById('cal-today').textContent = totalCaloriesIn + ' cal today';
+    document.getElementById('protein-today').textContent = todayProtein + 'g protein';
+    
+    const balance = totalCaloriesOut - totalCaloriesIn;
+    const balanceElement = document.getElementById('balance-today');
+    
+    let balanceText, balanceColor;
+    if (balance > 100) {
+        balanceText = `-${balance} cal deficit`;
+        balanceColor = '#059669'; // Green for deficit
+    } else if (balance >= -100 && balance <= 100) {
+        balanceText = balance === 0 ? 'Balanced calories' : `${balance > 0 ? '-' : '+'}${Math.abs(balance)} cal maintenance`;
+        balanceColor = '#f59e0b'; // Orange for maintenance
+    } else {
+        balanceText = `+${Math.abs(balance)} cal surplus`;
+        balanceColor = '#dc2626'; // Red for surplus
     }
     
-    document.getElementById('cal-today').textContent = todayCals + ' cal today';
-    document.getElementById('protein-today').textContent = todayProtein + 'g protein';
-    document.getElementById('balance-today').textContent = balanceText;
-    document.getElementById('balance-today').style.color = balanceColor;
+    balanceElement.textContent = balanceText;
+    balanceElement.style.color = balanceColor;
     
-    const weekStart = new Date();
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-    const weekSpend = data.spending.filter(e => new Date(e.date) >= weekStart).reduce((sum, e) => sum + e.amount, 0);
+    // This week's spending
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const weekAgoStr = weekAgo.getFullYear() + '-' + 
+                      String(weekAgo.getMonth() + 1).padStart(2, '0') + '-' + 
+                      String(weekAgo.getDate()).padStart(2, '0');
     
+    const weekSpend = data.spending.filter(s => s.date >= weekAgoStr).reduce((sum, s) => sum + s.amount, 0);
     document.getElementById('spend-week').textContent = '$' + weekSpend.toFixed(2) + ' this week';
 }
 
-function showFullImage(imageData) {
-    const img = new Image();
-    img.src = imageData;
-    img.style.maxWidth = '100vw';
-    img.style.maxHeight = '100vh';
-    img.style.objectFit = 'contain';
-    
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100vw';
-    overlay.style.height = '100vh';
-    overlay.style.backgroundColor = 'rgba(0,0,0,0.9)';
-    overlay.style.display = 'flex';
-    overlay.style.justifyContent = 'center';
-    overlay.style.alignItems = 'center';
-    overlay.style.zIndex = '9999';
-    overlay.style.cursor = 'pointer';
-    
-    overlay.appendChild(img);
-    overlay.onclick = function() {
-        document.body.removeChild(overlay);
-    };
-    
-    document.body.appendChild(overlay);
-}
-
-function filterItems(listName) {
-    const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    
-    // Store the search term temporarily
-    window.currentSearch = searchTerm;
-    
-    // Reload the tab with filtering
-    loadListTab(listName);
-}
-
-function renderFilteredItems(listName, items, container) {
-    let html = '';
-    
-    if (listName === 'notes') {
-        items.forEach(note => {
-            html += '<div class="item" style="background: #f8f9fa;">' +
-                    '<div class="item-content" onclick="editNote(' + note.id + ')">' +
-                    note.content +
-                    '<br><small>' + note.date + '</small>' +
-                    '</div>' +
-                    '<div class="item-actions">' +
-                    '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">🗑️</button>' +
-                    '</div>' +
-                    '</div>';
-        });
-    } else {
-        items.forEach(item => {
-            const today = getPSTDate();
-            const isToday = item.date === today;
-            const bgColor = isToday ? '#e0f2fe' : '#f8f9fa';
-            
-            html += '<div class="item" style="background: ' + bgColor + ';">' +
-                    '<div class="item-content" onclick="editItem(\'' + listName + '\', ' + item.id + ')">' +
-                    item.content +
-                    (listName === 'read' ? '<br><small><strong>' + (item.category || 'book').toUpperCase() + '</strong></small>' : '') +
-                    '<br><small>' + item.date + '</small>' +
-                    '</div>' +
-                    '<div class="item-actions">' +
-                    (item.link ? '<button class="btn-green" style="padding: 4px 8px; font-size: 12px;" onclick="window.open(\'' + item.link + '\')">🔗</button>' : '') +
-                    '<button class="btn btn-delete" onclick="deleteItem(\'' + listName + '\', ' + item.id + ')">🗑️</button>' +
-                    '</div>' +
-                    '</div>';
-        });
-    }
-    
-    container.innerHTML = html;
-}
-
-function simpleFilter(listName) {
-    const searchInput = document.getElementById('search-' + listName);
-    const searchTerm = searchInput.value.toLowerCase();
-    
-    const allItems = document.querySelectorAll('.item');
-    
-    allItems.forEach(item => {
-        const content = item.textContent.toLowerCase();
-        if (searchTerm === '' || content.includes(searchTerm)) {
-            item.style.display = 'block';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
-
 function downloadData() {
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'notebook-data.json';
-    a.click();
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'notebook-data-' + getPSTDate() + '.json';
+    link.click();
     URL.revokeObjectURL(url);
 }
 
@@ -691,24 +1080,20 @@ function uploadData(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
-            const imported = JSON.parse(e.target.result);
-            if (confirm('Replace all data with uploaded file?')) {
-                data = imported;
-                save();
-                showTab('home');
-                alert('Data imported!');
-            }
-        } catch (error) {
-            alert('Error: ' + error.message);
+            const uploadedData = JSON.parse(e.target.result);
+            data = uploadedData;
+            save();
+            updateStats();
+            alert('Data uploaded successfully!');
+        } catch (err) {
+            alert('Error uploading data: ' + err.message);
         }
     };
     reader.readAsText(file);
-    event.target.value = '';
 }
 
-// Initialize
+// Initialize the app
 load();
-showTab('home');
 updateStats();
 </script>
 </body>
