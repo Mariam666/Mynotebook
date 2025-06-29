@@ -379,7 +379,19 @@
             items.forEach((item, i) => {
                 const progressIndicator = item.completed ? '✅' : '⏳';
                 const itemStyle = item.completed ? 'text-decoration: line-through; opacity: 0.7;' : '';
-                const category = item.category ? ` <span style="background: #dbeafe; color: #1d4ed8; padding: 2px 6px; border-radius: 3px; font-size: 11px;">${item.category}</span>` : '';
+                
+                // Get category color for reading items
+                let category = '';
+                if (item.category) {
+                    const categoryColors = {
+                        book: { bg: '#dbeafe', color: '#1d4ed8' },      // blue
+                        essay: { bg: '#fef3c7', color: '#92400e' },     // yellow/amber  
+                        poem: { bg: '#fce7f3', color: '#be185d' }       // pink
+                    };
+                    const colors = categoryColors[item.category] || { bg: '#dbeafe', color: '#1d4ed8' };
+                    category = ` <span style="background: ${colors.bg}; color: ${colors.color}; padding: 2px 6px; border-radius: 3px; font-size: 11px;">${item.category}</span>`;
+                }
+                
                 html += `<div class="item item-${listName}-${i}">
                     <div class="item-content" style="${itemStyle}" onclick="toggleComplete('${listName}', ${i})">${progressIndicator} ${item.title}${category} ${item.link ? '<a href="' + item.link + '" target="_blank" style="color: #2563eb;">🔗</a>' : ''} <small style="color: #666;">(${item.date})</small></div>
                     <div class="item-actions">
