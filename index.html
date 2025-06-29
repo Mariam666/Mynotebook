@@ -1,31 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Notebook</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Notebook</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'EB Garamond', 'Adobe Garamond Pro', 'Garamond', 'Times New Roman', serif; padding: 10px; background: #f9fafb; margin: 0; }
+        body { 
+            font-family: 'EB Garamond', 'Adobe Garamond Pro', 'Garamond', 'Times New Roman', serif; 
+            padding: 10px; 
+            background: #f9fafb; 
+            margin: 0; 
+        }
         .container { max-width: 1000px; margin: 0 auto; }
         h1 { color: #333; margin-bottom: 15px; font-size: 1.5rem; }
         .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .stat-card { background: white; padding: 12px; border-radius: 8px; border: 2px solid #e5e7eb; text-align: center; cursor: pointer; font-size: 14px; }
+        .stat-card { 
+            background: white; 
+            padding: 12px; 
+            border-radius: 8px; 
+            border: 2px solid #e5e7eb; 
+            text-align: center; 
+            cursor: pointer; 
+            font-size: 14px; 
+            transition: background-color 0.2s;
+        }
         .stat-card:hover { background: #f3f4f6; }
         .nav-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-        .tab-btn { padding: 12px 8px; border: 2px solid #e5e7eb; background: white; border-radius: 8px; cursor: pointer; text-align: center; font-size: 12px; }
+        .tab-btn { 
+            padding: 12px 8px; 
+            border: 2px solid #e5e7eb; 
+            background: white; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            text-align: center; 
+            font-size: 12px; 
+            transition: all 0.2s;
+        }
         .tab-btn:hover { background: #f3f4f6; }
         .tab-btn.active { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
         .content { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; }
         .hidden { display: none; }
-        input, textarea, select { padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 14px; }
-        textarea { width: 100%; height: 80px; resize: vertical; }
-        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 14px; }
+        input, textarea, select { 
+            padding: 6px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            font-family: inherit; 
+            font-size: 14px; 
+        }
+        textarea { width: 100%; height: 80px; resize: vertical; box-sizing: border-box; }
+        .btn { 
+            padding: 6px 12px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: 500; 
+            font-size: 14px; 
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
         .btn-primary { background: #3b82f6; color: white; }
         .btn-green { background: #10b981; color: white; }
         .btn-delete { background: #ef4444; color: white; padding: 4px 8px; font-size: 12px; }
-        .item { padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .item { 
+            padding: 12px; 
+            border: 1px solid #e5e7eb; 
+            border-radius: 6px; 
+            margin-bottom: 8px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: white;
+        }
         .item-content { flex: 1; cursor: pointer; font-size: 14px; }
         .item-actions { display: flex; gap: 6px; align-items: center; }
-        .form-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+        .form-row { 
+            display: flex; 
+            gap: 6px; 
+            margin-bottom: 12px; 
+            flex-wrap: wrap; 
+            align-items: center; 
+        }
         .form-row input, .form-row select { min-width: 80px; flex: 1; }
         
         /* Enhanced table styles for calorie tracking */
@@ -50,8 +105,8 @@
         }
         .editable-cell:hover { background: #e0f2fe; }
         .editing { background: #fff3cd !important; }
-        .net-positive { color: #059669; font-weight: 600; }
-        .net-negative { color: #dc2626; font-weight: 600; }
+        .net-positive { color: #dc2626; font-weight: 600; }
+        .net-negative { color: #059669; font-weight: 600; }
         .net-neutral { color: #6b7280; }
         
         .week-summary { 
@@ -93,7 +148,35 @@
             margin-left: 8px;
         }
         
-        #paste-area img { max-width: 80px; max-height: 80px; object-fit: cover; border-radius: 4px; }
+        .spending-category { 
+            background: #f0f9ff; 
+            border: 1px solid #bae6fd; 
+            padding: 8px; 
+            border-radius: 4px; 
+            margin: 4px 0; 
+        }
+        .spending-category-header { 
+            font-weight: 600; 
+            color: #0369a1; 
+            margin-bottom: 4px; 
+        }
+        
+        .note-item { 
+            background: #fefce8; 
+            border: 1px solid #fef3c7; 
+            padding: 12px; 
+            border-radius: 6px; 
+            margin-bottom: 8px; 
+        }
+        .note-date { 
+            font-size: 12px; 
+            color: #92400e; 
+            margin-bottom: 4px; 
+        }
+        .note-content { 
+            white-space: pre-wrap; 
+            line-height: 1.5; 
+        }
         
         @media (max-width: 768px) {
             body { padding: 8px; font-size: 16px; }
@@ -108,7 +191,14 @@
             .item { padding: 12px; gap: 8px; margin-bottom: 8px; }
             .item-content { font-size: 14px; line-height: 1.4; }
             .form-row { gap: 8px; margin-bottom: 12px; flex-direction: column; align-items: stretch; }
-            .form-row input, .form-row select { min-width: auto; font-size: 14px; width: 100%; margin-bottom: 6px; padding: 12px; box-sizing: border-box; }
+            .form-row input, .form-row select { 
+                min-width: auto; 
+                font-size: 14px; 
+                width: 100%; 
+                margin-bottom: 6px; 
+                padding: 12px; 
+                box-sizing: border-box; 
+            }
             .btn { padding: 12px 16px; font-size: 14px; }
             .btn-delete { padding: 8px 12px; font-size: 12px; width: auto; }
             .form-row .btn { width: 100%; padding: 14px; }
@@ -138,7 +228,9 @@
             </div>
             <div class="stat-card" onclick="showTab('spending')">
                 <div>💰 Spending</div>
+                <div style="font-size: 14px; color: #dc2626;" id="spend-today">$0 today</div>
                 <div style="font-size: 14px; color: #2563eb;" id="spend-week">$0 this week</div>
+                <div style="font-size: 14px; color: #8b5cf6;" id="spend-month">$0 this month</div>
             </div>
         </div>
         
@@ -169,948 +261,927 @@
         <div id="content" class="content hidden"></div>
     </div>
 
-<script>
-let data = {
-    lists: { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
-    notes: [],
-    calories: [],
-    caloriesBurned: [],
-    spending: [],
-    calorieTable: [] // New field for enhanced calorie tracking
-};
+    <script>
+        let data = {
+            lists: { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
+            notes: [],
+            calories: [],
+            caloriesBurned: [],
+            spending: [],
+            calorieTable: [],
+            customCalorieDays: []
+        };
 
-function getPSTDate() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
+        function getPSTDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
 
-function save() {
-    try {
-        localStorage.setItem('notebookData', JSON.stringify(data));
-    } catch (e) {
-        console.error('Save error:', e);
-    }
-}
-
-function load() {
-    try {
-        const saved = localStorage.getItem('notebookData');
-        if (saved) {
-            const loadedData = JSON.parse(saved);
-            data = { ...data, ...loadedData };
-            // Ensure calorieTable exists for backwards compatibility
-            if (!data.calorieTable) {
-                data.calorieTable = [];
+        function save() {
+            try {
+                localStorage.setItem('notebookData', JSON.stringify(data));
+            } catch (e) {
+                console.error('Save error:', e);
+                alert('Error saving data: ' + e.message);
             }
         }
-    } catch (e) {
-        console.error('Load error:', e);
-    }
-}
 
-function showTab(tab) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    
-    if (tab === 'home') {
-        document.getElementById('stats').style.display = 'grid';
-        document.getElementById('content').classList.add('hidden');
-        document.getElementById('tab-home').classList.add('active');
-        updateStats();
-    } else {
-        document.getElementById('stats').style.display = 'none';
-        document.getElementById('content').classList.remove('hidden');
-        document.getElementById('tab-' + tab).classList.add('active');
-        loadTab(tab);
-    }
-}
-
-function loadTab(tab) {
-    const content = document.getElementById('content');
-    
-    if (['read', 'listen', 'watch', 'cook', 'make', 'look'].includes(tab)) {
-        loadListTab(tab);
-    } else if (tab === 'notes') {
-        loadNotesTab();
-    } else if (tab === 'calories') {
-        loadCaloriesTab();
-    } else if (tab === 'spending') {
-        loadSpendingTab();
-    }
-}
-
-function loadListTab(listName) {
-    const items = data.lists[listName] || [];
-    const content = document.getElementById('content');
-    
-    let html = '<h2>' + listName.toUpperCase() + '</h2>';
-    
-    if (listName === 'read') {
-        html += '<div class="form-row">' +
-                '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
-                '<input type="url" id="link-input" placeholder="Link">' +
-                '<select id="cat-input"><option value="book">Book</option><option value="essay">Essay</option><option value="poem">Poem</option></select>' +
-                '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
-                '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
-                '</div>' +
-                '<div style="margin: 8px 0;"><input type="text" id="search-' + listName + '" placeholder="🔍 Search..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" oninput="simpleFilter(\'' + listName + '\')"></div>';
-    } else {
-        html += '<div class="form-row">' +
-                '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
-                '<input type="url" id="link-input" placeholder="Link">' +
-                '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
-                '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
-                '</div>' +
-                '<div style="margin: 8px 0;"><input type="text" id="search-' + listName + '" placeholder="🔍 Search..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" oninput="simpleFilter(\'' + listName + '\')"></div>';
-    }
-    
-    html += '<div>';
-    items.sort((a, b) => b.date.localeCompare(a.date)).forEach(item => {
-        let bgColor = 'white';
-        if (listName === 'read') {
-            if (item.category === 'book') bgColor = '#dbeafe';
-            else if (item.category === 'essay') bgColor = '#f0fdf4';
-            else if (item.category === 'poem') bgColor = '#faf5ff';
+        function load() {
+            try {
+                const saved = localStorage.getItem('notebookData');
+                if (saved) {
+                    const loadedData = JSON.parse(saved);
+                    data = { ...data, ...loadedData };
+                    
+                    // Clean up data structure - ensure lists contain valid items
+                    if (data.lists) {
+                        Object.keys(data.lists).forEach(listName => {
+                            if (Array.isArray(data.lists[listName])) {
+                                data.lists[listName] = data.lists[listName].filter(item => 
+                                    item && typeof item === 'object' && item.title
+                                );
+                            } else {
+                                data.lists[listName] = [];
+                            }
+                        });
+                    }
+                    
+                    // Ensure other arrays exist and are valid
+                    if (!Array.isArray(data.calories)) data.calories = [];
+                    if (!Array.isArray(data.caloriesBurned)) data.caloriesBurned = [];
+                    if (!Array.isArray(data.spending)) data.spending = [];
+                    if (!Array.isArray(data.notes)) data.notes = [];
+                    if (!data.calorieTable) data.calorieTable = [];
+                }
+            } catch (e) {
+                console.error('Load error:', e);
+                alert('Error loading data: ' + e.message);
+            }
         }
-        
-        html += '<div class="item" style="background: ' + bgColor + ';">' +
-                '<div class="item-content" onclick="editItem(\'' + listName + '\', ' + item.id + ')">' +
-                item.content +
-                (listName === 'read' ? '<br><small><strong>' + (item.category || 'book').toUpperCase() + '</strong></small>' : '') +
-                '<br><small>' + item.date + '</small>' +
-                '</div>' +
-                '<div class="item-actions">' +
-                (item.link ? '<button class="btn-green" style="padding: 4px 8px; font-size: 12px;" onclick="window.open(\'' + item.link + '\')">🔗</button>' : '') +
-                '<button class="btn btn-delete" onclick="deleteItem(\'' + listName + '\', ' + item.id + ')">🗑️</button>' +
-                '</div>' +
-                '</div>';
-    });
-    html += '</div></div>';
-    
-    content.innerHTML = html;
-}
 
-function addItem(listName) {
-    const itemInput = document.getElementById('item-input');
-    const linkInput = document.getElementById('link-input');
-    const dateInput = document.getElementById('date-input');
-    
-    if (!itemInput.value.trim() || !dateInput.value) return;
-    
-    const item = {
-        id: Date.now(),
-        content: itemInput.value.trim(),
-        date: dateInput.value
-    };
-    
-    if (listName === 'read') {
-        item.category = document.getElementById('cat-input').value;
-    }
-    
-    if (linkInput.value.trim()) {
-        item.link = linkInput.value.trim();
-    }
-    
-    data.lists[listName].push(item);
-    save();
-    itemInput.value = '';
-    linkInput.value = '';
-    loadListTab(listName);
-}
-
-function editItem(listName, id) {
-    const item = data.lists[listName].find(i => i.id === id);
-    if (!item) return;
-    
-    const newContent = prompt('Edit:', item.content);
-    if (!newContent) return;
-    
-    const newDate = prompt('Date (YYYY-MM-DD):', item.date);
-    if (!newDate) return;
-    
-    item.content = newContent;
-    item.date = newDate;
-    
-    if (listName === 'read') {
-        const newCategory = prompt('Category (book/essay/poem):', item.category || 'book');
-        if (newCategory) item.category = newCategory;
-    }
-    
-    save();
-    loadListTab(listName);
-}
-
-function deleteItem(listName, id) {
-    if (!confirm('Delete this item?')) return;
-    data.lists[listName] = data.lists[listName].filter(i => i.id !== id);
-    save();
-    loadListTab(listName);
-}
-
-function simpleFilter(listName) {
-    const query = document.getElementById('search-' + listName).value.toLowerCase();
-    document.querySelectorAll('.item').forEach(item => {
-        const text = item.textContent.toLowerCase();
-        item.style.display = text.includes(query) ? 'flex' : 'none';
-    });
-}
-
-function loadNotesTab() {
-    const content = document.getElementById('content');
-    let html = '<h2>NOTES</h2>';
-    
-    html += '<div class="form-row">' +
-            '<textarea id="note-input" placeholder="Write your note..." style="flex: 1; min-height: 80px;"></textarea>' +
-            '<button class="btn btn-primary" onclick="addNote()" style="align-self: flex-start;">Add Note</button>' +
-            '</div>';
-    
-    html += '<div id="paste-area" style="border: 2px dashed #ccc; padding: 15px; margin: 10px 0; text-align: center; cursor: pointer;" onclick="document.getElementById(\'file-input\').click()">' +
-            'Click to upload image or drag & drop' +
-            '<input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleFileUpload(event)">' +
-            '</div>';
-    
-    html += '<div>';
-    data.notes.sort((a, b) => b.date.localeCompare(a.date)).forEach(note => {
-        html += '<div class="item">' +
-                '<div class="item-content" onclick="editNote(' + note.id + ')">' +
-                (note.image ? '<img src="' + note.image + '" style="max-width: 100px; max-height: 100px; float: right; margin-left: 10px; border-radius: 4px;">' : '') +
-                note.content.replace(/\n/g, '<br>') +
-                '<br><small>' + note.date + '</small>' +
-                '</div>' +
-                '<div class="item-actions">' +
-                '<button class="btn btn-delete" onclick="deleteNote(' + note.id + ')">🗑️</button>' +
-                '</div>' +
-                '</div>';
-    });
-    html += '</div>';
-    
-    content.innerHTML = html;
-}
-
-function addNote() {
-    const input = document.getElementById('note-input');
-    if (!input.value.trim()) return;
-    
-    const note = {
-        id: Date.now(),
-        content: input.value.trim(),
-        date: getPSTDate()
-    };
-    
-    data.notes.push(note);
-    save();
-    input.value = '';
-    loadNotesTab();
-}
-
-function editNote(id) {
-    const note = data.notes.find(n => n.id === id);
-    if (!note) return;
-    
-    const newContent = prompt('Edit note:', note.content);
-    if (newContent !== null) {
-        note.content = newContent;
-        save();
-        loadNotesTab();
-    }
-}
-
-function deleteNote(id) {
-    if (!confirm('Delete this note?')) return;
-    data.notes = data.notes.filter(n => n.id !== id);
-    save();
-    loadNotesTab();
-}
-
-function handleFileUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const pasteArea = document.getElementById('paste-area');
-        pasteArea.innerHTML += '<img src="' + e.target.result + '" style="max-width: 80px; max-height: 80px; margin: 5px; border-radius: 4px;">';
-        
-        // Add note with image
-        const note = {
-            id: Date.now(),
-            content: 'Image uploaded',
-            image: e.target.result,
-            date: getPSTDate()
-        };
-        data.notes.push(note);
-        save();
-        loadNotesTab();
-    };
-    reader.readAsDataURL(file);
-}
-
-// Enhanced calorie tracking functions
-function loadCaloriesTab() {
-    const content = document.getElementById('content');
-    let html = '<h2>🔥 CALORIES</h2>';
-    
-    // Individual meal tracking
-    html += '<div style="margin-bottom: 20px; padding: 15px; background: #f0fdf4; border-radius: 8px;">' +
-            '<h3>🍽️ Add Individual Meals</h3>' +
-            '<div class="form-row">' +
-            '<input type="text" id="meal-desc" placeholder="Meal description (e.g. Breakfast, chicken salad)" style="flex: 2;">' +
-            '<input type="number" id="meal-calories" placeholder="Calories" style="flex: 1;">' +
-            '<input type="number" id="meal-protein" placeholder="Protein (g)" style="flex: 1;">' +
-            '<input type="date" id="meal-date" value="' + getPSTDate() + '">' +
-            '<button class="btn btn-primary" onclick="addMeal()">Add Meal</button>' +
-            '</div>' +
-            '</div>' +
+        function showTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             
-            // Show meal list
-            '<div style="margin-bottom: 20px;">' +
-            '<h3>📝 Recent Meals</h3>' +
-            '<div id="meals-list"></div>' +
-            '</div>' +
+            if (tab === 'home') {
+                document.getElementById('stats').style.display = 'grid';
+                document.getElementById('content').classList.add('hidden');
+                document.getElementById('tab-home').classList.add('active');
+                updateStats();
+            } else {
+                document.getElementById('stats').style.display = 'none';
+                document.getElementById('content').classList.remove('hidden');
+                document.getElementById('tab-' + tab).classList.add('active');
+                loadTab(tab);
+            }
+        }
+
+        function loadTab(tab) {
+            if (['read', 'listen', 'watch', 'cook', 'make', 'look'].includes(tab)) {
+                loadListTab(tab);
+            } else if (tab === 'notes') {
+                loadNotesTab();
+            } else if (tab === 'calories') {
+                loadCaloriesTab();
+            } else if (tab === 'spending') {
+                loadSpendingTab();
+            }
+        }
+
+        function loadListTab(listName) {
+            const items = data.lists[listName] || [];
+            const content = document.getElementById('content');
             
-            // Exercise tracking
-            '<div style="margin-bottom: 20px; padding: 15px; background: #fef3c7; border-radius: 8px;">' +
-            '<h3>🏃 Add Burned Calories</h3>' +
-            '<div class="form-row">' +
-            '<input type="number" id="burned-input" placeholder="Calories burned" style="flex: 1;">' +
-            '<input type="date" id="burned-date" value="' + getPSTDate() + '">' +
-            '<button class="btn btn-green" onclick="addBurnedCalorie()">Add Burned</button>' +
-            '</div>' +
-            '</div>';
-    
-    // Enhanced calorie table
-    html += '<div style="margin-bottom: 20px;">' +
-            '<h3>Calorie Tracking Table</h3>' +
-            '<div style="margin-bottom: 10px;">' +
-            '<button class="btn btn-primary" onclick="addTableRow()">➕ Add Day</button>' +
-            '<button class="btn" onclick="fillMissingDays()" style="background: #8b5cf6; color: white; margin-left: 8px;">📅 Fill Missing Days</button>' +
-            '</div>' +
-            '<div style="overflow-x: auto;">' +
-            '<table class="calorie-table">' +
-            '<thead>' +
-            '<tr>' +
-            '<th>Date</th>' +
-            '<th>Calories In</th>' +
-            '<th>Calories Out</th>' +
-            '<th>Net (Out-In)</th>' +
-            '<th>Actions</th>' +
-            '</tr>' +
-            '</thead>' +
-            '<tbody id="calorie-table-body">' +
-            '</tbody>' +
-            '</table>' +
-            '</div>' +
-            '</div>';
-    
-    content.innerHTML = html;
-    
-    // Populate table and lists
-    populateCalorieTable();
-    populateMealsList();
-    generateWeeklyAnalysis();
-}
-
-function addMeal() {
-    const descInput = document.getElementById('meal-desc');
-    const caloriesInput = document.getElementById('meal-calories');
-    const proteinInput = document.getElementById('meal-protein');
-    const dateInput = document.getElementById('meal-date');
-    
-    if (!descInput.value.trim() || !caloriesInput.value || !dateInput.value) return;
-    
-    const meal = {
-        id: Date.now(),
-        description: descInput.value.trim(),
-        amount: parseInt(caloriesInput.value),
-        protein: parseInt(proteinInput.value) || 0,
-        date: dateInput.value
-    };
-    
-    // Add to calories array for legacy compatibility
-    data.calories.push(meal);
-    
-    // Also update the calorie table
-    let tableRow = data.calorieTable.find(r => r.date === dateInput.value);
-    if (!tableRow) {
-        tableRow = { date: dateInput.value, caloriesIn: 0, caloriesOut: 0 };
-        data.calorieTable.push(tableRow);
-    }
-    tableRow.caloriesIn += meal.amount;
-    
-    save();
-    descInput.value = '';
-    caloriesInput.value = '';
-    proteinInput.value = '';
-    
-    populateMealsList();
-    populateCalorieTable();
-    generateWeeklyAnalysis();
-    updateStats();
-}
-
-
-
-function populateMealsList() {
-    const container = document.getElementById('meals-list');
-    if (!container) return;
-    
-    const recentMeals = data.calories.slice(-10).reverse(); // Show last 10 meals
-    
-    let html = '';
-    recentMeals.forEach(meal => {
-        html += '<div class="item">' +
-                '<div class="item-content">' +
-                '<strong>' + meal.description + '</strong> - ' + meal.amount + ' cal, ' + (meal.protein || 0) + 'g protein' +
-                '<br><small>' + meal.date + '</small>' +
-                '</div>' +
-                '<div class="item-actions">' +
-                '<button class="btn btn-delete" onclick="deleteMeal(' + meal.id + ')">🗑️</button>' +
-                '</div>' +
-                '</div>';
-    });
-    
-    container.innerHTML = html;
-}
-
-
-
-function deleteMeal(id) {
-    if (!confirm('Delete this meal?')) return;
-    
-    // Find and remove the meal
-    const mealIndex = data.calories.findIndex(m => m.id === id);
-    if (mealIndex !== -1) {
-        const meal = data.calories[mealIndex];
-        data.calories.splice(mealIndex, 1);
-        
-        // Update calorie table
-        const tableRow = data.calorieTable.find(r => r.date === meal.date);
-        if (tableRow) {
-            tableRow.caloriesIn = Math.max(0, tableRow.caloriesIn - meal.amount);
+            let html = '<h2>' + listName.toUpperCase() + '</h2>';
+            
+            if (listName === 'read') {
+                html += '<div class="form-row">' +
+                        '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
+                        '<input type="url" id="link-input" placeholder="Link">' +
+                        '<select id="cat-input"><option value="book">Book</option><option value="essay">Essay</option><option value="poem">Poem</option></select>' +
+                        '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
+                        '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
+                        '</div>';
+            } else {
+                html += '<div class="form-row">' +
+                        '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
+                        '<input type="url" id="link-input" placeholder="Link">' +
+                        '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
+                        '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
+                        '</div>';
+            }
+            
+            html += '<div style="margin: 8px 0;"><input type="text" id="search-' + listName + '" placeholder="🔍 Search..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" oninput="filterItems(\'' + listName + '\')"></div>';
+            
+            html += '<div id="items-' + listName + '">';
+            items.forEach((item, i) => {
+                const progressIndicator = item.completed ? '✅' : '⏳';
+                const itemStyle = item.completed ? 'text-decoration: line-through; opacity: 0.7;' : '';
+                const category = item.category ? ` <span style="background: #dbeafe; color: #1d4ed8; padding: 2px 6px; border-radius: 3px; font-size: 11px;">${item.category}</span>` : '';
+                html += `<div class="item item-${listName}-${i}">
+                    <div class="item-content" style="${itemStyle}" onclick="toggleComplete('${listName}', ${i})">${progressIndicator} ${item.title}${category} ${item.link ? '<a href="' + item.link + '" target="_blank" style="color: #2563eb;">🔗</a>' : ''} <small style="color: #666;">(${item.date})</small></div>
+                    <div class="item-actions">
+                        <button class="btn-delete" onclick="deleteItem('${listName}', ${i})">🗑️</button>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            
+            content.innerHTML = html;
         }
-        
-        save();
-        populateMealsList();
-        populateCalorieTable();
-        generateWeeklyAnalysis();
-        updateStats();
-    }
-}
 
-
-
-function populateCalorieTable() {
-    const tbody = document.getElementById('calorie-table-body');
-    if (!tbody) return;
-    
-    // Sort by date descending
-    const sortedData = [...data.calorieTable].sort((a, b) => b.date.localeCompare(a.date));
-    
-    let html = '';
-    sortedData.forEach(row => {
-        const net = (row.caloriesOut || 0) - (row.caloriesIn || 0);
-        const netClass = net > 0 ? 'net-positive' : net < 0 ? 'net-negative' : 'net-neutral';
-        
-        html += '<tr>' +
-                '<td>' + row.date + '</td>' +
-                '<td class="editable-cell" onclick="editCell(this, \'' + row.date + '\', \'caloriesIn\')">' + (row.caloriesIn || 0) + '</td>' +
-                '<td class="editable-cell" onclick="editCell(this, \'' + row.date + '\', \'caloriesOut\')">' + (row.caloriesOut || 0) + '</td>' +
-                '<td class="' + netClass + '">' + net + '</td>' +
-                '<td><button class="btn btn-delete" onclick="deleteTableRow(\'' + row.date + '\')">🗑️</button></td>' +
-                '</tr>';
-    });
-    
-    tbody.innerHTML = html;
-}
-
-function addTableRow() {
-    const date = prompt('Enter date (YYYY-MM-DD):', getPSTDate());
-    if (!date) return;
-    
-    // Check if date already exists
-    const existingRow = data.calorieTable.find(row => row.date === date);
-    if (existingRow) {
-        alert('Date already exists in table');
-        return;
-    }
-    
-    data.calorieTable.push({
-        date: date,
-        caloriesIn: 0,
-        caloriesOut: 0
-    });
-    
-    save();
-    populateCalorieTable();
-    generateWeeklyAnalysis();
-}
-
-function deleteTableRow(date) {
-    if (!confirm('Delete this day\'s data?')) return;
-    
-    data.calorieTable = data.calorieTable.filter(row => row.date !== date);
-    save();
-    populateCalorieTable();
-    generateWeeklyAnalysis();
-}
-
-function editCell(cell, date, field) {
-    const currentValue = cell.textContent;
-    cell.classList.add('editing');
-    
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.value = currentValue;
-    input.style.width = '100%';
-    input.style.border = 'none';
-    input.style.background = 'transparent';
-    input.style.textAlign = 'center';
-    
-    cell.innerHTML = '';
-    cell.appendChild(input);
-    input.focus();
-    input.select();
-    
-    function saveEdit() {
-        const newValue = parseInt(input.value) || 0;
-        const row = data.calorieTable.find(r => r.date === date);
-        if (row) {
-            row[field] = newValue;
-            save();
-            populateCalorieTable();
-            generateWeeklyAnalysis();
-        }
-    }
-    
-    input.addEventListener('blur', saveEdit);
-    input.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            saveEdit();
-        }
-    });
-}
-
-function fillMissingDays() {
-    const today = new Date();
-    const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
-    
-    const existingDates = new Set(data.calorieTable.map(row => row.date));
-    
-    for (let d = new Date(thirtyDaysAgo); d <= today; d.setDate(d.getDate() + 1)) {
-        const dateStr = d.getFullYear() + '-' + 
-                       String(d.getMonth() + 1).padStart(2, '0') + '-' + 
-                       String(d.getDate()).padStart(2, '0');
-        
-        if (!existingDates.has(dateStr)) {
-            data.calorieTable.push({
-                date: dateStr,
-                caloriesIn: 0,
-                caloriesOut: 0
+        function filterItems(listName) {
+            const searchTerm = document.getElementById('search-' + listName).value.toLowerCase();
+            const items = data.lists[listName] || [];
+            
+            document.querySelectorAll(`.item-${listName}-`).forEach(element => {
+                element.style.display = 'none';
+            });
+            
+            items.forEach((item, i) => {
+                if (item.title.toLowerCase().includes(searchTerm) || 
+                    (item.category && item.category.toLowerCase().includes(searchTerm))) {
+                    const element = document.querySelector(`.item-${listName}-${i}`);
+                    if (element) element.style.display = 'flex';
+                }
             });
         }
-    }
-    
-    save();
-    populateCalorieTable();
-    generateWeeklyAnalysis();
-}
 
-function generateWeeklyAnalysis() {
-    const content = document.getElementById('content');
-    const existingAnalysis = document.getElementById('weekly-analysis');
-    if (existingAnalysis) {
-        existingAnalysis.remove();
-    }
-    
-    // Group data by week
-    const weeks = {};
-    data.calorieTable.forEach(row => {
-        const date = new Date(row.date);
-        const weekStart = getWeekStart(date);
-        const weekKey = weekStart.toISOString().split('T')[0];
-        
-        if (!weeks[weekKey]) {
-            weeks[weekKey] = {
-                start: weekStart,
-                days: [],
-                totalIn: 0,
-                totalOut: 0,
-                totalNet: 0
-            };
+        function loadNotesTab() {
+            const content = document.getElementById('content');
+            let html = '<h2>NOTES</h2>';
+            
+            html += '<div class="form-row">' +
+                    '<textarea id="note-input" placeholder="Write your note here..." style="flex: 1; margin-right: 8px;"></textarea>' +
+                    '<button class="btn btn-primary" onclick="addNote()">Add Note</button>' +
+                    '</div>';
+                    
+            html += '<div>';
+            data.notes.forEach((note, i) => {
+                html += `<div class="note-item">
+                    <div class="note-date">${note.date}</div>
+                    <div class="note-content">${note.content}</div>
+                    <button class="btn-delete" onclick="deleteNote(${i})" style="margin-top: 8px;">🗑️ Delete</button>
+                </div>`;
+            });
+            html += '</div>';
+            
+            content.innerHTML = html;
         }
-        
-        weeks[weekKey].days.push(row);
-        weeks[weekKey].totalIn += row.caloriesIn || 0;
-        weeks[weekKey].totalOut += row.caloriesOut || 0;
-        weeks[weekKey].totalNet += (row.caloriesOut || 0) - (row.caloriesIn || 0);
-    });
-    
-    // Sort weeks by start date (most recent first)
-    const sortedWeeks = Object.entries(weeks).sort((a, b) => b[1].start.getTime() - a[1].start.getTime());
-    
-    let analysisHtml = '<div id="weekly-analysis"><h3>📊 Weekly Analysis</h3>';
-    
-    sortedWeeks.slice(0, 8).forEach(([weekKey, week], index) => {
-        const weekEnd = new Date(week.start);
-        weekEnd.setDate(weekEnd.getDate() + 6);
-        
-        // Compare with previous week for progress indicator
-        let progressIndicator = '';
-        if (index < sortedWeeks.length - 1) {
-            const prevWeek = sortedWeeks[index + 1][1];
-            if (week.totalNet > prevWeek.totalNet) {
-                progressIndicator = '<span class="progress-indicator">📈</span>';
-            } else if (week.totalNet < prevWeek.totalNet) {
-                progressIndicator = '<span class="progress-indicator">📉</span>';
-            } else {
-                progressIndicator = '<span class="progress-indicator">➡️</span>';
+
+        // Global variable to store current calorie view week
+        let currentCalorieWeek = new Date();
+
+        function loadCaloriesTab() {
+            const content = document.getElementById('content');
+            let html = '<h2>CALORIE TRACKING</h2>';
+            
+            // Simple calorie entry form
+            html += '<div class="form-row">' +
+                    '<input type="text" id="food-input" placeholder="Food item" style="flex: 2;">' +
+                    '<input type="number" id="calories-input" placeholder="Calories" min="0">' +
+                    '<input type="number" id="protein-input" placeholder="Protein (g)" min="0" step="0.1">' +
+                    '<input type="date" id="cal-date-input" value="' + getPSTDate() + '">' +
+                    '<button class="btn btn-primary" onclick="addCalorie()">Add</button>' +
+                    '</div>';
+                    
+            // Calories burned form
+            html += '<div class="form-row">' +
+                    '<input type="text" id="exercise-input" placeholder="Exercise/Activity" style="flex: 2;">' +
+                    '<input type="number" id="burned-input" placeholder="Calories burned" min="0">' +
+                    '<input type="date" id="burned-date-input" value="' + getPSTDate() + '">' +
+                    '<button class="btn btn-green" onclick="addCalorieBurned()">Add Burned</button>' +
+                    '</div>';
+
+            // Week navigation
+            html += '<div style="display: flex; align-items: center; justify-content: space-between; margin: 15px 0; background: #f8fafc; padding: 10px; border-radius: 8px;">';
+            html += '<button class="btn" onclick="changeCalorieWeek(-1)" style="background: #6b7280; color: white;">← Previous Week</button>';
+            html += '<div style="text-align: center; font-weight: 600; color: #374151;">' + formatWeekHeader(currentCalorieWeek) + '</div>';
+            html += '<button class="btn" onclick="changeCalorieWeek(1)" style="background: #6b7280; color: white;">Next Week →</button>';
+            html += '</div>';
+            
+            // Add day and fill missing day buttons
+            html += '<div style="text-align: center; margin: 15px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">';
+            html += '<button class="btn" onclick="addDay()" style="background: #8b5cf6; color: white;">📅 Add Day</button>';
+            html += '<button class="btn" onclick="fillMissingDays()" style="background: #f59e0b; color: white;">🔄 Fill Missing Days</button>';
+            html += '<button class="btn" onclick="goToToday()" style="background: #10b981; color: white;">🏠 Today</button>';
+            html += '</div>';
+
+            // Enhanced calorie table
+            html += '<h3>Weekly Calorie Overview</h3>';
+            html += generateCalorieTable();
+            
+            // Recent entries
+            html += '<h3>Recent Entries</h3>';
+            html += '<div>';
+            const allEntries = [
+                ...data.calories.map(c => ({...c, type: 'consumed'})),
+                ...data.caloriesBurned.map(c => ({...c, type: 'burned'}))
+            ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+            
+            allEntries.forEach((entry, i) => {
+                const isConsumed = entry.type === 'consumed';
+                const icon = isConsumed ? '🍽️' : '🏃';
+                const color = isConsumed ? '#059669' : '#dc2626';
+                const proteinText = isConsumed && entry.protein ? ` (${entry.protein}g protein)` : '';
+                html += `<div class="item">
+                    <div class="item-content">${icon} ${entry.food || entry.exercise} - <span style="color: ${color};">${isConsumed ? '+' : '-'}${entry.calories} cal</span>${proteinText} <small style="color: #666;">(${entry.date})</small></div>
+                    <div class="item-actions">
+                        <button class="btn-delete" onclick="deleteCalorieEntry('${entry.type}', '${entry.date}', '${entry.food || entry.exercise}')">🗑️</button>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            
+            content.innerHTML = html;
+        }
+
+        function formatWeekHeader(date) {
+            const startOfWeek = new Date(date);
+            startOfWeek.setDate(date.getDate() - date.getDay());
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            const options = { month: 'short', day: 'numeric' };
+            return `${startOfWeek.toLocaleDateString('en-US', options)} - ${endOfWeek.toLocaleDateString('en-US', options)}`;
+        }
+
+        function changeCalorieWeek(direction) {
+            const newDate = new Date(currentCalorieWeek);
+            newDate.setDate(currentCalorieWeek.getDate() + (direction * 7));
+            currentCalorieWeek = newDate;
+            loadCaloriesTab();
+        }
+
+        function addDay() {
+            // Simply add tomorrow's date
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dateToAdd = tomorrow.toISOString().split('T')[0];
+            
+            // Initialize customCalorieDays if it doesn't exist
+            if (!data.customCalorieDays) {
+                data.customCalorieDays = [];
+            }
+            
+            // Add the date if not already present
+            if (!data.customCalorieDays.includes(dateToAdd)) {
+                data.customCalorieDays.push(dateToAdd);
+                save();
+            }
+            
+            // Navigate to show this week
+            currentCalorieWeek = tomorrow;
+            loadCaloriesTab();
+        }
+
+        function fillMissingDays() {
+            if (!data.calories.length && !data.caloriesBurned.length) {
+                alert('No calorie data found. Add some entries first.');
+                return;
+            }
+            
+            // Find the earliest and latest dates in the data
+            const allDates = [
+                ...data.calories.map(c => c.date),
+                ...data.caloriesBurned.map(c => c.date)
+            ].filter(date => date).sort();
+            
+            if (allDates.length === 0) {
+                alert('No dates found in calorie data.');
+                return;
+            }
+            
+            const startDate = new Date(allDates[0]);
+            const endDate = new Date(allDates[allDates.length - 1]);
+            const today = new Date(getPSTDate());
+            
+            // Extend to today if needed
+            if (endDate < today) {
+                endDate.setTime(today.getTime());
+            }
+            
+            const existingDates = new Set(allDates);
+            const missingDates = [];
+            
+            // Find missing dates between start and end
+            const currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                const dateStr = currentDate.toISOString().split('T')[0];
+                if (!existingDates.has(dateStr)) {
+                    missingDates.push(dateStr);
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            if (missingDates.length === 0) {
+                alert('No missing days found. Your calendar is complete!');
+                return;
+            }
+            
+            const confirm = window.confirm(`Found ${missingDates.length} missing days between ${allDates[0]} and ${endDate.toISOString().split('T')[0]}. Fill them with zero entries?`);
+            
+            if (confirm) {
+                missingDates.forEach(date => {
+                    // Add zero calorie placeholder entries
+                    data.calories.push({
+                        date: date,
+                        food: 'No entries',
+                        calories: '0',
+                        protein: '0'
+                    });
+                });
+                
+                save();
+                loadCaloriesTab();
+                alert(`Added ${missingDates.length} missing days to your calendar.`);
             }
         }
-        
-        analysisHtml += '<div class="week-summary">' +
-                       '<div class="week-header">' +
-                       'Week of ' + formatDate(week.start) + ' - ' + formatDate(weekEnd) +
-                       progressIndicator +
-                       '</div>' +
-                       '<div class="week-stats">' +
-                       '<div class="week-stat">' +
-                       '<div class="week-stat-label">Total In</div>' +
-                       '<div class="week-stat-value" style="color: #dc2626;">' + week.totalIn + '</div>' +
-                       '</div>' +
-                       '<div class="week-stat">' +
-                       '<div class="week-stat-label">Total Out</div>' +
-                       '<div class="week-stat-value" style="color: #059669;">' + week.totalOut + '</div>' +
-                       '</div>' +
-                       '<div class="week-stat">' +
-                       '<div class="week-stat-label">Net Total</div>' +
-                       '<div class="week-stat-value ' + (week.totalNet > 0 ? 'net-positive' : week.totalNet < 0 ? 'net-negative' : 'net-neutral') + '">' + week.totalNet + '</div>' +
-                       '</div>' +
-                       '</div>' +
-                       '</div>';
-    });
-    
-    analysisHtml += '</div>';
-    
-    content.innerHTML += analysisHtml;
-}
 
-function getWeekStart(date) {
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate() - day;
-    return new Date(d.setDate(diff));
-}
+        function goToToday() {
+            currentCalorieWeek = new Date();
+            loadCaloriesTab();
+        }
 
-function formatDate(date) {
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
-
-
-
-// Legacy calorie functions for backwards compatibility
-function addCalorie() {
-    const dateInput = document.getElementById('cal-date');
-    const calInput = document.getElementById('cal-input');
-    const proteinInput = document.getElementById('protein-input');
-    
-    if (!calInput.value || !dateInput.value) return;
-    
-    const calories = parseInt(calInput.value);
-    const protein = parseInt(proteinInput.value) || 0;
-    const date = dateInput.value;
-    
-    // Add to legacy calories array
-    data.calories.push({
-        id: Date.now(),
-        amount: calories,
-        protein: protein,
-        date: date
-    });
-    
-    // Update or add to calorie table
-    let tableRow = data.calorieTable.find(r => r.date === date);
-    if (!tableRow) {
-        tableRow = { date: date, caloriesIn: 0, caloriesOut: 0 };
-        data.calorieTable.push(tableRow);
-    }
-    tableRow.caloriesIn += calories;
-    
-    save();
-    calInput.value = '';
-    proteinInput.value = '';
-    populateCalorieTable();
-    generateWeeklyAnalysis();
-    updateStats();
-}
-
-function addBurnedCalorie() {
-    const dateInput = document.getElementById('burned-date');
-    const burnInput = document.getElementById('burned-input');
-    
-    if (!burnInput.value || !dateInput.value) return;
-    
-    const burned = parseInt(burnInput.value);
-    const date = dateInput.value;
-    
-    // Add to legacy burned array
-    data.caloriesBurned.push({
-        id: Date.now(),
-        amount: burned,
-        date: date
-    });
-    
-    // Update or add to calorie table
-    let tableRow = data.calorieTable.find(r => r.date === date);
-    if (!tableRow) {
-        tableRow = { date: date, caloriesIn: 0, caloriesOut: 0 };
-        data.calorieTable.push(tableRow);
-    }
-    tableRow.caloriesOut += burned;
-    
-    save();
-    burnInput.value = '';
-    populateCalorieTable();
-    generateWeeklyAnalysis();
-    updateStats();
-}
-
-function loadSpendingTab() {
-    const content = document.getElementById('content');
-    let html = '<h2>💰 SPENDING</h2>';
-    
-    html += '<div class="form-row">' +
-            '<input type="date" id="spend-date" value="' + getPSTDate() + '">' +
-            '<input type="number" id="spend-input" placeholder="Amount" step="0.01" style="flex: 1;">' +
-            '<input type="text" id="spend-desc" placeholder="Description" style="flex: 2;">' +
-            '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
-            '</div>';
-    
-    html += '<div>';
-    data.spending.sort((a, b) => b.date.localeCompare(a.date)).forEach(item => {
-        html += '<div class="item">' +
-                '<div class="item-content" onclick="editSpending(' + item.id + ')">' +
-                '$' + item.amount.toFixed(2) + ' - ' + item.description +
-                '<br><small>' + item.date + '</small>' +
-                '</div>' +
-                '<div class="item-actions">' +
-                '<button class="btn btn-delete" onclick="deleteSpending(' + item.id + ')">🗑️</button>' +
-                '</div>' +
-                '</div>';
-    });
-    html += '</div>';
-    
-    content.innerHTML = html;
-}
-
-function addSpending() {
-    const dateInput = document.getElementById('spend-date');
-    const amountInput = document.getElementById('spend-input');
-    const descInput = document.getElementById('spend-desc');
-    
-    if (!amountInput.value || !dateInput.value || !descInput.value.trim()) return;
-    
-    data.spending.push({
-        id: Date.now(),
-        amount: parseFloat(amountInput.value),
-        description: descInput.value.trim(),
-        date: dateInput.value
-    });
-    
-    save();
-    amountInput.value = '';
-    descInput.value = '';
-    loadSpendingTab();
-    updateStats();
-}
-
-function editSpending(id) {
-    const item = data.spending.find(s => s.id === id);
-    if (!item) return;
-    
-    const newAmount = prompt('Amount:', item.amount);
-    if (!newAmount) return;
-    
-    const newDesc = prompt('Description:', item.description);
-    if (!newDesc) return;
-    
-    const newDate = prompt('Date (YYYY-MM-DD):', item.date);
-    if (!newDate) return;
-    
-    item.amount = parseFloat(newAmount);
-    item.description = newDesc;
-    item.date = newDate;
-    
-    save();
-    loadSpendingTab();
-    updateStats();
-}
-
-function deleteSpending(id) {
-    if (!confirm('Delete this spending entry?')) return;
-    data.spending = data.spending.filter(s => s.id !== id);
-    save();
-    loadSpendingTab();
-    updateStats();
-}
-
-function updateStats() {
-    const today = getPSTDate();
-    
-    // Calculate today's calories and protein from legacy data
-    const todayCalories = data.calories ? data.calories.filter(c => c.date === today).reduce((sum, c) => sum + (c.amount || 0), 0) : 0;
-    const todayProtein = data.calories ? data.calories.filter(c => c.date === today).reduce((sum, c) => sum + (c.protein || 0), 0) : 0;
-    const todayBurned = data.caloriesBurned ? data.caloriesBurned.filter(c => c.date === today).reduce((sum, c) => sum + (c.amount || 0), 0) : 0;
-    
-    // Also check calorie table data
-    const tableToday = data.calorieTable ? data.calorieTable.find(r => r.date === today) : null;
-    const tableCaloriesIn = tableToday ? (tableToday.caloriesIn || 0) : 0;
-    const tableCaloriesOut = tableToday ? (tableToday.caloriesOut || 0) : 0;
-    
-    // Use the higher values between legacy and table data
-    const totalCaloriesIn = Math.max(todayCalories || 0, tableCaloriesIn || 0);
-    const totalCaloriesOut = Math.max(todayBurned || 0, tableCaloriesOut || 0);
-    
-    document.getElementById('cal-today').textContent = totalCaloriesIn + ' cal today';
-    document.getElementById('protein-today').textContent = todayProtein + 'g protein';
-    
-    const balance = totalCaloriesOut - totalCaloriesIn;
-    const balanceElement = document.getElementById('balance-today');
-    
-    let balanceText, balanceColor;
-    if (balance > 100) {
-        balanceText = `-${balance} cal deficit`;
-        balanceColor = '#059669'; // Green for deficit
-    } else if (balance >= -100 && balance <= 100) {
-        balanceText = balance === 0 ? 'Balanced calories' : `${balance > 0 ? '-' : '+'}${Math.abs(balance)} cal maintenance`;
-        balanceColor = '#f59e0b'; // Orange for maintenance
-    } else {
-        balanceText = `+${Math.abs(balance)} cal surplus`;
-        balanceColor = '#dc2626'; // Red for surplus
-    }
-    
-    balanceElement.textContent = balanceText;
-    balanceElement.style.color = balanceColor;
-    
-    // This week's spending
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const weekAgoStr = weekAgo.getFullYear() + '-' + 
-                      String(weekAgo.getMonth() + 1).padStart(2, '0') + '-' + 
-                      String(weekAgo.getDate()).padStart(2, '0');
-    
-    const weekSpend = data.spending ? data.spending.filter(s => s.date >= weekAgoStr).reduce((sum, s) => sum + (s.amount || 0), 0) : 0;
-    document.getElementById('spend-week').textContent = '$' + weekSpend.toFixed(2) + ' this week';
-}
-
-function downloadData() {
-    // Create a clean export with all current data structures
-    const exportData = {
-        version: "2.0", // Version to help with future compatibility
-        exportDate: getPSTDate(),
-        lists: data.lists || { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
-        notes: data.notes || [],
-        calories: data.calories || [], // Individual meals
-        caloriesBurned: data.caloriesBurned || [], // Individual exercises
-        spending: data.spending || [],
-        calorieTable: data.calorieTable || [] // Daily summary table
-    };
-    
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'notebook-data-' + getPSTDate() + '.json';
-    link.click();
-    URL.revokeObjectURL(url);
-    
-    console.log('Data exported with structure:', Object.keys(exportData));
-}
-
-function uploadData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const importedData = JSON.parse(e.target.result);
+        function generateCalorieTable() {
+            const viewWeek = [];
             
-            if (confirm('This will replace all current data. Continue?')) {
-                // Handle both old and new data formats
-                const newData = {
-                    lists: importedData.lists || { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
-                    notes: importedData.notes || [],
-                    calories: importedData.calories || [],
-                    caloriesBurned: importedData.caloriesBurned || [],
-                    spending: importedData.spending || [],
-                    calorieTable: importedData.calorieTable || []
-                };
+            // Get the week being viewed (Sunday to Saturday)
+            const startOfWeek = new Date(currentCalorieWeek);
+            startOfWeek.setDate(currentCalorieWeek.getDate() - currentCalorieWeek.getDay());
+            
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startOfWeek);
+                date.setDate(startOfWeek.getDate() + i);
+                viewWeek.push(date.toISOString().split('T')[0]);
+            }
+            
+            // Add any custom tracked days for this week
+            if (data.customCalorieDays) {
+                data.customCalorieDays.forEach(customDate => {
+                    const customDateObj = new Date(customDate);
+                    if (customDateObj >= startOfWeek && customDateObj < new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000)) {
+                        if (!viewWeek.includes(customDate)) {
+                            viewWeek.push(customDate);
+                        }
+                    }
+                });
+            }
+            
+            // Sort dates to display in order
+            viewWeek.sort();
+            
+            let html = '<table class="calorie-table">';
+            html += '<thead><tr><th>Day</th><th>Consumed</th><th>Burned</th><th>Net</th><th>Protein</th></tr></thead><tbody>';
+            
+            viewWeek.forEach(dateStr => {
+                const dayName = new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' });
+                const consumed = data.calories.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
+                const burned = data.caloriesBurned.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
+                const protein = data.calories.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseFloat(c.protein || 0), 0);
+                const net = consumed - burned;
                 
-                // If importing old format without calorieTable, try to rebuild it from individual entries
-                if (!importedData.calorieTable && (importedData.calories || importedData.caloriesBurned)) {
-                    console.log('Converting old format to new format...');
-                    newData.calorieTable = rebuildCalorieTable(newData.calories, newData.caloriesBurned);
+                const netClass = net > 0 ? 'net-positive' : net < 0 ? 'net-negative' : 'net-neutral';
+                const isToday = dateStr === getPSTDate() ? ' style="background: #fef3c7;"' : '';
+                
+                html += `<tr${isToday}>
+                    <td><strong>${dayName}</strong><br><small>${dateStr}</small></td>
+                    <td class="editable-cell" onclick="editCell(this, 'consumed', '${dateStr}')">${consumed}</td>
+                    <td class="editable-cell" onclick="editCell(this, 'burned', '${dateStr}')">${burned}</td>
+                    <td class="${netClass}">${net > 0 ? '+' : ''}${net}</td>
+                    <td>${protein.toFixed(1)}g</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            
+            // Week summary
+            const weekConsumed = viewWeek.reduce((sum, date) => {
+                return sum + data.calories.filter(c => c.date === date).reduce((daySum, c) => daySum + parseInt(c.calories || 0), 0);
+            }, 0);
+            const weekBurned = viewWeek.reduce((sum, date) => {
+                return sum + data.caloriesBurned.filter(c => c.date === date).reduce((daySum, c) => daySum + parseInt(c.calories || 0), 0);
+            }, 0);
+            const weekProtein = viewWeek.reduce((sum, date) => {
+                return sum + data.calories.filter(c => c.date === date).reduce((daySum, c) => daySum + parseFloat(c.protein || 0), 0);
+            }, 0);
+            const weekNet = weekConsumed - weekBurned;
+            
+            html += '<div class="week-summary">';
+            html += '<div class="week-header">📊 This Week Summary</div>';
+            html += '<div class="week-stats">';
+            html += `<div class="week-stat"><div class="week-stat-label">Consumed</div><div class="week-stat-value" style="color: #059669;">+${weekConsumed}</div></div>`;
+            html += `<div class="week-stat"><div class="week-stat-label">Burned</div><div class="week-stat-value" style="color: #dc2626;">-${weekBurned}</div></div>`;
+            html += `<div class="week-stat"><div class="week-stat-label">Net</div><div class="week-stat-value ${weekNet > 0 ? 'net-positive' : weekNet < 0 ? 'net-negative' : 'net-neutral'}">${weekNet > 0 ? '+' : ''}${weekNet}</div></div>`;
+            html += `<div class="week-stat"><div class="week-stat-label">Protein</div><div class="week-stat-value" style="color: #8b5cf6;">${weekProtein.toFixed(1)}g</div></div>`;
+            html += '</div></div>';
+            
+            return html;
+        }
+
+        function loadSpendingTab() {
+            const content = document.getElementById('content');
+            let html = '<h2>SPENDING TRACKER</h2>';
+            
+            html += '<div class="form-row">' +
+                    '<input type="text" id="spend-desc" placeholder="Description" style="flex: 2;">' +
+                    '<input type="number" id="spend-amount" placeholder="Amount" min="0" step="0.01">' +
+                    '<select id="spend-category">' +
+                    '<option value="food">Food</option>' +
+                    '<option value="transport">Transport</option>' +
+                    '<option value="entertainment">Entertainment</option>' +
+                    '<option value="shopping">Shopping</option>' +
+                    '<option value="bills">Bills</option>' +
+                    '<option value="subscription">Subscription</option>' +
+                    '<option value="health">Health</option>' +
+                    '<option value="other">Other</option>' +
+                    '</select>' +
+                    '<input type="date" id="spend-date" value="' + getPSTDate() + '">' +
+                    '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
+                    '</div>';
+                    
+            // Spending analytics
+            html += generateSpendingAnalytics();
+            
+            // Recent spending
+            html += '<h3>Recent Spending</h3>';
+            html += '<div>';
+            const sortedSpending = [...data.spending].sort((a, b) => new Date(b.date) - new Date(a.date));
+            sortedSpending.slice(0, 15).forEach((spend, i) => {
+                const categoryColor = getCategoryColor(spend.category);
+                html += `<div class="item">
+                    <div class="item-content">💰 ${spend.description} - <span style="color: #dc2626; font-weight: 600;">$${parseFloat(spend.amount).toFixed(2)}</span> 
+                        <span style="background: ${categoryColor}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">${spend.category}</span>
+                        <small style="color: #666;"> (${spend.date})</small>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-delete" onclick="deleteSpending(${data.spending.findIndex(s => s === spend)})">🗑️</button>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            
+            content.innerHTML = html;
+        }
+
+        function generateSpendingAnalytics() {
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            
+            // This week
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            // This month
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            
+            const todaySpending = data.spending.filter(s => s.date === todayStr).reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            const weekSpending = data.spending.filter(s => {
+                const spendDate = new Date(s.date);
+                return spendDate >= startOfWeek && spendDate <= endOfWeek;
+            }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            const monthSpending = data.spending.filter(s => {
+                const spendDate = new Date(s.date);
+                return spendDate >= startOfMonth && spendDate <= endOfMonth;
+            }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            
+            // Category breakdown for this month
+            const categoryTotals = {};
+            data.spending.filter(s => {
+                const spendDate = new Date(s.date);
+                return spendDate >= startOfMonth && spendDate <= endOfMonth;
+            }).forEach(spend => {
+                categoryTotals[spend.category] = (categoryTotals[spend.category] || 0) + parseFloat(spend.amount);
+            });
+            
+            let html = '<div class="week-summary">';
+            html += '<div class="week-header">📊 Spending Analytics</div>';
+            html += '<div class="week-stats">';
+            html += `<div class="week-stat"><div class="week-stat-label">Today</div><div class="week-stat-value" style="color: #dc2626;">$${todaySpending.toFixed(2)}</div></div>`;
+            html += `<div class="week-stat"><div class="week-stat-label">This Week</div><div class="week-stat-value" style="color: #dc2626;">$${weekSpending.toFixed(2)}</div></div>`;
+            html += `<div class="week-stat"><div class="week-stat-label">This Month</div><div class="week-stat-value" style="color: #dc2626;">$${monthSpending.toFixed(2)}</div></div>`;
+            html += '</div>';
+            
+            // Subscription tracking
+            const subscriptions = data.spending.filter(s => s.category === 'subscription');
+            const monthlySubscriptions = subscriptions.filter(s => {
+                const spendDate = new Date(s.date);
+                return spendDate >= startOfMonth && spendDate <= endOfMonth;
+            });
+            const subscriptionTotal = monthlySubscriptions.reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            
+            if (subscriptions.length > 0) {
+                html += '<div style="margin-top: 12px;"><strong>📱 Subscriptions This Month: $' + subscriptionTotal.toFixed(2) + '</strong></div>';
+                html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 8px;">';
+                monthlySubscriptions.forEach(sub => {
+                    html += `<div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 8px; border-radius: 4px;">
+                        <div style="font-weight: 600; color: #92400e;">${sub.description}</div>
+                        <div style="color: #dc2626;">$${parseFloat(sub.amount).toFixed(2)}</div>
+                        <div style="font-size: 12px; color: #6b7280;">${sub.date}</div>
+                    </div>`;
+                });
+                html += '</div>';
+            }
+            
+            // Category breakdown
+            if (Object.keys(categoryTotals).length > 0) {
+                html += '<div style="margin-top: 12px;"><strong>This Month by Category:</strong></div>';
+                html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 8px;">';
+                Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]).forEach(([category, amount]) => {
+                    const color = getCategoryColor(category);
+                    html += `<div class="spending-category">
+                        <div class="spending-category-header" style="color: ${color};">${category.charAt(0).toUpperCase() + category.slice(1)}</div>
+                        <div style="font-weight: 600;">$${amount.toFixed(2)}</div>
+                    </div>`;
+                });
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                food: '#f59e0b',
+                transport: '#3b82f6',
+                entertainment: '#8b5cf6',
+                shopping: '#ec4899',
+                bills: '#ef4444',
+                subscription: '#06b6d4',
+                health: '#10b981',
+                other: '#6b7280'
+            };
+            return colors[category] || '#6b7280';
+        }
+
+        function addItem(listName) {
+            const title = document.getElementById('item-input').value.trim();
+            const link = document.getElementById('link-input').value.trim();
+            const date = document.getElementById('date-input').value;
+            const category = document.getElementById('cat-input') ? document.getElementById('cat-input').value : null;
+            
+            if (!title) {
+                alert('Please enter a title');
+                return;
+            }
+            
+            const item = { title, link, date, completed: false };
+            if (category) item.category = category;
+            
+            data.lists[listName].push(item);
+            save();
+            loadListTab(listName);
+            
+            // Clear inputs
+            document.getElementById('item-input').value = '';
+            document.getElementById('link-input').value = '';
+            document.getElementById('date-input').value = getPSTDate();
+            if (document.getElementById('cat-input')) {
+                document.getElementById('cat-input').value = 'book';
+            }
+        }
+
+        function deleteItem(listName, index) {
+            if (confirm('Delete this item?')) {
+                data.lists[listName].splice(index, 1);
+                save();
+                loadListTab(listName);
+            }
+        }
+
+        function toggleComplete(listName, index) {
+            data.lists[listName][index].completed = !data.lists[listName][index].completed;
+            save();
+            loadListTab(listName);
+        }
+
+        function addNote() {
+            const content = document.getElementById('note-input').value.trim();
+            if (!content) {
+                alert('Please enter a note');
+                return;
+            }
+            
+            data.notes.push({
+                content: content,
+                date: getPSTDate()
+            });
+            save();
+            loadNotesTab();
+            
+            // Clear input
+            document.getElementById('note-input').value = '';
+        }
+
+        function deleteNote(index) {
+            if (confirm('Delete this note?')) {
+                data.notes.splice(index, 1);
+                save();
+                loadNotesTab();
+            }
+        }
+
+        function addCalorie() {
+            const food = document.getElementById('food-input').value.trim();
+            const calories = document.getElementById('calories-input').value;
+            const protein = document.getElementById('protein-input').value || '0';
+            const date = document.getElementById('cal-date-input').value;
+            
+            if (!food || !calories) {
+                alert('Please enter food and calories');
+                return;
+            }
+            
+            data.calories.push({ food, calories, protein, date });
+            save();
+            loadCaloriesTab();
+            updateStats();
+            
+            // Clear inputs
+            document.getElementById('food-input').value = '';
+            document.getElementById('calories-input').value = '';
+            document.getElementById('protein-input').value = '';
+            document.getElementById('cal-date-input').value = getPSTDate();
+        }
+
+        function addCalorieBurned() {
+            const exercise = document.getElementById('exercise-input').value.trim();
+            const calories = document.getElementById('burned-input').value;
+            const date = document.getElementById('burned-date-input').value;
+            
+            if (!exercise || !calories) {
+                alert('Please enter exercise and calories burned');
+                return;
+            }
+            
+            data.caloriesBurned.push({ exercise, calories, date });
+            save();
+            loadCaloriesTab();
+            updateStats();
+            
+            // Clear inputs
+            document.getElementById('exercise-input').value = '';
+            document.getElementById('burned-input').value = '';
+            document.getElementById('burned-date-input').value = getPSTDate();
+        }
+
+        function deleteCalorieEntry(type, date, name) {
+            if (confirm('Delete this entry?')) {
+                if (type === 'consumed') {
+                    const index = data.calories.findIndex(c => c.date === date && c.food === name);
+                    if (index !== -1) {
+                        data.calories.splice(index, 1);
+                    }
+                } else {
+                    const index = data.caloriesBurned.findIndex(c => c.date === date && c.exercise === name);
+                    if (index !== -1) {
+                        data.caloriesBurned.splice(index, 1);
+                    }
+                }
+                save();
+                loadCaloriesTab();
+                updateStats();
+            }
+        }
+
+        function editCell(cell, type, date) {
+            if (cell.classList.contains('editing')) return;
+            
+            const currentValue = cell.textContent;
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = currentValue;
+            input.style.width = '80px';
+            input.style.border = 'none';
+            input.style.background = 'transparent';
+            input.style.textAlign = 'center';
+            
+            cell.classList.add('editing');
+            cell.textContent = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+            
+            function saveEdit() {
+                const newValue = parseInt(input.value) || 0;
+                cell.classList.remove('editing');
+                cell.textContent = newValue;
+                
+                // Update the data
+                if (type === 'consumed') {
+                    // Find or create calorie entry for this date
+                    let entry = data.calories.find(c => c.date === date);
+                    if (!entry) {
+                        entry = { date, food: 'Quick edit', calories: '0', protein: '0' };
+                        data.calories.push(entry);
+                    }
+                    entry.calories = newValue.toString();
+                } else if (type === 'burned') {
+                    // Find or create burned entry for this date
+                    let entry = data.caloriesBurned.find(c => c.date === date);
+                    if (!entry) {
+                        entry = { date, exercise: 'Quick edit', calories: '0' };
+                        data.caloriesBurned.push(entry);
+                    }
+                    entry.calories = newValue.toString();
                 }
                 
-                data = newData;
                 save();
-                
-                // Refresh all UI components
+                loadCaloriesTab(); // Refresh to recalculate totals
                 updateStats();
-                populateCalorieTable();
-                generateWeeklyAnalysis();
-                
-                const version = importedData.version || "1.0";
-                alert(`Data imported successfully! (Format version: ${version})`);
-                showTab('home');
             }
-        } catch (error) {
-            alert('Error importing data: ' + error.message);
-            console.error('Import error:', error);
+            
+            input.onblur = saveEdit;
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    saveEdit();
+                }
+            };
         }
-    };
-    reader.readAsText(file);
-}
 
-function rebuildCalorieTable(calories, caloriesBurned) {
-    const table = [];
-    const dateMap = {};
-    
-    // Process calories (meals)
-    if (calories) {
-        calories.forEach(meal => {
-            if (!dateMap[meal.date]) {
-                dateMap[meal.date] = { date: meal.date, caloriesIn: 0, caloriesOut: 0 };
+        function addSpending() {
+            const description = document.getElementById('spend-desc').value.trim();
+            const amount = document.getElementById('spend-amount').value;
+            const category = document.getElementById('spend-category').value;
+            const date = document.getElementById('spend-date').value;
+            
+            if (!description || !amount) {
+                alert('Please enter description and amount');
+                return;
             }
-            dateMap[meal.date].caloriesIn += meal.amount || 0;
-        });
-    }
-    
-    // Process burned calories (exercises)
-    if (caloriesBurned) {
-        caloriesBurned.forEach(exercise => {
-            if (!dateMap[exercise.date]) {
-                dateMap[exercise.date] = { date: exercise.date, caloriesIn: 0, caloriesOut: 0 };
+            
+            data.spending.push({ description, amount, category, date });
+            save();
+            loadSpendingTab();
+            updateStats();
+            
+            // Clear inputs
+            document.getElementById('spend-desc').value = '';
+            document.getElementById('spend-amount').value = '';
+            document.getElementById('spend-category').value = 'food';
+            document.getElementById('spend-date').value = getPSTDate();
+        }
+
+        function deleteSpending(index) {
+            if (confirm('Delete this spending entry?')) {
+                data.spending.splice(index, 1);
+                save();
+                loadSpendingTab();
+                updateStats();
             }
-            dateMap[exercise.date].caloriesOut += exercise.amount || 0;
-        });
-    }
-    
-    // Convert to array
-    Object.values(dateMap).forEach(day => table.push(day));
-    
-    console.log('Rebuilt calorie table with', table.length, 'days');
-    return table;
-}
+        }
 
-// Initialize app
-load();
-updateStats();
-showTab('home');
+        function updateStats() {
+            const today = getPSTDate();
+            
+            // Calorie stats
+            const todayConsumed = data.calories.filter(c => c.date === today).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
+            const todayBurned = data.caloriesBurned.filter(c => c.date === today).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
+            const todayProtein = data.calories.filter(c => c.date === today).reduce((sum, c) => sum + parseFloat(c.protein || 0), 0);
+            const netCalories = todayConsumed - todayBurned;
+            
+            document.getElementById('cal-today').textContent = `${todayConsumed} cal today`;
+            document.getElementById('protein-today').textContent = `${todayProtein.toFixed(1)}g protein`;
+            
+            if (todayBurned > 0) {
+                const balanceColor = netCalories > 0 ? '#dc2626' : '#059669'; // red for surplus, green for deficit
+                document.getElementById('balance-today').innerHTML = `<span style="color: ${balanceColor};">${netCalories > 0 ? '+' : ''}${netCalories} net cal</span>`;
+            } else {
+                document.getElementById('balance-today').textContent = 'Enter burned calories';
+            }
+            
+            // Spending stats
+            const todaySpending = data.spending.filter(s => s.date === today).reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            
+            // This week
+            const startOfWeek = new Date();
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            
+            const weekSpending = data.spending.filter(s => {
+                const spendDate = new Date(s.date);
+                return spendDate >= startOfWeek && spendDate <= endOfWeek;
+            }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            
+            // This month
+            const startOfMonth = new Date();
+            startOfMonth.setDate(1);
+            const monthSpending = data.spending.filter(s => {
+                const spendDate = new Date(s.date);
+                return spendDate >= startOfMonth;
+            }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            
+            document.getElementById('spend-today').textContent = `$${todaySpending.toFixed(2)} today`;
+            document.getElementById('spend-week').textContent = `$${weekSpending.toFixed(2)} this week`;
+            document.getElementById('spend-month').textContent = `$${monthSpending.toFixed(2)} this month`;
+        }
 
-</script>
+        function downloadData() {
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'notebook-data-' + getPSTDate() + '.json';
+            link.click();
+        }
+
+        function uploadData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let content = e.target.result;
+                    
+                    // Check if it's an HTML file (from previous backups)
+                    if (content.includes('<!DOCTYPE html>') || content.includes('<html>')) {
+                        alert('This appears to be an HTML backup file. Please export your data as JSON from the old version and try again.');
+                        return;
+                    }
+                    
+                    // Try to parse as JSON
+                    const loadedData = JSON.parse(content);
+                    
+                    // Validate the data structure
+                    if (typeof loadedData === 'object' && loadedData !== null) {
+                        // Merge with existing data structure to ensure all fields exist
+                        data = {
+                            lists: loadedData.lists || { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
+                            notes: loadedData.notes || [],
+                            calories: loadedData.calories || [],
+                            caloriesBurned: loadedData.caloriesBurned || [],
+                            spending: loadedData.spending || [],
+                            calorieTable: loadedData.calorieTable || [],
+                            customCalorieDays: loadedData.customCalorieDays || []
+                        };
+                        
+                        save();
+                        updateStats();
+                        alert('Data uploaded successfully!');
+                        showTab('home');
+                    } else {
+                        throw new Error('Invalid data structure');
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    alert('Error uploading data: ' + error.message + '\nPlease check the file format.');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Clear the input
+            event.target.value = '';
+        }
+
+        // Add function to reset corrupted data
+        function resetData() {
+            if (confirm('This will clear all data and reset the app. Continue?')) {
+                localStorage.removeItem('notebookData');
+                data = {
+                    lists: { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
+                    notes: [],
+                    calories: [],
+                    caloriesBurned: [],
+                    spending: [],
+                    calorieTable: []
+                };
+                save();
+                showTab('home');
+                alert('Data has been reset.');
+            }
+        }
+
+        // Function to inspect and recover data
+        function inspectData() {
+            const saved = localStorage.getItem('notebookData');
+            if (saved) {
+                console.log('Raw data length:', saved.length);
+                console.log('Raw data preview:', saved.substring(0, 200));
+                
+                try {
+                    const parsed = JSON.parse(saved);
+                    console.log('Parsed data structure:', Object.keys(parsed));
+                    console.log('Full parsed data:', parsed);
+                } catch (e) {
+                    console.error('Parse error:', e);
+                }
+            } else {
+                console.log('No saved data found');
+            }
+        }
+
+        // Initialize the app
+        load();
+        showTab('home');
+    </script>
 </body>
 </html>
