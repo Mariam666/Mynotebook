@@ -485,28 +485,6 @@
             html += '<h3>Weekly Calorie Overview</h3>';
             html += generateCalorieTable();
             
-            // Recent entries
-            html += '<h3>Recent Entries</h3>';
-            html += '<div>';
-            const allEntries = [
-                ...data.calories.map(c => ({...c, type: 'consumed'})),
-                ...data.caloriesBurned.map(c => ({...c, type: 'burned'}))
-            ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
-            
-            allEntries.forEach((entry, i) => {
-                const isConsumed = entry.type === 'consumed';
-                const icon = isConsumed ? '🍽️' : '🏃';
-                const color = isConsumed ? '#059669' : '#dc2626';
-                const proteinText = isConsumed && entry.protein ? ` (${entry.protein}g protein)` : '';
-                html += `<div class="item">
-                    <div class="item-content">${icon} ${entry.food || entry.exercise} - <span style="color: ${color};">${isConsumed ? '+' : '-'}${entry.calories} cal</span>${proteinText} <small style="color: #666;">(${entry.date})</small></div>
-                    <div class="item-actions">
-                        <button class="btn-delete" onclick="deleteCalorieEntry('${entry.type}', '${entry.date}', '${entry.food || entry.exercise}')">🗑️</button>
-                    </div>
-                </div>`;
-            });
-            html += '</div>';
-            
             content.innerHTML = html;
         }
 
@@ -941,25 +919,6 @@
             document.getElementById('exercise-input').value = '';
             document.getElementById('burned-input').value = '';
             document.getElementById('burned-date-input').value = getPSTDate();
-        }
-
-        function deleteCalorieEntry(type, date, name) {
-            if (confirm('Delete this entry?')) {
-                if (type === 'consumed') {
-                    const index = data.calories.findIndex(c => c.date === date && c.food === name);
-                    if (index !== -1) {
-                        data.calories.splice(index, 1);
-                    }
-                } else {
-                    const index = data.caloriesBurned.findIndex(c => c.date === date && c.exercise === name);
-                    if (index !== -1) {
-                        data.caloriesBurned.splice(index, 1);
-                    }
-                }
-                save();
-                loadCaloriesTab();
-                updateStats();
-            }
         }
 
         function editCell(cell, type, date) {
