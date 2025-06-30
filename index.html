@@ -265,6 +265,7 @@
         let data = {
             lists: { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
             notes: [],
+            reading: [],
             calories: [],
             caloriesBurned: [],
             spending: [],
@@ -274,10 +275,17 @@
 
         function getPSTDate() {
             const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
+            // Convert to PST (UTC-8) or PDT (UTC-7) 
+            const pstDate = new Date(now.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
+            const year = pstDate.getFullYear();
+            const month = String(pstDate.getMonth() + 1).padStart(2, '0');
+            const day = String(pstDate.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
+        }
+
+        function getPSTTime() {
+            const now = new Date();
+            return new Date(now.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
         }
 
         function save() {
@@ -380,24 +388,62 @@
                 const progressIndicator = item.completed ? '✅' : '⏳';
                 const itemStyle = item.completed ? 'text-decoration: line-through; opacity: 0.7;' : '';
                 
-                // Get category color for reading items
-                let category = '';
-                if (item.category) {
-                    const categoryColors = {
-                        book: { bg: '#dbeafe', color: '#1d4ed8' },      // blue
-                        essay: { bg: '#fef3c7', color: '#92400e' },     // yellow/amber  
-                        poem: { bg: '#fce7f3', color: '#be185d' }       // pink
-                    };
-                    const colors = categoryColors[item.category] || { bg: '#dbeafe', color: '#1d4ed8' };
-                    category = ` <span style="background: ${colors.bg}; color: ${colors.color}; padding: 2px 6px; border-radius: 3px; font-size: 11px;">${item.category}</span>`;
+                // Get background color based on category (like subscription boxes)
+                let categoryBg = '#f8fafc'; // default light gray
+                let categoryBorder = '#e2e8f0';
+                let categoryTextColor = '#1e293b';
+                
+                if (listName === 'read' && item.category) {
+                    switch(item.category) {
+                        case 'book':
+                            categoryBg = '#dbeafe'; // light blue
+                            categoryBorder = '#3b82f6';
+                            categoryTextColor = '#1e40af';
+                            break;
+                        case 'essay':
+                            categoryBg = '#dcfce7'; // light green
+                            categoryBorder = '#22c55e';
+                            categoryTextColor = '#15803d';
+                            break;
+                        case 'poem':
+                            categoryBg = '#fce7f3'; // light pink
+                            categoryBorder = '#ec4899';
+                            categoryTextColor = '#be185d';
+                            break;
+                    }
                 }
                 
-                html += `<div class="item item-${listName}-${i}">
-                    <div class="item-content" style="${itemStyle}" onclick="toggleComplete('${listName}', ${i})">${progressIndicator} ${item.title}${category} ${item.link ? '<a href="' + item.link + '" target="_blank" style="color: #2563eb;">🔗</a>' : ''} <small style="color: #666;">(${item.date})</small></div>
-                    <div class="item-actions">
-                        <button class="btn-delete" onclick="deleteItem('${listName}', ${i})">🗑️</button>
-                    </div>
-                </div>`;
+                const boxStyle = `background: ${categoryBg}; border: 2px solid ${categoryBorder}; border-radius: 8px; padding: 12px; margin: 8px 0; color: ${categoryTextColor};`;
+                
+                // For reading tab, show differently - no completion functionality since it's a record of things already read
+                if (listName === 'read') {
+                    html += `<div class="item item-${listName}-${i}" data-search="${(item.title || '').toLowerCase()}" style="${boxStyle}">
+                        <div class="item-content">
+                            📖 
+                            <span class="editable-text" onclick="editListItem('${listName}', ${i}, 'title')" title="Click to edit title">${item.title}</span>
+                            ${item.category ? ` <span style="background: ${categoryBorder}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">${item.category}</span>` : ''}
+                            ${item.link ? ' <a href="' + item.link + '" target="_blank" style="color: #2563eb;">🔗</a>' : ''} 
+                            <small style="color: #666;" class="editable-text" onclick="editListItem('${listName}', ${i}, 'date')" title="Click to edit date"> (${item.date})</small>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-delete" onclick="deleteItem('${listName}', ${i})">🗑️</button>
+                        </div>
+                    </div>`;
+                } else {
+                    html += `<div class="item item-${listName}-${i}" data-search="${(item.title || '').toLowerCase()}" style="${boxStyle}">
+                        <div class="item-content" style="${itemStyle}">
+                            ${progressIndicator} 
+                            <span class="editable-text" onclick="editListItem('${listName}', ${i}, 'title')" title="Click to edit title">${item.title}</span>
+                            ${item.category ? ` <span style="background: ${categoryBorder}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">${item.category}</span>` : ''}
+                            ${item.link ? ' <a href="' + item.link + '" target="_blank" style="color: #2563eb;">🔗</a>' : ''} 
+                            <small style="color: #666;" class="editable-text" onclick="editListItem('${listName}', ${i}, 'date')" title="Click to edit date"> (${item.date})</small>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn" style="font-size: 10px; padding: 2px 6px;" onclick="toggleComplete('${listName}', ${i})">${item.completed ? 'Undo' : 'Done'}</button>
+                            <button class="btn-delete" onclick="deleteItem('${listName}', ${i})">🗑️</button>
+                        </div>
+                    </div>`;
+                }
             });
             html += '</div>';
             
@@ -433,8 +479,8 @@
             html += '<div>';
             data.notes.forEach((note, i) => {
                 html += `<div class="note-item">
-                    <div class="note-date">${note.date}</div>
-                    <div class="note-content">${note.content}</div>
+                    <div class="note-date editable-text" onclick="editNote(${i}, 'date')" title="Click to edit date">${note.date}</div>
+                    <div class="note-content editable-text" onclick="editNote(${i}, 'content')" title="Click to edit note" style="cursor: pointer;">${note.content}</div>
                     <button class="btn-delete" onclick="deleteNote(${i})" style="margin-top: 8px;">🗑️ Delete</button>
                 </div>`;
             });
@@ -444,7 +490,7 @@
         }
 
         // Global variable to store current calorie view week
-        let currentCalorieWeek = new Date();
+        let currentCalorieWeek = getPSTTime();
 
         function loadCaloriesTab() {
             const content = document.getElementById('content');
@@ -489,12 +535,13 @@
         }
 
         function formatWeekHeader(date) {
-            const startOfWeek = new Date(date);
-            startOfWeek.setDate(date.getDate() - date.getDay());
+            const startOfWeek = getPSTTime();
+            startOfWeek.setTime(date.getTime());
+            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
             
-            const options = { month: 'short', day: 'numeric' };
+            const options = { month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' };
             return `${startOfWeek.toLocaleDateString('en-US', options)} - ${endOfWeek.toLocaleDateString('en-US', options)}`;
         }
 
@@ -506,8 +553,8 @@
         }
 
         function addDay() {
-            // Simply add tomorrow's date
-            const tomorrow = new Date();
+            // Simply add tomorrow's date (PST)
+            const tomorrow = getPSTTime();
             tomorrow.setDate(tomorrow.getDate() + 1);
             const dateToAdd = tomorrow.toISOString().split('T')[0];
             
@@ -598,14 +645,22 @@
         function generateCalorieTable() {
             const viewWeek = [];
             
-            // Get the week being viewed (Sunday to Saturday)
-            const startOfWeek = new Date(currentCalorieWeek);
-            startOfWeek.setDate(currentCalorieWeek.getDate() - currentCalorieWeek.getDay());
+            // Use the currentCalorieWeek variable (which can be changed by navigation)
+            const currentPST = new Date(currentCalorieWeek.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
+            const dayOfWeek = currentPST.getDay(); // 0 = Sunday, 6 = Saturday
             
+            // Calculate start of week (Sunday)
+            const startOfWeek = new Date(currentPST);
+            startOfWeek.setDate(currentPST.getDate() - dayOfWeek); // Go back to Sunday
+            
+            // Generate Sunday through Saturday (7 days)
             for (let i = 0; i < 7; i++) {
-                const date = new Date(startOfWeek);
-                date.setDate(startOfWeek.getDate() + i);
-                viewWeek.push(date.toISOString().split('T')[0]);
+                const dayDate = new Date(startOfWeek);
+                dayDate.setDate(startOfWeek.getDate() + i);
+                
+                // Format as YYYY-MM-DD in PST
+                const pstString = dayDate.toLocaleDateString('en-CA', {timeZone: 'America/Los_Angeles'});
+                viewWeek.push(pstString);
             }
             
             // Add any custom tracked days for this week
@@ -627,7 +682,7 @@
             html += '<thead><tr><th>Day</th><th>Consumed</th><th>Burned</th><th>Net</th><th>Protein</th></tr></thead><tbody>';
             
             viewWeek.forEach(dateStr => {
-                const dayName = new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' });
+                const dayName = new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/Los_Angeles' });
                 const consumed = data.calories.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
                 const burned = data.caloriesBurned.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
                 const protein = data.calories.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseFloat(c.protein || 0), 0);
@@ -683,6 +738,8 @@
                     '<option value="transport">Transport</option>' +
                     '<option value="entertainment">Entertainment</option>' +
                     '<option value="shopping">Shopping</option>' +
+                    '<option value="streaming">Streaming</option>' +
+                    '<option value="news/magazine">News/Magazine</option>' +
                     '<option value="bills">Bills</option>' +
                     '<option value="subscription">Subscription</option>' +
                     '<option value="health">Health</option>' +
@@ -699,15 +756,18 @@
             html += '<h3>Recent Spending</h3>';
             html += '<div>';
             const sortedSpending = [...data.spending].sort((a, b) => new Date(b.date) - new Date(a.date));
-            sortedSpending.slice(0, 15).forEach((spend, i) => {
+            sortedSpending.forEach((spend, i) => {
                 const categoryColor = getCategoryColor(spend.category);
+                const originalIndex = data.spending.findIndex(s => s === spend);
                 html += `<div class="item">
-                    <div class="item-content">💰 ${spend.description} - <span style="color: #dc2626; font-weight: 600;">$${parseFloat(spend.amount).toFixed(2)}</span> 
-                        <span style="background: ${categoryColor}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">${spend.category}</span>
-                        <small style="color: #666;"> (${spend.date})</small>
+                    <div class="item-content">💰 
+                        <span class="editable-text" onclick="editSpending(${originalIndex}, 'description')" title="Click to edit description">${spend.description}</span> - 
+                        <span class="editable-text" onclick="editSpending(${originalIndex}, 'amount')" title="Click to edit amount" style="color: #dc2626; font-weight: 600;">$${parseFloat(spend.amount).toFixed(2)}</span> 
+                        <span class="editable-text" onclick="editSpending(${originalIndex}, 'category')" title="Click to edit category" style="background: ${categoryColor}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; cursor: pointer;">${spend.category}</span>
+                        <small class="editable-text" onclick="editSpending(${originalIndex}, 'date')" title="Click to edit date" style="color: #666; cursor: pointer;"> (${spend.date})</small>
                     </div>
                     <div class="item-actions">
-                        <button class="btn-delete" onclick="deleteSpending(${data.spending.findIndex(s => s === spend)})">🗑️</button>
+                        <button class="btn-delete" onclick="deleteSpending(${originalIndex})">🗑️</button>
                     </div>
                 </div>`;
             });
@@ -717,14 +777,16 @@
         }
 
         function generateSpendingAnalytics() {
-            const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
+            const today = getPSTTime();
+            const todayStr = getPSTDate();
             
             // This week
             const startOfWeek = new Date(today);
             startOfWeek.setDate(today.getDate() - today.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
             
             // This month
             const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -732,11 +794,11 @@
             
             const todaySpending = data.spending.filter(s => s.date === todayStr).reduce((sum, s) => sum + parseFloat(s.amount), 0);
             const weekSpending = data.spending.filter(s => {
-                const spendDate = new Date(s.date);
+                const spendDate = new Date(s.date + 'T00:00:00');
                 return spendDate >= startOfWeek && spendDate <= endOfWeek;
             }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
             const monthSpending = data.spending.filter(s => {
-                const spendDate = new Date(s.date);
+                const spendDate = new Date(s.date + 'T00:00:00');
                 return spendDate >= startOfMonth && spendDate <= endOfMonth;
             }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
             
@@ -757,8 +819,12 @@
             html += `<div class="week-stat"><div class="week-stat-label">This Month</div><div class="week-stat-value" style="color: #dc2626;">$${monthSpending.toFixed(2)}</div></div>`;
             html += '</div>';
             
-            // Subscription tracking
-            const subscriptions = data.spending.filter(s => s.category === 'subscription');
+            // Subscription tracking (including streaming and news/magazine)
+            const subscriptions = data.spending.filter(s => 
+                s.category === 'subscription' || 
+                s.category === 'streaming' || 
+                s.category === 'news/magazine'
+            );
             const monthlySubscriptions = subscriptions.filter(s => {
                 const spendDate = new Date(s.date);
                 return spendDate >= startOfMonth && spendDate <= endOfMonth;
@@ -769,8 +835,9 @@
                 html += '<div style="margin-top: 12px;"><strong>📱 Subscriptions This Month: $' + subscriptionTotal.toFixed(2) + '</strong></div>';
                 html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 8px;">';
                 monthlySubscriptions.forEach(sub => {
-                    html += `<div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 8px; border-radius: 4px;">
-                        <div style="font-weight: 600; color: #92400e;">${sub.description}</div>
+                    const categoryColor = getCategoryColor(sub.category);
+                    html += `<div style="background: ${categoryColor}20; border: 1px solid ${categoryColor}; padding: 8px; border-radius: 4px;">
+                        <div style="font-weight: 600; color: ${categoryColor};">${sub.description}</div>
                         <div style="color: #dc2626;">$${parseFloat(sub.amount).toFixed(2)}</div>
                         <div style="font-size: 12px; color: #6b7280;">${sub.date}</div>
                     </div>`;
@@ -802,6 +869,8 @@
                 transport: '#3b82f6',
                 entertainment: '#8b5cf6',
                 shopping: '#ec4899',
+                streaming: '#db2777',
+                'news/magazine': '#059669',
                 bills: '#ef4444',
                 subscription: '#06b6d4',
                 health: '#10b981',
@@ -845,6 +914,29 @@
             }
         }
 
+        function editListItem(listName, index, field) {
+            const item = data.lists[listName][index];
+            let currentValue = item[field];
+            let newValue;
+
+            if (field === 'category') {
+                const categories = ['book', 'essay', 'poem'];
+                const currentIndex = categories.indexOf(currentValue) || 0;
+                const nextIndex = (currentIndex + 1) % categories.length;
+                newValue = categories[nextIndex];
+            } else if (field === 'date') {
+                newValue = prompt('Edit date (YYYY-MM-DD):', currentValue);
+            } else {
+                newValue = prompt(`Edit ${field}:`, currentValue);
+            }
+
+            if (newValue !== null && newValue !== currentValue) {
+                item[field] = newValue;
+                save();
+                loadListTab(listName);
+            }
+        }
+
         function toggleComplete(listName, index) {
             data.lists[listName][index].completed = !data.lists[listName][index].completed;
             save();
@@ -872,6 +964,24 @@
         function deleteNote(index) {
             if (confirm('Delete this note?')) {
                 data.notes.splice(index, 1);
+                save();
+                loadNotesTab();
+            }
+        }
+
+        function editNote(index, field) {
+            const note = data.notes[index];
+            let currentValue = note[field];
+            let newValue;
+
+            if (field === 'content') {
+                newValue = prompt('Edit note:', currentValue);
+            } else if (field === 'date') {
+                newValue = prompt('Edit date (YYYY-MM-DD):', currentValue);
+            }
+
+            if (newValue !== null && newValue !== currentValue) {
+                note[field] = newValue;
                 save();
                 loadNotesTab();
             }
@@ -1008,6 +1118,37 @@
             }
         }
 
+        function editSpending(index, field) {
+            const spend = data.spending[index];
+            let currentValue = spend[field];
+            let newValue;
+
+            if (field === 'category') {
+                const categories = ['food', 'transport', 'entertainment', 'shopping', 'streaming', 'news/magazine', 'bills', 'subscription', 'health', 'other'];
+                const currentIndex = categories.indexOf(currentValue);
+                const nextIndex = (currentIndex + 1) % categories.length;
+                newValue = categories[nextIndex];
+            } else if (field === 'amount') {
+                newValue = prompt('Edit amount (without $):', currentValue);
+                if (newValue && !isNaN(parseFloat(newValue))) {
+                    newValue = parseFloat(newValue).toString();
+                } else {
+                    return;
+                }
+            } else if (field === 'date') {
+                newValue = prompt('Edit date (YYYY-MM-DD):', currentValue);
+            } else {
+                newValue = prompt(`Edit ${field}:`, currentValue);
+            }
+
+            if (newValue !== null && newValue !== currentValue) {
+                spend[field] = newValue;
+                save();
+                loadSpendingTab();
+                updateStats();
+            }
+        }
+
         function updateStats() {
             const today = getPSTDate();
             
@@ -1030,22 +1171,24 @@
             // Spending stats
             const todaySpending = data.spending.filter(s => s.date === today).reduce((sum, s) => sum + parseFloat(s.amount), 0);
             
-            // This week
-            const startOfWeek = new Date();
+            // This week (PST)
+            const startOfWeek = getPSTTime();
             startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
             
             const weekSpending = data.spending.filter(s => {
-                const spendDate = new Date(s.date);
+                const spendDate = new Date(s.date + 'T00:00:00');
                 return spendDate >= startOfWeek && spendDate <= endOfWeek;
             }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
             
-            // This month
-            const startOfMonth = new Date();
+            // This month (PST)
+            const startOfMonth = getPSTTime();
             startOfMonth.setDate(1);
             const monthSpending = data.spending.filter(s => {
-                const spendDate = new Date(s.date);
+                const spendDate = new Date(s.date + 'T00:00:00');
                 return spendDate >= startOfMonth;
             }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
             
@@ -1055,14 +1198,37 @@
         }
 
         function downloadData() {
-            const dataStr = JSON.stringify(data, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'notebook-data-' + getPSTDate() + '.json';
-            link.click();
+            try {
+                console.log('Download data called, current data:', data);
+                const dataStr = JSON.stringify(data, null, 2);
+                console.log('Data string length:', dataStr.length);
+                
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'notebook-data-' + getPSTDate() + '.json';
+                
+                // Add to body, click, then remove
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Clean up the URL
+                URL.revokeObjectURL(url);
+                
+                alert('Download started! Check your Downloads folder for: notebook-data-' + getPSTDate() + '.json');
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('Download failed: ' + error.message);
+            }
         }
+
+        function loadReadingTab() {
+            loadListTab('read');
+        }
+
+
 
         function uploadData(event) {
             const file = event.target.files[0];
@@ -1088,6 +1254,7 @@
                         data = {
                             lists: loadedData.lists || { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
                             notes: loadedData.notes || [],
+                            reading: loadedData.reading || [],
                             calories: loadedData.calories || [],
                             caloriesBurned: loadedData.caloriesBurned || [],
                             spending: loadedData.spending || [],
@@ -1097,8 +1264,26 @@
                         
                         save();
                         updateStats();
+                        
+                        // Refresh current tab if active
+                        const activeTab = document.querySelector('.nav-item.active');
+                        if (activeTab && activeTab.textContent.includes('CALORIES')) {
+                            currentCalorieWeek = getPSTTime();
+                            loadCaloriesTab();
+                        } else if (activeTab && activeTab.textContent.includes('READING')) {
+                            loadReadingTab();
+                        } else if (activeTab && activeTab.textContent.includes('SPENDING')) {
+                            loadSpendingTab();
+                        } else if (activeTab && activeTab.textContent.includes('NOTES')) {
+                            loadNotesTab();
+                        }
+                        
                         alert('Data uploaded successfully!');
-                        showTab('home');
+                        
+                        // Maintain current tab instead of forcing home
+                        if (!activeTab) {
+                            showTab('home');
+                        }
                     } else {
                         throw new Error('Invalid data structure');
                     }
@@ -1120,10 +1305,12 @@
                 data = {
                     lists: { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
                     notes: [],
+                    reading: [],
                     calories: [],
                     caloriesBurned: [],
                     spending: [],
-                    calorieTable: []
+                    calorieTable: [],
+                    customCalorieDays: []
                 };
                 save();
                 showTab('home');
