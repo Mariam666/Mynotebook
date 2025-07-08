@@ -554,6 +554,8 @@
                     '<option value="bills">Bills</option>' +
                     '<option value="subscription">Subscription</option>' +
                     '<option value="health">Health</option>' +
+                    '<option value="wedding/vacation">Wedding/Vacation</option>' +
+                    '<option value="reimbursable">Reimbursable</option>' +
                     '<option value="other">Other</option>' +
                     '</select>' +
                     '<input type="date" id="spend-date" value="' + getPSTDate() + '">' +
@@ -1229,6 +1231,8 @@
                 bills: '#ef4444',
                 subscription: '#06b6d4',
                 health: '#10b981',
+                'wedding/vacation': '#d97706',
+                reimbursable: '#7c3aed',
                 other: '#6b7280'
             };
             return colors[category] || '#6b7280';
@@ -1334,7 +1338,7 @@
             let newValue;
 
             if (field === 'category') {
-                const categories = ['food', 'grocery', 'doordash', 'instacart', 'transport', 'entertainment', 'shopping', 'streaming', 'news/magazine', 'bills', 'subscription', 'health', 'other'];
+                const categories = ['food', 'grocery', 'doordash', 'instacart', 'transport', 'entertainment', 'shopping', 'streaming', 'news/magazine', 'bills', 'subscription', 'health', 'wedding/vacation', 'reimbursable', 'other'];
                 const currentIndex = categories.indexOf(currentValue);
                 const nextIndex = (currentIndex + 1) % categories.length;
                 newValue = categories[nextIndex];
