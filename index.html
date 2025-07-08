@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Notebook</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>My Notebook v3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -61,7 +64,19 @@
         .btn:hover { opacity: 0.9; }
         .btn-primary { background: #3b82f6; color: white; }
         .btn-green { background: #10b981; color: white; }
-        .btn-delete { background: #ef4444; color: white; padding: 4px 8px; font-size: 12px; }
+        .btn-delete, button.btn-delete {
+            background: #3b82f6 !important;
+            color: white !important;
+            padding: 4px 8px;
+            font-size: 12px;
+            border: none !important;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .btn-delete:hover, button.btn-delete:hover {
+            opacity: 0.9;
+        }
         .item {
             padding: 12px;
             border: 1px solid #e5e7eb;
@@ -178,21 +193,31 @@
         }
 
         .note-item {
-            background: #fefce8;
-            border: 1px solid #fef3c7;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
             padding: 12px;
             border-radius: 6px;
             margin-bottom: 8px;
         }
         .note-date {
             font-size: 12px;
-            color: #92400e;
+            color: #666;
             margin-bottom: 4px;
         }
         .note-content {
             white-space: pre-wrap;
-            line-height: 1.5;
+            line-height: 1.6;
         }
+        .note-content ul {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        .note-content li {
+            margin: 4px 0;
+        }
+        .note-content .indent-1 { padding-left: 20px; }
+        .note-content .indent-2 { padding-left: 40px; }
+        .note-content .indent-3 { padding-left: 60px; }
         .editable-text { cursor: pointer; }
         .editable-text:hover { background: #e0f2fe; padding: 1px 3px; border-radius: 3px; }
 
@@ -422,7 +447,7 @@
             document.getElementById('content').innerHTML = `
                 <h2>📝 Notes</h2>
                 <div class="form-row">
-                    <textarea id="new-note" placeholder="Write your note here..."></textarea>
+                    <textarea id="new-note" placeholder="Write your note here... (Use • or - for bullets, Tab to indent, Shift+Tab to outdent)" onkeydown="handleNoteKeydown(event)"></textarea>
                 </div>
                 <div class="form-row">
                     <button class="btn btn-primary" onclick="addNote()">Add Note</button>
@@ -444,7 +469,7 @@
             const categoryOptions = type === 'read' ? `
                 <option value="book">Book</option>
                 <option value="essay">Essay</option>
-                <option value="article">Article</option>
+                <option value="poetry">Poetry</option>
             ` : '';
 
             document.getElementById('content').innerHTML = `
@@ -518,6 +543,9 @@
                     '<input type="number" id="spend-amount" placeholder="Amount" min="0" step="0.01">' +
                     '<select id="spend-category">' +
                     '<option value="food">Food</option>' +
+                    '<option value="grocery">Grocery</option>' +
+                    '<option value="doordash">DoorDash</option>' +
+                    '<option value="instacart">Instacart</option>' +
                     '<option value="transport">Transport</option>' +
                     '<option value="entertainment">Entertainment</option>' +
                     '<option value="shopping">Shopping</option>' +
@@ -532,6 +560,9 @@
                     '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
                     '</div>';
 
+            // Spending analytics
+            html += generateSpendingAnalytics();
+            
             // Add filter controls
             html += '<div class="filter-controls">' +
                     '<div class="filter-row">' +
@@ -550,9 +581,6 @@
                     '</div>' +
                     '</div>';
                     
-            // Spending analytics
-            html += generateSpendingAnalytics();
-            
             // Recent spending
             html += '<h3>Recent Spending</h3>';
             html += '<div id="spending-list">';
@@ -589,18 +617,106 @@
             }
             
             notesList.innerHTML = data.notes.map((note, i) => `
-                <div class="note-item note-item-${i}" data-search="${(note.content || '').toLowerCase()}">
-                    <div class="note-date">${note.date}</div>
-                    <div class="note-content">${note.content}</div>
-                    <button class="btn-delete" onclick="deleteNote(${note.id})">Delete</button>
+                <div class="item item-note-${i}" data-search="${(note.content || '').toLowerCase()}">
+                    <div class="item-content" onclick="editNote(${note.id}, event)" style="cursor: pointer;" title="Click to edit">
+                        <div class="note-date">${note.date}</div>
+                        <div class="note-content">${formatNoteContent(note.content)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn" onclick="deleteNote(${note.id})" style="padding: 4px 8px; font-size: 12px;">🗑️</button>
+                    </div>
                 </div>
             `).join('');
+            forceDeleteButtonStyling();
         }
 
         function deleteNote(id) {
             data.notes = data.notes.filter(note => note.id !== id);
             save();
             renderNotes();
+        }
+
+        function handleNoteKeydown(event) {
+            const textarea = event.target;
+            const cursorPos = textarea.selectionStart;
+            const textBeforeCursor = textarea.value.substring(0, cursorPos);
+            const currentLine = textBeforeCursor.split('\n').pop();
+            
+            if (event.key === 'Enter') {
+                // Check if current line starts with bullet point
+                if (currentLine.match(/^[\s]*[•\-]\s/)) {
+                    event.preventDefault();
+                    const bulletMatch = currentLine.match(/^(\s*)[•\-](\s+)/);
+                    if (bulletMatch) {
+                        const indent = bulletMatch[1];
+                        const spacing = bulletMatch[2];
+                        const newBullet = `\n${indent}• ${spacing}`;
+                        
+                        const textAfterCursor = textarea.value.substring(cursorPos);
+                        textarea.value = textBeforeCursor + newBullet + textAfterCursor;
+                        textarea.selectionStart = textarea.selectionEnd = cursorPos + newBullet.length;
+                    }
+                }
+            }
+            
+            // Handle Tab for indenting bullet points
+            if (event.key === 'Tab') {
+                if (currentLine.match(/^[\s]*[•\-]\s/)) {
+                    event.preventDefault();
+                    const lineStart = textBeforeCursor.lastIndexOf('\n') + 1;
+                    const beforeLine = textBeforeCursor.substring(0, lineStart);
+                    const textAfterCursor = textarea.value.substring(cursorPos);
+                    
+                    if (event.shiftKey) {
+                        // Shift+Tab: Remove indentation (outdent)
+                        const updatedLine = currentLine.replace(/^  /, ''); // Remove 2 spaces
+                        if (updatedLine !== currentLine) {
+                            textarea.value = beforeLine + updatedLine + textAfterCursor;
+                            textarea.selectionStart = textarea.selectionEnd = cursorPos - 2;
+                        }
+                    } else {
+                        // Tab: Add indentation (indent)
+                        const updatedLine = '  ' + currentLine; // Add 2 spaces
+                        textarea.value = beforeLine + updatedLine + textAfterCursor;
+                        textarea.selectionStart = textarea.selectionEnd = cursorPos + 2;
+                    }
+                }
+            }
+            
+            // Auto-convert - to • at start of line
+            if (event.key === ' ') {
+                if (currentLine === '-' || currentLine.match(/^\s*-$/)) {
+                    event.preventDefault();
+                    const spaces = currentLine.match(/^(\s*)-$/)?.[1] || '';
+                    const newText = textBeforeCursor.slice(0, -1) + '• ';
+                    const textAfterCursor = textarea.value.substring(cursorPos);
+                    textarea.value = newText + textAfterCursor;
+                    textarea.selectionStart = textarea.selectionEnd = newText.length;
+                }
+            }
+        }
+
+        function formatNoteContent(content) {
+            if (!content) return '';
+            
+            // Convert bullet points to HTML with proper indentation
+            return content
+                .split('\n')
+                .map(line => {
+                    // Handle bullet points with indentation
+                    const bulletMatch = line.match(/^(\s*)[•\-]\s(.*)$/);
+                    if (bulletMatch) {
+                        const indent = bulletMatch[1];
+                        const text = bulletMatch[2];
+                        const indentLevel = Math.floor(indent.length / 2);
+                        const indentClass = indentLevel > 0 ? ` class="indent-${Math.min(indentLevel, 3)}"` : '';
+                        return `<li${indentClass}>${text}</li>`;
+                    }
+                    return line;
+                })
+                .join('\n')
+                .replace(/(<li.*<\/li>\n?)+/g, match => `<ul>${match}</ul>`)
+                .replace(/\n/g, '<br>');
         }
 
         function addListItem(type) {
@@ -645,11 +761,11 @@
             }
             
             listDiv.innerHTML = items.map((item, i) => `
-                <div class="item item-${type}-${i}" data-search="${(item.title || '').toLowerCase()}">
+                <div class="item item-${type}-${i}" data-search="${(item.title || '').toLowerCase()}" style="background: ${getBackgroundColorForType(type, item.category)};">
                     <div class="item-content">
                         <div style="text-decoration: ${item.completed ? 'line-through' : 'none'};">
                             <span class="editable-text" onclick="editListItem('${type}', ${item.id}, 'title')" title="Click to edit title" style="cursor: pointer;">${item.title}</span>
-                            ${item.category ? ` <span class="editable-text" onclick="editListItem('${type}', ${item.id}, 'category')" title="Click to edit category" style="background: #3b82f6; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; cursor: pointer;">${item.category}</span>` : ''}
+                            ${item.category && type === 'read' ? ` <span class="editable-text" onclick="editListItem('${type}', ${item.id}, 'category')" title="Click to edit category" style="color: #666; font-size: 11px; cursor: pointer;">(${item.category})</span>` : (item.category ? ` <span class="editable-text" onclick="editListItem('${type}', ${item.id}, 'category')" title="Click to edit category" style="background: ${getCategoryColorForType(type, item.category)}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; cursor: pointer;">${item.category}</span>` : '')}
                         </div>
                         <div style="font-size: 12px; color: #666;" class="editable-text" onclick="editListItem('${type}', ${item.id}, 'date')" title="Click to edit date">${item.date}</div>
                     </div>
@@ -679,8 +795,13 @@
             let newValue;
 
             if (field === 'category') {
-                const categories = ['book', 'essay', 'article', 'podcast', 'video', 'course', 'other'];
-                const currentIndex = categories.indexOf(currentValue || 'book');
+                let categories;
+                if (type === 'read') {
+                    categories = ['book', 'essay', 'poetry'];
+                } else {
+                    categories = ['podcast', 'video', 'course', 'other'];
+                }
+                const currentIndex = categories.indexOf(currentValue || categories[0]);
                 const nextIndex = (currentIndex + 1) % categories.length;
                 newValue = categories[nextIndex];
             } else if (field === 'date') {
@@ -1097,6 +1218,9 @@
         function getCategoryColor(category) {
             const colors = {
                 food: '#f59e0b',
+                grocery: '#16a34a',
+                doordash: '#ff6b6b',
+                instacart: '#4ecdc4',
                 transport: '#3b82f6',
                 entertainment: '#8b5cf6',
                 shopping: '#ec4899',
@@ -1108,6 +1232,30 @@
                 other: '#6b7280'
             };
             return colors[category] || '#6b7280';
+        }
+
+        function getCategoryColorForType(type, category) {
+            if (type === 'read') {
+                const readColors = {
+                    book: '#8b5cf6',      // Purple for books
+                    essay: '#f59e0b',     // Orange for essays  
+                    poetry: '#ec4899'     // Pink for poetry
+                };
+                return readColors[category] || '#3b82f6';
+            }
+            return '#3b82f6'; // Default blue for other types
+        }
+
+        function getBackgroundColorForType(type, category) {
+            if (type === 'read') {
+                const backgroundColors = {
+                    book: '#e0f2fe',      // Light blue for books
+                    essay: '#f0fdf4',     // Light green for essays
+                    poetry: '#fdf2f8'     // Light pink for poetry
+                };
+                return backgroundColors[category] || '#ffffff';
+            }
+            return '#ffffff'; // Default white for other types
         }
 
         function generateSpendingAnalytics() {
@@ -1186,7 +1334,7 @@
             let newValue;
 
             if (field === 'category') {
-                const categories = ['food', 'transport', 'entertainment', 'shopping', 'streaming', 'news/magazine', 'bills', 'subscription', 'health', 'other'];
+                const categories = ['food', 'grocery', 'doordash', 'instacart', 'transport', 'entertainment', 'shopping', 'streaming', 'news/magazine', 'bills', 'subscription', 'health', 'other'];
                 const currentIndex = categories.indexOf(currentValue);
                 const nextIndex = (currentIndex + 1) % categories.length;
                 newValue = categories[nextIndex];
@@ -1293,11 +1441,12 @@
                         <small class="editable-text" onclick="editSpending(${originalIndex}, 'date')" title="Click to edit date" style="color: #666; cursor: pointer;"> (${spend.date})</small>
                     </div>
                     <div class="item-actions">
-                        <button class="btn-delete" onclick="deleteSpending(${originalIndex})">🗑️</button>
+                        <button class="btn" onclick="deleteSpending(${originalIndex})" style="padding: 4px 8px; font-size: 12px;">🗑️</button>
                     </div>
                 </div>`;
             });
             listDiv.innerHTML = html;
+            forceDeleteButtonStyling();
         }
 
         function updateStats() {
@@ -1435,10 +1584,21 @@
             event.target.value = '';
         }
 
+        // Force delete button styling override
+        function forceDeleteButtonStyling() {
+            setTimeout(() => {
+                const deleteButtons = document.querySelectorAll('.btn-delete');
+                deleteButtons.forEach(btn => {
+                    btn.style.cssText = 'background: #3b82f6 !important; color: white !important; border: none !important; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;';
+                });
+            }, 100);
+        }
+
         // Initialize app
         load();
         showTab('home');
         updateStats();
+        forceDeleteButtonStyling();
     </script>
 </body>
 </html>
