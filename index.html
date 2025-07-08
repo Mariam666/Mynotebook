@@ -6,100 +6,100 @@
     <title>My Notebook</title>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'EB Garamond', 'Adobe Garamond Pro', 'Garamond', 'Times New Roman', serif; 
-            padding: 10px; 
-            background: #f9fafb; 
-            margin: 0; 
+        body {
+            font-family: 'EB Garamond', 'Adobe Garamond Pro', 'Garamond', 'Times New Roman', serif;
+            padding: 10px;
+            background: #f9fafb;
+            margin: 0;
         }
         .container { max-width: 1000px; margin: 0 auto; }
         h1 { color: #333; margin-bottom: 15px; font-size: 1.5rem; }
         .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .stat-card { 
-            background: white; 
-            padding: 12px; 
-            border-radius: 8px; 
-            border: 2px solid #e5e7eb; 
-            text-align: center; 
-            cursor: pointer; 
-            font-size: 14px; 
+        .stat-card {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
             transition: background-color 0.2s;
         }
         .stat-card:hover { background: #f3f4f6; }
         .nav-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-        .tab-btn { 
-            padding: 12px 8px; 
-            border: 2px solid #e5e7eb; 
-            background: white; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            text-align: center; 
-            font-size: 12px; 
+        .tab-btn {
+            padding: 12px 8px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
             transition: all 0.2s;
         }
         .tab-btn:hover { background: #f3f4f6; }
         .tab-btn.active { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
         .content { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; }
         .hidden { display: none; }
-        input, textarea, select { 
-            padding: 6px; 
-            border: 1px solid #ddd; 
-            border-radius: 4px; 
-            font-family: inherit; 
-            font-size: 14px; 
+        input, textarea, select {
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
         }
         textarea { width: 100%; height: 80px; resize: vertical; box-sizing: border-box; }
-        .btn { 
-            padding: 6px 12px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-weight: 500; 
-            font-size: 14px; 
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
             transition: opacity 0.2s;
         }
         .btn:hover { opacity: 0.9; }
         .btn-primary { background: #3b82f6; color: white; }
         .btn-green { background: #10b981; color: white; }
         .btn-delete { background: #ef4444; color: white; padding: 4px 8px; font-size: 12px; }
-        .item { 
-            padding: 12px; 
-            border: 1px solid #e5e7eb; 
-            border-radius: 6px; 
-            margin-bottom: 8px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
+        .item {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             background: white;
         }
         .item-content { flex: 1; cursor: pointer; font-size: 14px; }
         .item-actions { display: flex; gap: 6px; align-items: center; }
-        .form-row { 
-            display: flex; 
-            gap: 6px; 
-            margin-bottom: 12px; 
-            flex-wrap: wrap; 
-            align-items: center; 
+        .form-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            align-items: center;
         }
         .form-row input, .form-row select { min-width: 80px; flex: 1; }
-        
+
         /* Enhanced table styles for calorie tracking */
         .calorie-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-        .calorie-table th, .calorie-table td { 
-            border: 1px solid #e5e7eb; 
-            padding: 8px 12px; 
-            text-align: center; 
+        .calorie-table th, .calorie-table td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 12px;
+            text-align: center;
             font-size: 14px;
         }
-        .calorie-table th { 
-            background: #f3f4f6; 
-            font-weight: 600; 
+        .calorie-table th {
+            background: #f3f4f6;
+            font-weight: 600;
             color: #374151;
         }
         .calorie-table tr:nth-child(even) { background: #f9fafb; }
         .calorie-table tr:hover { background: #f3f4f6; }
-        .editable-cell { 
-            cursor: pointer; 
+        .editable-cell {
+            cursor: pointer;
             min-width: 80px;
             position: relative;
         }
@@ -108,76 +108,123 @@
         .net-positive { color: #dc2626; font-weight: 600; }
         .net-negative { color: #059669; font-weight: 600; }
         .net-neutral { color: #6b7280; }
-        
-        .week-summary { 
-            background: #f8fafc; 
-            border: 2px solid #e2e8f0; 
-            border-radius: 8px; 
-            padding: 12px; 
+        .consumed-cell { color: #059669; font-weight: 600; }
+        .burned-cell { color: #dc2626; font-weight: 600; }
+        .protein-cell { color: #8b5cf6; font-weight: 600; }
+
+        .spending-category {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 4px 0;
+        }
+        .spending-category-header {
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 4px;
+        }
+
+        .week-summary {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
             margin: 15px 0;
         }
-        .week-header { 
-            font-weight: 600; 
-            color: #1e40af; 
+        .week-header {
+            font-weight: 600;
+            color: #1e40af;
             margin-bottom: 8px;
             font-size: 16px;
         }
-        .week-stats { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+        .week-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 8px;
         }
-        .week-stat { 
-            text-align: center; 
+        .week-stat {
+            text-align: center;
             padding: 6px;
             background: white;
             border-radius: 4px;
             border: 1px solid #e5e7eb;
         }
-        .week-stat-label { 
-            font-size: 12px; 
-            color: #6b7280; 
+        .week-stat-label {
+            font-size: 12px;
+            color: #6b7280;
             margin-bottom: 2px;
         }
-        .week-stat-value { 
-            font-size: 14px; 
+        .week-stat-value {
+            font-size: 14px;
             font-weight: 600;
         }
-        .progress-indicator { 
-            font-size: 18px; 
+        .progress-indicator {
+            font-size: 18px;
             margin-left: 8px;
         }
-        
-        .spending-category { 
-            background: #f0f9ff; 
-            border: 1px solid #bae6fd; 
-            padding: 8px; 
-            border-radius: 4px; 
-            margin: 4px 0; 
+
+        .spending-category {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 4px 0;
         }
-        .spending-category-header { 
-            font-weight: 600; 
-            color: #0369a1; 
-            margin-bottom: 4px; 
+        .spending-category-header {
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 4px;
         }
-        
-        .note-item { 
-            background: #fefce8; 
-            border: 1px solid #fef3c7; 
-            padding: 12px; 
-            border-radius: 6px; 
-            margin-bottom: 8px; 
+
+        .note-item {
+            background: #fefce8;
+            border: 1px solid #fef3c7;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
-        .note-date { 
-            font-size: 12px; 
-            color: #92400e; 
-            margin-bottom: 4px; 
+        .note-date {
+            font-size: 12px;
+            color: #92400e;
+            margin-bottom: 4px;
         }
-        .note-content { 
-            white-space: pre-wrap; 
-            line-height: 1.5; 
+        .note-content {
+            white-space: pre-wrap;
+            line-height: 1.5;
         }
-        
+        .editable-text { cursor: pointer; }
+        .editable-text:hover { background: #e0f2fe; padding: 1px 3px; border-radius: 3px; }
+
+        /* Spending filter controls */
+        .filter-controls {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+        .filter-label {
+            font-weight: 600;
+            color: #374151;
+            min-width: 80px;
+            font-size: 14px;
+        }
+        .filter-input {
+            flex: 1;
+            min-width: 120px;
+        }
+
         @media (max-width: 768px) {
             body { padding: 8px; font-size: 16px; }
             .container { max-width: 100%; padding: 0; }
@@ -191,13 +238,13 @@
             .item { padding: 12px; gap: 8px; margin-bottom: 8px; }
             .item-content { font-size: 14px; line-height: 1.4; }
             .form-row { gap: 8px; margin-bottom: 12px; flex-direction: column; align-items: stretch; }
-            .form-row input, .form-row select { 
-                min-width: auto; 
-                font-size: 14px; 
-                width: 100%; 
-                margin-bottom: 6px; 
-                padding: 12px; 
-                box-sizing: border-box; 
+            .form-row input, .form-row select {
+                min-width: auto;
+                font-size: 14px;
+                width: 100%;
+                margin-bottom: 6px;
+                padding: 12px;
+                box-sizing: border-box;
             }
             .btn { padding: 12px 16px; font-size: 14px; }
             .btn-delete { padding: 8px 12px; font-size: 12px; width: auto; }
@@ -206,19 +253,32 @@
             input, textarea, select { padding: 12px; font-size: 14px; border-radius: 8px; box-sizing: border-box; }
             h2 { font-size: 1.3rem; margin-bottom: 12px; }
             h3 { font-size: 1.1rem; margin-bottom: 8px; }
-            
+
             /* Mobile table adjustments */
             .calorie-table { font-size: 12px; }
             .calorie-table th, .calorie-table td { padding: 6px 4px; }
             .week-stats { grid-template-columns: repeat(2, 1fr); }
             .week-stat { padding: 8px 4px; }
+
+            /* Mobile filter controls */
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-label {
+                min-width: auto;
+                margin-bottom: 4px;
+            }
+            .filter-input {
+                min-width: auto;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📝 Notebook</h1>
-        
+
         <div id="stats" class="stats">
             <div class="stat-card" onclick="showTab('calories')">
                 <div>🔥 Calories</div>
@@ -233,13 +293,13 @@
                 <div style="font-size: 14px; color: #8b5cf6;" id="spend-month">$0 this month</div>
             </div>
         </div>
-        
+
         <div id="home-button" style="margin-bottom: 15px;">
             <button class="tab-btn active" onclick="showTab('home')" id="tab-home" style="width: 100%; padding: 20px;">
                 🏠 Home
             </button>
         </div>
-        
+
         <div class="nav-grid" id="nav-grid">
             <button class="tab-btn" onclick="showTab('notes')" id="tab-notes">📝<br>Notes</button>
             <button class="tab-btn" onclick="showTab('read')" id="tab-read">📚<br>Read</button>
@@ -257,7 +317,7 @@
             <button class="btn" onclick="document.getElementById('upload').click()" style="background: #8b5cf6; color: white;">📤 Upload Data</button>
             <input type="file" id="upload" accept=".json" style="display: none;" onchange="uploadData(event)">
         </div>
-        
+
         <div id="content" class="content hidden"></div>
     </div>
 
@@ -275,7 +335,7 @@
 
         function getPSTDate() {
             const now = new Date();
-            // Convert to PST (UTC-8) or PDT (UTC-7) 
+            // Convert to PST (UTC-8) or PDT (UTC-7)
             const pstDate = new Date(now.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
             const year = pstDate.getFullYear();
             const month = String(pstDate.getMonth() + 1).padStart(2, '0');
@@ -303,12 +363,12 @@
                 if (saved) {
                     const loadedData = JSON.parse(saved);
                     data = { ...data, ...loadedData };
-                    
+
                     // Clean up data structure - ensure lists contain valid items
                     if (data.lists) {
                         Object.keys(data.lists).forEach(listName => {
                             if (Array.isArray(data.lists[listName])) {
-                                data.lists[listName] = data.lists[listName].filter(item => 
+                                data.lists[listName] = data.lists[listName].filter(item =>
                                     item && typeof item === 'object' && item.title
                                 );
                             } else {
@@ -316,7 +376,7 @@
                             }
                         });
                     }
-                    
+
                     // Ensure other arrays exist and are valid
                     if (!Array.isArray(data.calories)) data.calories = [];
                     if (!Array.isArray(data.caloriesBurned)) data.caloriesBurned = [];
@@ -332,7 +392,7 @@
 
         function showTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            
+
             if (tab === 'home') {
                 document.getElementById('stats').style.display = 'grid';
                 document.getElementById('content').classList.add('hidden');
@@ -352,147 +412,62 @@
             } else if (tab === 'notes') {
                 loadNotesTab();
             } else if (tab === 'calories') {
-                loadCaloriesTab();
+                loadCalorieTab();
             } else if (tab === 'spending') {
                 loadSpendingTab();
             }
         }
 
-        function loadListTab(listName) {
-            const items = data.lists[listName] || [];
-            const content = document.getElementById('content');
-            
-            let html = '<h2>' + listName.toUpperCase() + '</h2>';
-            
-            if (listName === 'read') {
-                html += '<div class="form-row">' +
-                        '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
-                        '<input type="url" id="link-input" placeholder="Link">' +
-                        '<select id="cat-input"><option value="book">Book</option><option value="essay">Essay</option><option value="poem">Poem</option></select>' +
-                        '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
-                        '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
-                        '</div>';
-            } else {
-                html += '<div class="form-row">' +
-                        '<input type="text" id="item-input" placeholder="Title" style="flex: 2;">' +
-                        '<input type="url" id="link-input" placeholder="Link">' +
-                        '<input type="date" id="date-input" value="' + getPSTDate() + '">' +
-                        '<button class="btn btn-primary" onclick="addItem(\'' + listName + '\')">Add</button>' +
-                        '</div>';
-            }
-            
-            html += '<div style="margin: 8px 0;"><input type="text" id="search-' + listName + '" placeholder="🔍 Search..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" oninput="filterItems(\'' + listName + '\')"></div>';
-            
-            html += '<div id="items-' + listName + '">';
-            items.forEach((item, i) => {
-                const progressIndicator = item.completed ? '✅' : '⏳';
-                const itemStyle = item.completed ? 'text-decoration: line-through; opacity: 0.7;' : '';
-                
-                // Get background color based on category (like subscription boxes)
-                let categoryBg = '#f8fafc'; // default light gray
-                let categoryBorder = '#e2e8f0';
-                let categoryTextColor = '#1e293b';
-                
-                if (listName === 'read' && item.category) {
-                    switch(item.category) {
-                        case 'book':
-                            categoryBg = '#dbeafe'; // light blue
-                            categoryBorder = '#3b82f6';
-                            categoryTextColor = '#1e40af';
-                            break;
-                        case 'essay':
-                            categoryBg = '#dcfce7'; // light green
-                            categoryBorder = '#22c55e';
-                            categoryTextColor = '#15803d';
-                            break;
-                        case 'poem':
-                            categoryBg = '#fce7f3'; // light pink
-                            categoryBorder = '#ec4899';
-                            categoryTextColor = '#be185d';
-                            break;
-                    }
-                }
-                
-                const boxStyle = `background: ${categoryBg}; border: 2px solid ${categoryBorder}; border-radius: 8px; padding: 12px; margin: 8px 0; color: ${categoryTextColor};`;
-                
-                // For reading tab, show differently - no completion functionality since it's a record of things already read
-                if (listName === 'read') {
-                    html += `<div class="item item-${listName}-${i}" data-search="${(item.title || '').toLowerCase()}" style="${boxStyle}">
-                        <div class="item-content">
-                            📖 
-                            <span class="editable-text" onclick="editListItem('${listName}', ${i}, 'title')" title="Click to edit title">${item.title}</span>
-                            ${item.category ? ` <span style="background: ${categoryBorder}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">${item.category}</span>` : ''}
-                            ${item.link ? ' <a href="' + item.link + '" target="_blank" style="color: #2563eb;">🔗</a>' : ''} 
-                            <small style="color: #666;" class="editable-text" onclick="editListItem('${listName}', ${i}, 'date')" title="Click to edit date"> (${item.date})</small>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-delete" onclick="deleteItem('${listName}', ${i})">🗑️</button>
-                        </div>
-                    </div>`;
-                } else {
-                    html += `<div class="item item-${listName}-${i}" data-search="${(item.title || '').toLowerCase()}" style="${boxStyle}">
-                        <div class="item-content" style="${itemStyle}">
-                            ${progressIndicator} 
-                            <span class="editable-text" onclick="editListItem('${listName}', ${i}, 'title')" title="Click to edit title">${item.title}</span>
-                            ${item.category ? ` <span style="background: ${categoryBorder}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">${item.category}</span>` : ''}
-                            ${item.link ? ' <a href="' + item.link + '" target="_blank" style="color: #2563eb;">🔗</a>' : ''} 
-                            <small style="color: #666;" class="editable-text" onclick="editListItem('${listName}', ${i}, 'date')" title="Click to edit date"> (${item.date})</small>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn" style="font-size: 10px; padding: 2px 6px;" onclick="toggleComplete('${listName}', ${i})">${item.completed ? 'Undo' : 'Done'}</button>
-                            <button class="btn-delete" onclick="deleteItem('${listName}', ${i})">🗑️</button>
-                        </div>
-                    </div>`;
-                }
-            });
-            html += '</div>';
-            
-            content.innerHTML = html;
-        }
-
-        function filterItems(listName) {
-            const searchTerm = document.getElementById('search-' + listName).value.toLowerCase();
-            const items = data.lists[listName] || [];
-            
-            document.querySelectorAll(`.item-${listName}-`).forEach(element => {
-                element.style.display = 'none';
-            });
-            
-            items.forEach((item, i) => {
-                if (item.title.toLowerCase().includes(searchTerm) || 
-                    (item.category && item.category.toLowerCase().includes(searchTerm))) {
-                    const element = document.querySelector(`.item-${listName}-${i}`);
-                    if (element) element.style.display = 'flex';
-                }
-            });
-        }
-
         function loadNotesTab() {
-            const content = document.getElementById('content');
-            let html = '<h2>NOTES</h2>';
+            document.getElementById('content').innerHTML = `
+                <h2>📝 Notes</h2>
+                <div class="form-row">
+                    <textarea id="new-note" placeholder="Write your note here..."></textarea>
+                </div>
+                <div class="form-row">
+                    <button class="btn btn-primary" onclick="addNote()">Add Note</button>
+                </div>
+                <div style="margin: 8px 0;">
+                    <input type="text" id="search-notes" placeholder="🔍 Search notes..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" oninput="filterNotes()">
+                </div>
+                <div id="notes-list"></div>
+            `;
+            renderNotes();
+        }
+
+        function loadListTab(type) {
+            const emojis = {
+                read: '📚', listen: '🎵', watch: '📺', 
+                cook: '🍳', make: '🔨', look: '👁️'
+            };
             
-            html += '<div class="form-row">' +
-                    '<textarea id="note-input" placeholder="Write your note here..." style="flex: 1; margin-right: 8px;"></textarea>' +
-                    '<button class="btn btn-primary" onclick="addNote()">Add Note</button>' +
-                    '</div>';
-                    
-            html += '<div>';
-            data.notes.forEach((note, i) => {
-                html += `<div class="note-item">
-                    <div class="note-date editable-text" onclick="editNote(${i}, 'date')" title="Click to edit date">${note.date}</div>
-                    <div class="note-content editable-text" onclick="editNote(${i}, 'content')" title="Click to edit note" style="cursor: pointer;">${note.content}</div>
-                    <button class="btn-delete" onclick="deleteNote(${i})" style="margin-top: 8px;">🗑️ Delete</button>
-                </div>`;
-            });
-            html += '</div>';
-            
-            content.innerHTML = html;
+            const categoryOptions = type === 'read' ? `
+                <option value="book">Book</option>
+                <option value="essay">Essay</option>
+                <option value="article">Article</option>
+            ` : '';
+
+            document.getElementById('content').innerHTML = `
+                <h2>${emojis[type]} ${type.charAt(0).toUpperCase() + type.slice(1)}</h2>
+                <div class="form-row">
+                    <input type="text" id="${type}-title" placeholder="Title">
+                    <input type="url" id="${type}-link" placeholder="Link (optional)">
+                    ${type === 'read' ? `<select id="${type}-category">${categoryOptions}</select>` : ''}
+                    <input type="date" id="${type}-date" value="${getPSTDate()}">
+                    <button class="btn btn-primary" onclick="addListItem('${type}')">Add ${type.charAt(0).toUpperCase() + type.slice(1)}</button>
+                </div>
+                <div style="margin: 8px 0;">
+                    <input type="text" id="search-${type}" placeholder="🔍 Search..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" oninput="filterItems('${type}')">
+                </div>
+                <div id="${type}-list"></div>
+            `;
+            renderList(type);
         }
 
         // Global variable to store current calorie view week
         let currentCalorieWeek = getPSTTime();
 
-        function loadCaloriesTab() {
+        function loadCalorieTab() {
             const content = document.getElementById('content');
             let html = '<h2>CALORIE TRACKING</h2>';
             
@@ -534,6 +509,264 @@
             content.innerHTML = html;
         }
 
+        function loadSpendingTab() {
+            const content = document.getElementById('content');
+            let html = '<h2>SPENDING TRACKER</h2>';
+            
+            html += '<div class="form-row">' +
+                    '<input type="text" id="spend-desc" placeholder="Description" style="flex: 2;">' +
+                    '<input type="number" id="spend-amount" placeholder="Amount" min="0" step="0.01">' +
+                    '<select id="spend-category">' +
+                    '<option value="food">Food</option>' +
+                    '<option value="transport">Transport</option>' +
+                    '<option value="entertainment">Entertainment</option>' +
+                    '<option value="shopping">Shopping</option>' +
+                    '<option value="streaming">Streaming</option>' +
+                    '<option value="news/magazine">News/Magazine</option>' +
+                    '<option value="bills">Bills</option>' +
+                    '<option value="subscription">Subscription</option>' +
+                    '<option value="health">Health</option>' +
+                    '<option value="other">Other</option>' +
+                    '</select>' +
+                    '<input type="date" id="spend-date" value="' + getPSTDate() + '">' +
+                    '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
+                    '</div>';
+
+            // Add filter controls
+            html += '<div class="filter-controls">' +
+                    '<div class="filter-row">' +
+                    '<span class="filter-label">Date Range:</span>' +
+                    '<input type="date" id="filter-date-from" class="filter-input" placeholder="From date">' +
+                    '<span style="margin: 0 8px;">to</span>' +
+                    '<input type="date" id="filter-date-to" class="filter-input" placeholder="To date">' +
+                    '</div>' +
+                    '<div class="filter-row">' +
+                    '<span class="filter-label">Category:</span>' +
+                    '<select id="filter-category" class="filter-input">' +
+                    '<option value="">All Categories</option>' +
+                    '</select>' +
+                    '<button class="btn btn-primary" onclick="applySpendingFilters()">Apply Filters</button>' +
+                    '<button class="btn" onclick="clearSpendingFilters()">Clear Filters</button>' +
+                    '</div>' +
+                    '</div>';
+                    
+            // Spending analytics
+            html += generateSpendingAnalytics();
+            
+            // Recent spending
+            html += '<h3>Recent Spending</h3>';
+            html += '<div id="spending-list">';
+            html += '</div>';
+            
+            content.innerHTML = html;
+            populateCategoryFilter();
+            renderSpending();
+        }
+
+        function addNote() {
+            const content = document.getElementById('new-note').value.trim();
+            if (!content) return;
+            
+            const note = {
+                id: Date.now(),
+                content: content,
+                date: getPSTDate()
+            };
+            
+            data.notes.unshift(note);
+            document.getElementById('new-note').value = '';
+            save();
+            renderNotes();
+        }
+
+        function renderNotes() {
+            const notesList = document.getElementById('notes-list');
+            if (!notesList) return;
+            
+            if (data.notes.length === 0) {
+                notesList.innerHTML = '<p>No notes yet.</p>';
+                return;
+            }
+            
+            notesList.innerHTML = data.notes.map((note, i) => `
+                <div class="note-item note-item-${i}" data-search="${(note.content || '').toLowerCase()}">
+                    <div class="note-date">${note.date}</div>
+                    <div class="note-content">${note.content}</div>
+                    <button class="btn-delete" onclick="deleteNote(${note.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteNote(id) {
+            data.notes = data.notes.filter(note => note.id !== id);
+            save();
+            renderNotes();
+        }
+
+        function addListItem(type) {
+            const title = document.getElementById(`${type}-title`).value.trim();
+            const link = document.getElementById(`${type}-link`).value.trim();
+            const date = document.getElementById(`${type}-date`).value;
+            const category = document.getElementById(`${type}-category`)?.value || '';
+            
+            if (!title) return;
+            
+            const item = {
+                id: Date.now(),
+                title: title,
+                link: link,
+                date: date,
+                completed: false,
+                ...(category && { category: category })
+            };
+            
+            data.lists[type].unshift(item);
+            
+            // Clear inputs
+            document.getElementById(`${type}-title`).value = '';
+            document.getElementById(`${type}-link`).value = '';
+            if (document.getElementById(`${type}-category`)) {
+                document.getElementById(`${type}-category`).value = 'book';
+            }
+            
+            save();
+            renderList(type);
+        }
+
+        function renderList(type) {
+            const listDiv = document.getElementById(`${type}-list`);
+            if (!listDiv) return;
+            
+            const items = data.lists[type] || [];
+            
+            if (items.length === 0) {
+                listDiv.innerHTML = `<p>No ${type} items yet.</p>`;
+                return;
+            }
+            
+            listDiv.innerHTML = items.map((item, i) => `
+                <div class="item item-${type}-${i}" data-search="${(item.title || '').toLowerCase()}">
+                    <div class="item-content">
+                        <div style="text-decoration: ${item.completed ? 'line-through' : 'none'};">
+                            <span class="editable-text" onclick="editListItem('${type}', ${item.id}, 'title')" title="Click to edit title" style="cursor: pointer;">${item.title}</span>
+                            ${item.category ? ` <span class="editable-text" onclick="editListItem('${type}', ${item.id}, 'category')" title="Click to edit category" style="background: #3b82f6; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; cursor: pointer;">${item.category}</span>` : ''}
+                        </div>
+                        <div style="font-size: 12px; color: #666;" class="editable-text" onclick="editListItem('${type}', ${item.id}, 'date')" title="Click to edit date">${item.date}</div>
+                    </div>
+                    <div class="item-actions">
+                        ${item.link ? `<button class="btn" onclick="openLink('${item.link}')" style="padding: 4px 8px; font-size: 12px;">🔗</button>` : ''}
+                        <button class="btn" onclick="deleteListItem('${type}', ${item.id})" style="padding: 4px 8px; font-size: 12px;">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleItem(type, id) {
+            const item = data.lists[type].find(item => item.id === id);
+            if (item) {
+                item.completed = !item.completed;
+                save();
+                renderList(type);
+                updateStats();
+            }
+        }
+
+        function editListItem(type, id, field) {
+            const item = data.lists[type].find(item => item.id === id);
+            if (!item) return;
+            
+            let currentValue = item[field];
+            let newValue;
+
+            if (field === 'category') {
+                const categories = ['book', 'essay', 'article', 'podcast', 'video', 'course', 'other'];
+                const currentIndex = categories.indexOf(currentValue || 'book');
+                const nextIndex = (currentIndex + 1) % categories.length;
+                newValue = categories[nextIndex];
+            } else if (field === 'date') {
+                newValue = prompt('Edit date (YYYY-MM-DD):', currentValue);
+                if (!newValue || !/^\d{4}-\d{2}-\d{2}$/.test(newValue)) {
+                    return;
+                }
+            } else {
+                newValue = prompt(`Edit ${field}:`, currentValue);
+                if (!newValue) return;
+            }
+
+            item[field] = newValue;
+            save();
+            renderList(type);
+            updateStats();
+        }
+
+        function deleteListItem(type, id) {
+            data.lists[type] = data.lists[type].filter(item => item.id !== id);
+            save();
+            renderList(type);
+        }
+
+        function openLink(link) {
+            if (link) {
+                window.open(link, '_blank');
+            }
+        }
+
+        function filterItems(listName) {
+            const searchTerm = document.getElementById('search-' + listName).value.toLowerCase();
+            const items = data.lists[listName] || [];
+            
+            // If search is empty, show all items
+            if (!searchTerm) {
+                items.forEach((item, i) => {
+                    const element = document.querySelector(`.item-${listName}-${i}`);
+                    if (element) element.style.display = 'flex';
+                });
+                return;
+            }
+            
+            // Hide all items first
+            items.forEach((item, i) => {
+                const element = document.querySelector(`.item-${listName}-${i}`);
+                if (element) element.style.display = 'none';
+            });
+            
+            // Show matching items
+            items.forEach((item, i) => {
+                if (item.title.toLowerCase().includes(searchTerm) || 
+                    (item.category && item.category.toLowerCase().includes(searchTerm))) {
+                    const element = document.querySelector(`.item-${listName}-${i}`);
+                    if (element) element.style.display = 'flex';
+                }
+            });
+        }
+
+        function filterNotes() {
+            const searchTerm = document.getElementById('search-notes').value.toLowerCase();
+            
+            // If search is empty, show all notes
+            if (!searchTerm) {
+                data.notes.forEach((note, i) => {
+                    const element = document.querySelector(`.note-item-${i}`);
+                    if (element) element.style.display = 'block';
+                });
+                return;
+            }
+            
+            // Hide all notes first
+            data.notes.forEach((note, i) => {
+                const element = document.querySelector(`.note-item-${i}`);
+                if (element) element.style.display = 'none';
+            });
+            
+            // Show matching notes
+            data.notes.forEach((note, i) => {
+                if (note.content.toLowerCase().includes(searchTerm)) {
+                    const element = document.querySelector(`.note-item-${i}`);
+                    if (element) element.style.display = 'block';
+                }
+            });
+        }
+
         function formatWeekHeader(date) {
             const startOfWeek = getPSTTime();
             startOfWeek.setTime(date.getTime());
@@ -549,7 +782,7 @@
             const newDate = new Date(currentCalorieWeek);
             newDate.setDate(currentCalorieWeek.getDate() + (direction * 7));
             currentCalorieWeek = newDate;
-            loadCaloriesTab();
+            loadCalorieTab();
         }
 
         function addDay() {
@@ -571,7 +804,7 @@
             
             // Navigate to show this week
             currentCalorieWeek = tomorrow;
-            loadCaloriesTab();
+            loadCalorieTab();
         }
 
         function fillMissingDays() {
@@ -593,53 +826,87 @@
             
             const startDate = new Date(allDates[0]);
             const endDate = new Date(allDates[allDates.length - 1]);
-            const today = new Date(getPSTDate());
             
-            // Extend to today if needed
-            if (endDate < today) {
-                endDate.setTime(today.getTime());
-            }
-            
-            const existingDates = new Set(allDates);
             const missingDates = [];
-            
-            // Find missing dates between start and end
-            const currentDate = new Date(startDate);
-            while (currentDate <= endDate) {
-                const dateStr = currentDate.toISOString().split('T')[0];
-                if (!existingDates.has(dateStr)) {
+            for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+                const dateStr = date.toISOString().split('T')[0];
+                if (!allDates.includes(dateStr)) {
                     missingDates.push(dateStr);
                 }
-                currentDate.setDate(currentDate.getDate() + 1);
             }
             
             if (missingDates.length === 0) {
-                alert('No missing days found. Your calendar is complete!');
+                alert('No missing days found.');
                 return;
             }
             
-            const confirm = window.confirm(`Found ${missingDates.length} missing days between ${allDates[0]} and ${endDate.toISOString().split('T')[0]}. Fill them with zero entries?`);
+            // Initialize customCalorieDays if it doesn't exist
+            if (!data.customCalorieDays) {
+                data.customCalorieDays = [];
+            }
             
-            if (confirm) {
-                missingDates.forEach(date => {
-                    // Add zero calorie placeholder entries
-                    data.calories.push({
-                        date: date,
-                        food: 'No entries',
-                        calories: '0',
-                        protein: '0'
-                    });
-                });
-                
-                save();
-                loadCaloriesTab();
+            // Add missing dates
+            missingDates.forEach(dateStr => {
+                if (!data.customCalorieDays.includes(dateStr)) {
+                    data.customCalorieDays.push(dateStr);
+                }
+            });
+            
+            save();
+            loadCalorieTab();
+            
+            if (missingDates.length > 0) {
                 alert(`Added ${missingDates.length} missing days to your calendar.`);
             }
         }
 
         function goToToday() {
             currentCalorieWeek = new Date();
-            loadCaloriesTab();
+            loadCalorieTab();
+        }
+
+        function addCalorie() {
+            const food = document.getElementById('food-input').value.trim();
+            const calories = document.getElementById('calories-input').value;
+            const protein = document.getElementById('protein-input').value || '0';
+            const date = document.getElementById('cal-date-input').value;
+            
+            if (!food || !calories) {
+                alert('Please enter food and calories');
+                return;
+            }
+            
+            data.calories.push({ food, calories, protein, date });
+            save();
+            loadCalorieTab();
+            updateStats();
+            
+            // Clear inputs
+            document.getElementById('food-input').value = '';
+            document.getElementById('calories-input').value = '';
+            document.getElementById('protein-input').value = '';
+            document.getElementById('cal-date-input').value = getPSTDate();
+        }
+
+        function addCalorieBurned() {
+            const exercise = document.getElementById('exercise-input').value.trim();
+            const calories = document.getElementById('burned-input').value;
+            const date = document.getElementById('burned-date-input').value;
+            
+            if (!exercise || !calories) {
+                alert('Please enter exercise and calories burned');
+                return;
+            }
+            
+            data.caloriesBurned.push({ exercise, calories, date });
+            save();
+            loadCalorieTab();
+            updateStats();
+            
+            // Clear inputs
+            document.getElementById('exercise-input').value = '';
+            document.getElementById('burned-input').value = '';
+            document.getElementById('burned-date-input').value = getPSTDate();
         }
 
         function generateCalorieTable() {
@@ -683,7 +950,7 @@
             
             viewWeek.forEach(dateStr => {
                 const dayName = new Date(dateStr + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/Los_Angeles' });
-                const consumed = data.calories.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
+                const consumed = data.calories.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseInt(c.calories || c.amount || 0), 0);
                 const burned = data.caloriesBurned.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
                 const protein = data.calories.filter(c => c.date === dateStr).reduce((sum, c) => sum + parseFloat(c.protein || 0), 0);
                 const net = consumed - burned;
@@ -693,10 +960,10 @@
                 
                 html += `<tr${isToday}>
                     <td><strong>${dayName}</strong><br><small>${dateStr}</small></td>
-                    <td class="editable-cell" onclick="editCell(this, 'consumed', '${dateStr}')">${consumed}</td>
-                    <td class="editable-cell" onclick="editCell(this, 'burned', '${dateStr}')">${burned}</td>
+                    <td class="editable-cell consumed-cell" onclick="editCell(this, 'consumed', '${dateStr}')">${consumed}</td>
+                    <td class="editable-cell burned-cell" onclick="editCell(this, 'burned', '${dateStr}')">${burned}</td>
                     <td class="${netClass}">${net > 0 ? '+' : ''}${net}</td>
-                    <td>${protein.toFixed(1)}g</td>
+                    <td class="protein-cell">${protein.toFixed(1)}g</td>
                 </tr>`;
             });
             
@@ -704,7 +971,7 @@
             
             // Week summary
             const weekConsumed = viewWeek.reduce((sum, date) => {
-                return sum + data.calories.filter(c => c.date === date).reduce((daySum, c) => daySum + parseInt(c.calories || 0), 0);
+                return sum + data.calories.filter(c => c.date === date).reduce((daySum, c) => daySum + parseInt(c.calories || c.amount || 0), 0);
             }, 0);
             const weekBurned = viewWeek.reduce((sum, date) => {
                 return sum + data.caloriesBurned.filter(c => c.date === date).reduce((daySum, c) => daySum + parseInt(c.calories || 0), 0);
@@ -714,66 +981,133 @@
             }, 0);
             const weekNet = weekConsumed - weekBurned;
             
-            html += '<div class="week-summary">';
-            html += '<div class="week-header">📊 This Week Summary</div>';
-            html += '<div class="week-stats">';
-            html += `<div class="week-stat"><div class="week-stat-label">Consumed</div><div class="week-stat-value" style="color: #059669;">+${weekConsumed}</div></div>`;
-            html += `<div class="week-stat"><div class="week-stat-label">Burned</div><div class="week-stat-value" style="color: #dc2626;">-${weekBurned}</div></div>`;
-            html += `<div class="week-stat"><div class="week-stat-label">Net</div><div class="week-stat-value ${weekNet > 0 ? 'net-positive' : weekNet < 0 ? 'net-negative' : 'net-neutral'}">${weekNet > 0 ? '+' : ''}${weekNet}</div></div>`;
-            html += `<div class="week-stat"><div class="week-stat-label">Protein</div><div class="week-stat-value" style="color: #8b5cf6;">${weekProtein.toFixed(1)}g</div></div>`;
-            html += '</div></div>';
+            html += `<div class="week-summary">
+                <h4>Week Summary</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;">
+                    <div class="summary-card">
+                        <div class="summary-value" style="color: #059669; font-weight: 600;">${weekConsumed}</div>
+                        <div class="summary-label">Consumed</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" style="color: #dc2626; font-weight: 600;">${weekBurned}</div>
+                        <div class="summary-label">Burned</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" style="color: ${weekNet < 0 ? '#059669' : '#dc2626'}; font-weight: 600;">${weekNet > 0 ? '+' : ''}${weekNet}</div>
+                        <div class="summary-label">Net</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" style="color: #8b5cf6; font-weight: 600;">${weekProtein.toFixed(1)}g</div>
+                        <div class="summary-label">Protein</div>
+                    </div>
+                </div>
+            </div>`;
             
             return html;
         }
 
-        function loadSpendingTab() {
-            const content = document.getElementById('content');
-            let html = '<h2>SPENDING TRACKER</h2>';
+        function editCell(cell, type, date) {
+            if (cell.classList.contains('editing')) return;
             
-            html += '<div class="form-row">' +
-                    '<input type="text" id="spend-desc" placeholder="Description" style="flex: 2;">' +
-                    '<input type="number" id="spend-amount" placeholder="Amount" min="0" step="0.01">' +
-                    '<select id="spend-category">' +
-                    '<option value="food">Food</option>' +
-                    '<option value="transport">Transport</option>' +
-                    '<option value="entertainment">Entertainment</option>' +
-                    '<option value="shopping">Shopping</option>' +
-                    '<option value="streaming">Streaming</option>' +
-                    '<option value="news/magazine">News/Magazine</option>' +
-                    '<option value="bills">Bills</option>' +
-                    '<option value="subscription">Subscription</option>' +
-                    '<option value="health">Health</option>' +
-                    '<option value="other">Other</option>' +
-                    '</select>' +
-                    '<input type="date" id="spend-date" value="' + getPSTDate() + '">' +
-                    '<button class="btn btn-primary" onclick="addSpending()">Add</button>' +
-                    '</div>';
-                    
-            // Spending analytics
-            html += generateSpendingAnalytics();
+            const currentValue = cell.textContent;
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = currentValue;
+            input.style.width = '80px';
+            input.style.border = 'none';
+            input.style.background = 'transparent';
+            input.style.textAlign = 'center';
             
-            // Recent spending
-            html += '<h3>Recent Spending</h3>';
-            html += '<div>';
-            const sortedSpending = [...data.spending].sort((a, b) => new Date(b.date) - new Date(a.date));
-            sortedSpending.forEach((spend, i) => {
-                const categoryColor = getCategoryColor(spend.category);
-                const originalIndex = data.spending.findIndex(s => s === spend);
-                html += `<div class="item">
-                    <div class="item-content">💰 
-                        <span class="editable-text" onclick="editSpending(${originalIndex}, 'description')" title="Click to edit description">${spend.description}</span> - 
-                        <span class="editable-text" onclick="editSpending(${originalIndex}, 'amount')" title="Click to edit amount" style="color: #dc2626; font-weight: 600;">$${parseFloat(spend.amount).toFixed(2)}</span> 
-                        <span class="editable-text" onclick="editSpending(${originalIndex}, 'category')" title="Click to edit category" style="background: ${categoryColor}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; cursor: pointer;">${spend.category}</span>
-                        <small class="editable-text" onclick="editSpending(${originalIndex}, 'date')" title="Click to edit date" style="color: #666; cursor: pointer;"> (${spend.date})</small>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-delete" onclick="deleteSpending(${originalIndex})">🗑️</button>
-                    </div>
-                </div>`;
-            });
-            html += '</div>';
+            cell.classList.add('editing');
+            cell.textContent = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
             
-            content.innerHTML = html;
+            function saveEdit() {
+                const newValue = parseInt(input.value) || 0;
+                cell.classList.remove('editing');
+                cell.textContent = newValue;
+                
+                // Update the data
+                if (type === 'consumed') {
+                    // Clear all existing entries for this date and create a single new one
+                    data.calories = data.calories.filter(c => c.date !== date);
+                    const entry = { 
+                        id: Date.now(),
+                        date: date, 
+                        food: 'Manual edit', 
+                        calories: newValue.toString(), 
+                        amount: newValue,
+                        protein: '0'
+                    };
+                    data.calories.push(entry);
+                } else if (type === 'burned') {
+                    // Clear all existing burned entries for this date and create a single new one
+                    data.caloriesBurned = data.caloriesBurned.filter(c => c.date !== date);
+                    const entry = { 
+                        id: Date.now(),
+                        date: date, 
+                        exercise: 'Manual edit', 
+                        calories: newValue.toString()
+                    };
+                    data.caloriesBurned.push(entry);
+                }
+                
+                save();
+                loadCalorieTab(); // Refresh to recalculate totals
+                updateStats();
+            }
+            
+            input.onblur = saveEdit;
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    saveEdit();
+                }
+            };
+        }
+
+
+
+
+
+        function addSpending() {
+            const description = document.getElementById('spend-desc').value.trim();
+            const amount = document.getElementById('spend-amount').value;
+            const category = document.getElementById('spend-category').value;
+            const date = document.getElementById('spend-date').value;
+            
+            if (!description || !amount) {
+                alert('Please enter description and amount');
+                return;
+            }
+            
+            data.spending.push({ description, amount, category, date });
+            save();
+            loadSpendingTab();
+            updateStats();
+            
+            // Clear inputs
+            document.getElementById('spend-desc').value = '';
+            document.getElementById('spend-amount').value = '';
+            document.getElementById('spend-category').value = 'food';
+            document.getElementById('spend-date').value = getPSTDate();
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                food: '#f59e0b',
+                transport: '#3b82f6',
+                entertainment: '#8b5cf6',
+                shopping: '#ec4899',
+                streaming: '#db2777',
+                'news/magazine': '#059669',
+                bills: '#ef4444',
+                subscription: '#06b6d4',
+                health: '#10b981',
+                other: '#6b7280'
+            };
+            return colors[category] || '#6b7280';
         }
 
         function generateSpendingAnalytics() {
@@ -819,32 +1153,6 @@
             html += `<div class="week-stat"><div class="week-stat-label">This Month</div><div class="week-stat-value" style="color: #dc2626;">$${monthSpending.toFixed(2)}</div></div>`;
             html += '</div>';
             
-            // Subscription tracking (including streaming and news/magazine)
-            const subscriptions = data.spending.filter(s => 
-                s.category === 'subscription' || 
-                s.category === 'streaming' || 
-                s.category === 'news/magazine'
-            );
-            const monthlySubscriptions = subscriptions.filter(s => {
-                const spendDate = new Date(s.date);
-                return spendDate >= startOfMonth && spendDate <= endOfMonth;
-            });
-            const subscriptionTotal = monthlySubscriptions.reduce((sum, s) => sum + parseFloat(s.amount), 0);
-            
-            if (subscriptions.length > 0) {
-                html += '<div style="margin-top: 12px;"><strong>📱 Subscriptions This Month: $' + subscriptionTotal.toFixed(2) + '</strong></div>';
-                html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 8px;">';
-                monthlySubscriptions.forEach(sub => {
-                    const categoryColor = getCategoryColor(sub.category);
-                    html += `<div style="background: ${categoryColor}20; border: 1px solid ${categoryColor}; padding: 8px; border-radius: 4px;">
-                        <div style="font-weight: 600; color: ${categoryColor};">${sub.description}</div>
-                        <div style="color: #dc2626;">$${parseFloat(sub.amount).toFixed(2)}</div>
-                        <div style="font-size: 12px; color: #6b7280;">${sub.date}</div>
-                    </div>`;
-                });
-                html += '</div>';
-            }
-            
             // Category breakdown
             if (Object.keys(categoryTotals).length > 0) {
                 html += '<div style="margin-top: 12px;"><strong>This Month by Category:</strong></div>';
@@ -861,252 +1169,6 @@
             
             html += '</div>';
             return html;
-        }
-
-        function getCategoryColor(category) {
-            const colors = {
-                food: '#f59e0b',
-                transport: '#3b82f6',
-                entertainment: '#8b5cf6',
-                shopping: '#ec4899',
-                streaming: '#db2777',
-                'news/magazine': '#059669',
-                bills: '#ef4444',
-                subscription: '#06b6d4',
-                health: '#10b981',
-                other: '#6b7280'
-            };
-            return colors[category] || '#6b7280';
-        }
-
-        function addItem(listName) {
-            const title = document.getElementById('item-input').value.trim();
-            const link = document.getElementById('link-input').value.trim();
-            const date = document.getElementById('date-input').value;
-            const category = document.getElementById('cat-input') ? document.getElementById('cat-input').value : null;
-            
-            if (!title) {
-                alert('Please enter a title');
-                return;
-            }
-            
-            const item = { title, link, date, completed: false };
-            if (category) item.category = category;
-            
-            data.lists[listName].push(item);
-            save();
-            loadListTab(listName);
-            
-            // Clear inputs
-            document.getElementById('item-input').value = '';
-            document.getElementById('link-input').value = '';
-            document.getElementById('date-input').value = getPSTDate();
-            if (document.getElementById('cat-input')) {
-                document.getElementById('cat-input').value = 'book';
-            }
-        }
-
-        function deleteItem(listName, index) {
-            if (confirm('Delete this item?')) {
-                data.lists[listName].splice(index, 1);
-                save();
-                loadListTab(listName);
-            }
-        }
-
-        function editListItem(listName, index, field) {
-            const item = data.lists[listName][index];
-            let currentValue = item[field];
-            let newValue;
-
-            if (field === 'category') {
-                const categories = ['book', 'essay', 'poem'];
-                const currentIndex = categories.indexOf(currentValue) || 0;
-                const nextIndex = (currentIndex + 1) % categories.length;
-                newValue = categories[nextIndex];
-            } else if (field === 'date') {
-                newValue = prompt('Edit date (YYYY-MM-DD):', currentValue);
-            } else {
-                newValue = prompt(`Edit ${field}:`, currentValue);
-            }
-
-            if (newValue !== null && newValue !== currentValue) {
-                item[field] = newValue;
-                save();
-                loadListTab(listName);
-            }
-        }
-
-        function toggleComplete(listName, index) {
-            data.lists[listName][index].completed = !data.lists[listName][index].completed;
-            save();
-            loadListTab(listName);
-        }
-
-        function addNote() {
-            const content = document.getElementById('note-input').value.trim();
-            if (!content) {
-                alert('Please enter a note');
-                return;
-            }
-            
-            data.notes.push({
-                content: content,
-                date: getPSTDate()
-            });
-            save();
-            loadNotesTab();
-            
-            // Clear input
-            document.getElementById('note-input').value = '';
-        }
-
-        function deleteNote(index) {
-            if (confirm('Delete this note?')) {
-                data.notes.splice(index, 1);
-                save();
-                loadNotesTab();
-            }
-        }
-
-        function editNote(index, field) {
-            const note = data.notes[index];
-            let currentValue = note[field];
-            let newValue;
-
-            if (field === 'content') {
-                newValue = prompt('Edit note:', currentValue);
-            } else if (field === 'date') {
-                newValue = prompt('Edit date (YYYY-MM-DD):', currentValue);
-            }
-
-            if (newValue !== null && newValue !== currentValue) {
-                note[field] = newValue;
-                save();
-                loadNotesTab();
-            }
-        }
-
-        function addCalorie() {
-            const food = document.getElementById('food-input').value.trim();
-            const calories = document.getElementById('calories-input').value;
-            const protein = document.getElementById('protein-input').value || '0';
-            const date = document.getElementById('cal-date-input').value;
-            
-            if (!food || !calories) {
-                alert('Please enter food and calories');
-                return;
-            }
-            
-            data.calories.push({ food, calories, protein, date });
-            save();
-            loadCaloriesTab();
-            updateStats();
-            
-            // Clear inputs
-            document.getElementById('food-input').value = '';
-            document.getElementById('calories-input').value = '';
-            document.getElementById('protein-input').value = '';
-            document.getElementById('cal-date-input').value = getPSTDate();
-        }
-
-        function addCalorieBurned() {
-            const exercise = document.getElementById('exercise-input').value.trim();
-            const calories = document.getElementById('burned-input').value;
-            const date = document.getElementById('burned-date-input').value;
-            
-            if (!exercise || !calories) {
-                alert('Please enter exercise and calories burned');
-                return;
-            }
-            
-            data.caloriesBurned.push({ exercise, calories, date });
-            save();
-            loadCaloriesTab();
-            updateStats();
-            
-            // Clear inputs
-            document.getElementById('exercise-input').value = '';
-            document.getElementById('burned-input').value = '';
-            document.getElementById('burned-date-input').value = getPSTDate();
-        }
-
-        function editCell(cell, type, date) {
-            if (cell.classList.contains('editing')) return;
-            
-            const currentValue = cell.textContent;
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.value = currentValue;
-            input.style.width = '80px';
-            input.style.border = 'none';
-            input.style.background = 'transparent';
-            input.style.textAlign = 'center';
-            
-            cell.classList.add('editing');
-            cell.textContent = '';
-            cell.appendChild(input);
-            input.focus();
-            input.select();
-            
-            function saveEdit() {
-                const newValue = parseInt(input.value) || 0;
-                cell.classList.remove('editing');
-                cell.textContent = newValue;
-                
-                // Update the data
-                if (type === 'consumed') {
-                    // Find or create calorie entry for this date
-                    let entry = data.calories.find(c => c.date === date);
-                    if (!entry) {
-                        entry = { date, food: 'Quick edit', calories: '0', protein: '0' };
-                        data.calories.push(entry);
-                    }
-                    entry.calories = newValue.toString();
-                } else if (type === 'burned') {
-                    // Find or create burned entry for this date
-                    let entry = data.caloriesBurned.find(c => c.date === date);
-                    if (!entry) {
-                        entry = { date, exercise: 'Quick edit', calories: '0' };
-                        data.caloriesBurned.push(entry);
-                    }
-                    entry.calories = newValue.toString();
-                }
-                
-                save();
-                loadCaloriesTab(); // Refresh to recalculate totals
-                updateStats();
-            }
-            
-            input.onblur = saveEdit;
-            input.onkeypress = function(e) {
-                if (e.key === 'Enter') {
-                    saveEdit();
-                }
-            };
-        }
-
-        function addSpending() {
-            const description = document.getElementById('spend-desc').value.trim();
-            const amount = document.getElementById('spend-amount').value;
-            const category = document.getElementById('spend-category').value;
-            const date = document.getElementById('spend-date').value;
-            
-            if (!description || !amount) {
-                alert('Please enter description and amount');
-                return;
-            }
-            
-            data.spending.push({ description, amount, category, date });
-            save();
-            loadSpendingTab();
-            updateStats();
-            
-            // Clear inputs
-            document.getElementById('spend-desc').value = '';
-            document.getElementById('spend-amount').value = '';
-            document.getElementById('spend-category').value = 'food';
-            document.getElementById('spend-date').value = getPSTDate();
         }
 
         function deleteSpending(index) {
@@ -1137,60 +1199,166 @@
                 }
             } else if (field === 'date') {
                 newValue = prompt('Edit date (YYYY-MM-DD):', currentValue);
+                if (!newValue || !/^\d{4}-\d{2}-\d{2}$/.test(newValue)) {
+                    return;
+                }
             } else {
                 newValue = prompt(`Edit ${field}:`, currentValue);
+                if (!newValue) return;
             }
 
-            if (newValue !== null && newValue !== currentValue) {
-                spend[field] = newValue;
-                save();
-                loadSpendingTab();
-                updateStats();
+            data.spending[index][field] = newValue;
+            save();
+            loadSpendingTab();
+            updateStats();
+        }
+
+        function populateCategoryFilter() {
+            const categorySelect = document.getElementById('filter-category');
+            if (!categorySelect) return;
+            
+            const categories = [...new Set(data.spending.map(entry => entry.category))].sort();
+            
+            // Keep the "All Categories" option and add unique categories
+            categorySelect.innerHTML = '<option value="">All Categories</option>' + 
+                categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+        }
+
+        function applySpendingFilters() {
+            renderSpending();
+        }
+
+        function clearSpendingFilters() {
+            document.getElementById('filter-date-from').value = '';
+            document.getElementById('filter-date-to').value = '';
+            document.getElementById('filter-category').value = '';
+            renderSpending();
+        }
+
+        function getFilteredSpendingEntries() {
+            const dateFrom = document.getElementById('filter-date-from')?.value;
+            const dateTo = document.getElementById('filter-date-to')?.value;
+            const category = document.getElementById('filter-category')?.value;
+            
+            let filtered = [...data.spending];
+            
+            // Apply date filters
+            if (dateFrom) {
+                filtered = filtered.filter(entry => entry.date >= dateFrom);
             }
+            if (dateTo) {
+                filtered = filtered.filter(entry => entry.date <= dateTo);
+            }
+            
+            // Apply category filter
+            if (category) {
+                filtered = filtered.filter(entry => entry.category === category);
+            }
+            
+            return filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
+
+        function renderSpending() {
+            const listDiv = document.getElementById('spending-list');
+            if (!listDiv) return;
+            
+            const filteredEntries = getFilteredSpendingEntries();
+            
+            // Calculate filtered total
+            const filteredTotal = filteredEntries.reduce((sum, spend) => sum + parseFloat(spend.amount), 0);
+            
+            let html = '';
+            
+            // Add filtered total display if filters are active
+            const dateFrom = document.getElementById('filter-date-from')?.value;
+            const dateTo = document.getElementById('filter-date-to')?.value;
+            const category = document.getElementById('filter-category')?.value;
+            
+            if (dateFrom || dateTo || category) {
+                html += `<div style="background: #f0f9ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 12px; margin-bottom: 16px; text-align: center;">
+                    <div style="font-weight: 600; color: #1e40af; font-size: 16px;">Filtered Total</div>
+                    <div style="font-size: 24px; font-weight: 700; color: #dc2626; margin-top: 4px;">$${filteredTotal.toFixed(2)}</div>
+                    <div style="font-size: 12px; color: #64748b; margin-top: 2px;">${filteredEntries.length} entries</div>
+                </div>`;
+            }
+            
+            filteredEntries.forEach((spend, i) => {
+                const categoryColor = getCategoryColor(spend.category);
+                const originalIndex = data.spending.findIndex(s => s === spend);
+                html += `<div class="item">
+                    <div class="item-content">💰 
+                        <span class="editable-text" onclick="editSpending(${originalIndex}, 'description')" title="Click to edit description">${spend.description}</span> - 
+                        <span class="editable-text" onclick="editSpending(${originalIndex}, 'amount')" title="Click to edit amount" style="color: #dc2626; font-weight: 600;">$${parseFloat(spend.amount).toFixed(2)}</span> 
+                        <span class="editable-text" onclick="editSpending(${originalIndex}, 'category')" title="Click to edit category" style="background: ${categoryColor}; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px; cursor: pointer;">${spend.category}</span>
+                        <small class="editable-text" onclick="editSpending(${originalIndex}, 'date')" title="Click to edit date" style="color: #666; cursor: pointer;"> (${spend.date})</small>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-delete" onclick="deleteSpending(${originalIndex})">🗑️</button>
+                    </div>
+                </div>`;
+            });
+            listDiv.innerHTML = html;
         }
 
         function updateStats() {
             const today = getPSTDate();
             
-            // Calorie stats
-            const todayConsumed = data.calories.filter(c => c.date === today).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
-            const todayBurned = data.caloriesBurned.filter(c => c.date === today).reduce((sum, c) => sum + parseInt(c.calories || 0), 0);
-            const todayProtein = data.calories.filter(c => c.date === today).reduce((sum, c) => sum + parseFloat(c.protein || 0), 0);
-            const netCalories = todayConsumed - todayBurned;
+            // Normalize calorie data
+            const normalizedCalories = data.calories.map(entry => ({
+                date: entry.date,
+                calories: parseInt(entry.amount) || parseInt(entry.calories) || 0,
+                protein: parseInt(entry.protein) || 0
+            }));
             
-            document.getElementById('cal-today').textContent = `${todayConsumed} cal today`;
-            document.getElementById('protein-today').textContent = `${todayProtein.toFixed(1)}g protein`;
+            // Calculate calorie stats
+            const todayCalories = normalizedCalories
+                .filter(entry => entry.date === today)
+                .reduce((sum, entry) => sum + entry.calories, 0);
+            
+            const todayProtein = normalizedCalories
+                .filter(entry => entry.date === today)
+                .reduce((sum, entry) => sum + entry.protein, 0);
+            
+            const todayBurned = data.caloriesBurned
+                .filter(entry => entry.date === today)
+                .reduce((sum, entry) => sum + (parseInt(entry.calories) || 0), 0);
+            
+            const netCalories = todayCalories - todayBurned;
+            
+            document.getElementById('cal-today').textContent = `${todayCalories} cal today`;
+            document.getElementById('protein-today').textContent = `${todayProtein}g protein`;
             
             if (todayBurned > 0) {
-                const balanceColor = netCalories > 0 ? '#dc2626' : '#059669'; // red for surplus, green for deficit
-                document.getElementById('balance-today').innerHTML = `<span style="color: ${balanceColor};">${netCalories > 0 ? '+' : ''}${netCalories} net cal</span>`;
+                const balanceElement = document.getElementById('balance-today');
+                balanceElement.textContent = `${netCalories > 0 ? '+' : ''}${netCalories} cal`;
+                // Make negative values green
+                balanceElement.style.color = netCalories < 0 ? '#059669' : '#f59e0b';
             } else {
-                document.getElementById('balance-today').textContent = 'Enter burned calories';
+                const balanceElement = document.getElementById('balance-today');
+                balanceElement.textContent = 'Enter burned calories';
+                balanceElement.style.color = '#f59e0b';
             }
             
-            // Spending stats
-            const todaySpending = data.spending.filter(s => s.date === today).reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            // Calculate spending stats
+            const todaySpending = data.spending
+                .filter(entry => entry.date === today)
+                .reduce((sum, entry) => sum + (parseFloat(entry.amount) || 0), 0);
             
-            // This week (PST)
-            const startOfWeek = getPSTTime();
-            startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-            startOfWeek.setHours(0, 0, 0, 0);
-            const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6);
-            endOfWeek.setHours(23, 59, 59, 999);
+            const thisWeekStart = new Date();
+            thisWeekStart.setDate(thisWeekStart.getDate() - thisWeekStart.getDay());
+            const weekStartStr = thisWeekStart.toISOString().split('T')[0];
             
-            const weekSpending = data.spending.filter(s => {
-                const spendDate = new Date(s.date + 'T00:00:00');
-                return spendDate >= startOfWeek && spendDate <= endOfWeek;
-            }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            const weekSpending = data.spending
+                .filter(entry => entry.date >= weekStartStr)
+                .reduce((sum, entry) => sum + (parseFloat(entry.amount) || 0), 0);
             
-            // This month (PST)
-            const startOfMonth = getPSTTime();
-            startOfMonth.setDate(1);
-            const monthSpending = data.spending.filter(s => {
-                const spendDate = new Date(s.date + 'T00:00:00');
-                return spendDate >= startOfMonth;
-            }).reduce((sum, s) => sum + parseFloat(s.amount), 0);
+            const thisMonthStart = new Date();
+            thisMonthStart.setDate(1);
+            const monthStartStr = thisMonthStart.toISOString().split('T')[0];
+            
+            const monthSpending = data.spending
+                .filter(entry => entry.date >= monthStartStr)
+                .reduce((sum, entry) => sum + (parseFloat(entry.amount) || 0), 0);
             
             document.getElementById('spend-today').textContent = `$${todaySpending.toFixed(2)} today`;
             document.getElementById('spend-week').textContent = `$${weekSpending.toFixed(2)} this week`;
@@ -1198,37 +1366,17 @@
         }
 
         function downloadData() {
-            try {
-                console.log('Download data called, current data:', data);
-                const dataStr = JSON.stringify(data, null, 2);
-                console.log('Data string length:', dataStr.length);
-                
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = 'notebook-data-' + getPSTDate() + '.json';
-                
-                // Add to body, click, then remove
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Clean up the URL
-                URL.revokeObjectURL(url);
-                
-                alert('Download started! Check your Downloads folder for: notebook-data-' + getPSTDate() + '.json');
-            } catch (error) {
-                console.error('Download error:', error);
-                alert('Download failed: ' + error.message);
-            }
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `notebook-data-${getPSTDate()}_${Date.now()}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
-
-        function loadReadingTab() {
-            loadListTab('read');
-        }
-
-
 
         function uploadData(event) {
             const file = event.target.files[0];
@@ -1237,109 +1385,60 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
-                    let content = e.target.result;
+                    const uploadedData = JSON.parse(e.target.result);
                     
-                    // Check if it's an HTML file (from previous backups)
-                    if (content.includes('<!DOCTYPE html>') || content.includes('<html>')) {
-                        alert('This appears to be an HTML backup file. Please export your data as JSON from the old version and try again.');
-                        return;
+                    // Convert spending amounts from strings to numbers if needed
+                    if (uploadedData.spending) {
+                        uploadedData.spending = uploadedData.spending.map(entry => ({
+                            ...entry,
+                            amount: parseFloat(entry.amount) || 0
+                        }));
                     }
                     
-                    // Try to parse as JSON
-                    const loadedData = JSON.parse(content);
-                    
-                    // Validate the data structure
-                    if (typeof loadedData === 'object' && loadedData !== null) {
-                        // Merge with existing data structure to ensure all fields exist
-                        data = {
-                            lists: loadedData.lists || { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
-                            notes: loadedData.notes || [],
-                            reading: loadedData.reading || [],
-                            calories: loadedData.calories || [],
-                            caloriesBurned: loadedData.caloriesBurned || [],
-                            spending: loadedData.spending || [],
-                            calorieTable: loadedData.calorieTable || [],
-                            customCalorieDays: loadedData.customCalorieDays || []
-                        };
-                        
-                        save();
-                        updateStats();
-                        
-                        // Refresh current tab if active
-                        const activeTab = document.querySelector('.nav-item.active');
-                        if (activeTab && activeTab.textContent.includes('CALORIES')) {
-                            currentCalorieWeek = getPSTTime();
-                            loadCaloriesTab();
-                        } else if (activeTab && activeTab.textContent.includes('READING')) {
-                            loadReadingTab();
-                        } else if (activeTab && activeTab.textContent.includes('SPENDING')) {
-                            loadSpendingTab();
-                        } else if (activeTab && activeTab.textContent.includes('NOTES')) {
-                            loadNotesTab();
-                        }
-                        
-                        alert('Data uploaded successfully!');
-                        
-                        // Maintain current tab instead of forcing home
-                        if (!activeTab) {
-                            showTab('home');
-                        }
-                    } else {
-                        throw new Error('Invalid data structure');
+                    // Convert calorie data from various formats
+                    if (uploadedData.calories) {
+                        uploadedData.calories = uploadedData.calories.map(entry => {
+                            // Handle different possible field names
+                            const calories = entry.calories || entry.amount || 0;
+                            const protein = entry.protein || 0;
+                            const description = entry.description || entry.food || '';
+                            
+                            return {
+                                id: entry.id || Date.now() + Math.random(),
+                                description: description,
+                                amount: parseFloat(calories) || 0,
+                                protein: parseFloat(protein) || 0,
+                                date: entry.date
+                            };
+                        });
                     }
+                    
+                    data = uploadedData;
+                    save();
+                    alert('Data uploaded successfully!');
+                    
+                    // Refresh current view if needed
+                    const activeTab = document.querySelector('.tab-btn.active');
+                    if (activeTab && activeTab.id !== 'tab-home') {
+                        const tabName = activeTab.id.replace('tab-', '');
+                        showTab(tabName);
+                    }
+                    updateStats();
                 } catch (error) {
+                    alert('Error uploading data: Invalid JSON file');
                     console.error('Upload error:', error);
-                    alert('Error uploading data: ' + error.message + '\nPlease check the file format.');
                 }
             };
             reader.readAsText(file);
             
-            // Clear the input
+            // Reset file input
             event.target.value = '';
         }
 
-        // Add function to reset corrupted data
-        function resetData() {
-            if (confirm('This will clear all data and reset the app. Continue?')) {
-                localStorage.removeItem('notebookData');
-                data = {
-                    lists: { read: [], listen: [], watch: [], cook: [], make: [], look: [] },
-                    notes: [],
-                    reading: [],
-                    calories: [],
-                    caloriesBurned: [],
-                    spending: [],
-                    calorieTable: [],
-                    customCalorieDays: []
-                };
-                save();
-                showTab('home');
-                alert('Data has been reset.');
-            }
-        }
-
-        // Function to inspect and recover data
-        function inspectData() {
-            const saved = localStorage.getItem('notebookData');
-            if (saved) {
-                console.log('Raw data length:', saved.length);
-                console.log('Raw data preview:', saved.substring(0, 200));
-                
-                try {
-                    const parsed = JSON.parse(saved);
-                    console.log('Parsed data structure:', Object.keys(parsed));
-                    console.log('Full parsed data:', parsed);
-                } catch (e) {
-                    console.error('Parse error:', e);
-                }
-            } else {
-                console.log('No saved data found');
-            }
-        }
-
-        // Initialize the app
+        // Initialize app
         load();
         showTab('home');
+        updateStats();
     </script>
 </body>
 </html>
